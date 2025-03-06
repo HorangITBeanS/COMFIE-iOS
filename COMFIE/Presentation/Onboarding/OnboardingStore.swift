@@ -70,7 +70,7 @@ class OnboardingStore: IntentStore {
             
         case .navigateToMainScreen:
             print("메인화면으로 이동")
-            router.isOnboardingFinished = true
+            router.hasEverOnboarded = true
         }
         return newState
     }

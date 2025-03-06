@@ -26,6 +26,9 @@
 		5103411A2D7994130050C718 /* Router + navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341192D7994130050C718 /* Router + navigate.swift */; };
 		5103411D2D7996F50050C718 /* MemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103411C2D7996F50050C718 /* MemoView.swift */; };
 		5103411F2D7997130050C718 /* MemoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103411E2D7997130050C718 /* MemoStore.swift */; };
+		510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341242D79A58B0050C718 /* UserDefaultsService.swift */; };
+		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
+		510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341282D79A5C60050C718 /* UserDefaultsError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,9 @@
 		510341192D7994130050C718 /* Router + navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router + navigate.swift"; sourceTree = "<group>"; };
 		5103411C2D7996F50050C718 /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		5103411E2D7997130050C718 /* MemoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoStore.swift; sourceTree = "<group>"; };
+		510341242D79A58B0050C718 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
+		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
+		510341282D79A5C60050C718 /* UserDefaultsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +136,7 @@
 			children = (
 				510341022D777C3B0050C718 /* App */,
 				510341042D777D000050C718 /* Presentation */,
+				510341202D79A5460050C718 /* Data */,
 				510341032D777C460050C718 /* Resources */,
 			);
 			path = COMFIE;
@@ -157,6 +164,7 @@
 			children = (
 				510341122D7993A90050C718 /* Router */,
 				510340F32D777C260050C718 /* COMFIEApp.swift */,
+				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -213,7 +221,6 @@
 				510341152D7993D60050C718 /* Route.swift */,
 				510341172D7993F20050C718 /* Router.swift */,
 				510341192D7994130050C718 /* Router + navigate.swift */,
-				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -225,6 +232,24 @@
 				5103411E2D7997130050C718 /* MemoStore.swift */,
 			);
 			path = Memo;
+			sourceTree = "<group>";
+		};
+		510341202D79A5460050C718 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				510341212D79A54F0050C718 /* UserDefauls */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		510341212D79A54F0050C718 /* UserDefauls */ = {
+			isa = PBXGroup;
+			children = (
+				510341242D79A58B0050C718 /* UserDefaultsService.swift */,
+				510341262D79A59A0050C718 /* UserDefaultsConstants.swift */,
+				510341282D79A5C60050C718 /* UserDefaultsError.swift */,
+			);
+			path = UserDefauls;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -391,16 +416,19 @@
 			files = (
 				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
 				5103411F2D7997130050C718 /* MemoStore.swift in Sources */,
+				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
+				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				5103411D2D7996F50050C718 /* MemoView.swift in Sources */,
+				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
