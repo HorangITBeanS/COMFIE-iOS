@@ -9,6 +9,16 @@
 /* Begin PBXBuildFile section */
 		510340EA2D776F5F0050C718 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 510340E92D776F5F0050C718 /* .gitignore */; };
 		510340EE2D777AA40050C718 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 510340ED2D777AA40050C718 /* .swiftlint.yml */; };
+		510340F62D777C260050C718 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F02D777C260050C718 /* Preview Assets.xcassets */; };
+		510340F72D777C260050C718 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F22D777C260050C718 /* Assets.xcassets */; };
+		510340F82D777C260050C718 /* COMFIEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340F32D777C260050C718 /* COMFIEApp.swift */; };
+		510340FC2D777C290050C718 /* COMFIETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FA2D777C290050C718 /* COMFIETests.swift */; };
+		510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FD2D777C2B0050C718 /* COMFIEUITests.swift */; };
+		510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */; };
+		510341072D777E140050C718 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341062D777E140050C718 /* OnboardingView.swift */; };
+		510341092D7782670050C718 /* OnboardingIntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341082D7782670050C718 /* OnboardingIntentContainer.swift */; };
+		5103410C2D77828C0050C718 /* Intent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410B2D77828C0050C718 /* Intent.swift */; };
+		5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410E2D7782E90050C718 /* DesignSystem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,25 +44,17 @@
 		510340C72D776EE90050C718 /* COMFIEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340E92D776F5F0050C718 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		510340ED2D777AA40050C718 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		510340F02D777C260050C718 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		510340F22D777C260050C718 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		510340F32D777C260050C718 /* COMFIEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEApp.swift; sourceTree = "<group>"; };
+		510340FA2D777C290050C718 /* COMFIETests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIETests.swift; sourceTree = "<group>"; };
+		510340FD2D777C2B0050C718 /* COMFIEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEUITests.swift; sourceTree = "<group>"; };
+		510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		510341062D777E140050C718 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		510341082D7782670050C718 /* OnboardingIntentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntentContainer.swift; sourceTree = "<group>"; };
+		5103410B2D77828C0050C718 /* Intent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intent.swift; sourceTree = "<group>"; };
+		5103410E2D7782E90050C718 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		510340AF2D776EE70050C718 /* COMFIE */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = COMFIE;
-			sourceTree = "<group>";
-		};
-		510340C02D776EE90050C718 /* COMFIETests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = COMFIETests;
-			sourceTree = "<group>";
-		};
-		510340CA2D776EE90050C718 /* COMFIEUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = COMFIEUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		510340AA2D776EE70050C718 /* Frameworks */ = {
@@ -84,9 +86,9 @@
 			children = (
 				510340ED2D777AA40050C718 /* .swiftlint.yml */,
 				510340E92D776F5F0050C718 /* .gitignore */,
-				510340AF2D776EE70050C718 /* COMFIE */,
-				510340C02D776EE90050C718 /* COMFIETests */,
-				510340CA2D776EE90050C718 /* COMFIEUITests */,
+				510340F52D777C260050C718 /* COMFIE */,
+				510340FB2D777C290050C718 /* COMFIETests */,
+				510340FF2D777C2B0050C718 /* COMFIEUITests */,
 				510340AE2D776EE70050C718 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,6 +101,93 @@
 				510340C72D776EE90050C718 /* COMFIEUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		510340F12D777C260050C718 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				510340F02D777C260050C718 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		510340F52D777C260050C718 /* COMFIE */ = {
+			isa = PBXGroup;
+			children = (
+				510341022D777C3B0050C718 /* App */,
+				510341042D777D000050C718 /* Presentation */,
+				510341032D777C460050C718 /* Resources */,
+			);
+			path = COMFIE;
+			sourceTree = "<group>";
+		};
+		510340FB2D777C290050C718 /* COMFIETests */ = {
+			isa = PBXGroup;
+			children = (
+				510340FA2D777C290050C718 /* COMFIETests.swift */,
+			);
+			path = COMFIETests;
+			sourceTree = "<group>";
+		};
+		510340FF2D777C2B0050C718 /* COMFIEUITests */ = {
+			isa = PBXGroup;
+			children = (
+				510340FD2D777C2B0050C718 /* COMFIEUITests.swift */,
+				510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */,
+			);
+			path = COMFIEUITests;
+			sourceTree = "<group>";
+		};
+		510341022D777C3B0050C718 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				510340F32D777C260050C718 /* COMFIEApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		510341032D777C460050C718 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5103410D2D7782C00050C718 /* DesignSystem */,
+				510340F12D777C260050C718 /* Preview Content */,
+				510340F22D777C260050C718 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		510341042D777D000050C718 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				5103410A2D7782830050C718 /* Intent */,
+				510341052D777E030050C718 /* Onboarding */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		510341052D777E030050C718 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				510341062D777E140050C718 /* OnboardingView.swift */,
+				510341082D7782670050C718 /* OnboardingIntentContainer.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		5103410A2D7782830050C718 /* Intent */ = {
+			isa = PBXGroup;
+			children = (
+				5103410B2D77828C0050C718 /* Intent.swift */,
+			);
+			path = Intent;
+			sourceTree = "<group>";
+		};
+		5103410D2D7782C00050C718 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				5103410E2D7782E90050C718 /* DesignSystem.swift */,
+			);
+			path = DesignSystem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -116,9 +205,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				510340AF2D776EE70050C718 /* COMFIE */,
 			);
 			name = COMFIE;
 			packageProductDependencies = (
@@ -140,9 +226,6 @@
 			dependencies = (
 				510340BF2D776EE90050C718 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				510340C02D776EE90050C718 /* COMFIETests */,
-			);
 			name = COMFIETests;
 			packageProductDependencies = (
 			);
@@ -162,9 +245,6 @@
 			);
 			dependencies = (
 				510340C92D776EE90050C718 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				510340CA2D776EE90050C718 /* COMFIEUITests */,
 			);
 			name = COMFIEUITests;
 			packageProductDependencies = (
@@ -224,6 +304,8 @@
 			files = (
 				510340EE2D777AA40050C718 /* .swiftlint.yml in Resources */,
 				510340EA2D776F5F0050C718 /* .gitignore in Resources */,
+				510340F62D777C260050C718 /* Preview Assets.xcassets in Resources */,
+				510340F72D777C260050C718 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +352,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
+				5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */,
+				5103410C2D77828C0050C718 /* Intent.swift in Sources */,
+				510341092D7782670050C718 /* OnboardingIntentContainer.swift in Sources */,
+				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +364,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510340FC2D777C290050C718 /* COMFIETests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +372,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
+				510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,7 +519,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"COMFIE/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"COMFIE/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 99KH3TLG9V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -460,7 +550,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"COMFIE/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"COMFIE/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 99KH3TLG9V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
