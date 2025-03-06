@@ -11,9 +11,7 @@ import SwiftUI
 struct COMFIEApp: App {
     var body: some Scene {
         WindowGroup {
-            OnboardingView(
-                intent: OnboardingStore()
-            )
+            COMFIERoutingView()
         }
     }
 }

@@ -19,6 +19,13 @@
 		510341092D7782670050C718 /* OnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341082D7782670050C718 /* OnboardingStore.swift */; };
 		5103410C2D77828C0050C718 /* IntentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410B2D77828C0050C718 /* IntentStore.swift */; };
 		5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410E2D7782E90050C718 /* DesignSystem.swift */; };
+		510341112D7989B00050C718 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341102D7989B00050C718 /* LoadingView.swift */; };
+		510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341132D7993B80050C718 /* COMFIERoutingView.swift */; };
+		510341162D7993D60050C718 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341152D7993D60050C718 /* Route.swift */; };
+		510341182D7993F20050C718 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341172D7993F20050C718 /* Router.swift */; };
+		5103411A2D7994130050C718 /* Router + navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341192D7994130050C718 /* Router + navigate.swift */; };
+		5103411D2D7996F50050C718 /* MemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103411C2D7996F50050C718 /* MemoView.swift */; };
+		5103411F2D7997130050C718 /* MemoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103411E2D7997130050C718 /* MemoStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +61,13 @@
 		510341082D7782670050C718 /* OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStore.swift; sourceTree = "<group>"; };
 		5103410B2D77828C0050C718 /* IntentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentStore.swift; sourceTree = "<group>"; };
 		5103410E2D7782E90050C718 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		510341102D7989B00050C718 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		510341132D7993B80050C718 /* COMFIERoutingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIERoutingView.swift; sourceTree = "<group>"; };
+		510341152D7993D60050C718 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		510341172D7993F20050C718 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		510341192D7994130050C718 /* Router + navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router + navigate.swift"; sourceTree = "<group>"; };
+		5103411C2D7996F50050C718 /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
+		5103411E2D7997130050C718 /* MemoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +155,7 @@
 		510341022D777C3B0050C718 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				510341122D7993A90050C718 /* Router */,
 				510340F32D777C260050C718 /* COMFIEApp.swift */,
 			);
 			path = App;
@@ -161,6 +176,7 @@
 			children = (
 				5103410A2D7782830050C718 /* Intent */,
 				510341052D777E030050C718 /* Onboarding */,
+				5103411B2D7996E40050C718 /* Memo */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -168,6 +184,7 @@
 		510341052D777E030050C718 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				510341102D7989B00050C718 /* LoadingView.swift */,
 				510341062D777E140050C718 /* OnboardingView.swift */,
 				510341082D7782670050C718 /* OnboardingStore.swift */,
 			);
@@ -188,6 +205,26 @@
 				5103410E2D7782E90050C718 /* DesignSystem.swift */,
 			);
 			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		510341122D7993A90050C718 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
+				510341152D7993D60050C718 /* Route.swift */,
+				510341172D7993F20050C718 /* Router.swift */,
+				510341192D7994130050C718 /* Router + navigate.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		5103411B2D7996E40050C718 /* Memo */ = {
+			isa = PBXGroup;
+			children = (
+				5103411C2D7996F50050C718 /* MemoView.swift */,
+				5103411E2D7997130050C718 /* MemoStore.swift */,
+			);
+			path = Memo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,11 +389,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
+				5103411F2D7997130050C718 /* MemoStore.swift in Sources */,
+				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
+				510341182D7993F20050C718 /* Router.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
+				510341162D7993D60050C718 /* Route.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
+				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
+				5103411D2D7996F50050C718 /* MemoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
