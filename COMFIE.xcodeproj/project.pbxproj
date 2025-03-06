@@ -29,6 +29,7 @@
 		510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341242D79A58B0050C718 /* UserDefaultsService.swift */; };
 		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
 		510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341282D79A5C60050C718 /* UserDefaultsError.swift */; };
+		5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103412B2D79ABC40050C718 /* ViewFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		510341242D79A58B0050C718 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
 		510341282D79A5C60050C718 /* UserDefaultsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsError.swift; sourceTree = "<group>"; };
+		5103412B2D79ABC40050C718 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 		510341022D777C3B0050C718 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				5103412A2D79ABB60050C718 /* DIContainer */,
 				510341122D7993A90050C718 /* Router */,
 				510340F32D777C260050C718 /* COMFIEApp.swift */,
 				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
@@ -250,6 +253,14 @@
 				510341282D79A5C60050C718 /* UserDefaultsError.swift */,
 			);
 			path = UserDefauls;
+			sourceTree = "<group>";
+		};
+		5103412A2D79ABB60050C718 /* DIContainer */ = {
+			isa = PBXGroup;
+			children = (
+				5103412B2D79ABC40050C718 /* ViewFactory.swift */,
+			);
+			path = DIContainer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -429,6 +440,7 @@
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				5103411D2D7996F50050C718 /* MemoView.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
+				5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
