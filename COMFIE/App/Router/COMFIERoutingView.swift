@@ -12,10 +12,10 @@ struct COMFIERoutingView: View {
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            router.rootView
+            router.rootView(router)
                 .onAppear { finishLoadingView() }
                 .navigationDestination(for: Route.self) { route in
-                    route.view()
+                    route.view(router)
                 }
         }
         .environment(router)

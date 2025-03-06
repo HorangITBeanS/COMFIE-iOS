@@ -13,16 +13,19 @@ enum Route {
     case onboarding
     case memo
     case retrospection
-    case settingComfieZone
+    case comfieZoneSetting
     
-    @ViewBuilder func view() -> some View {
-        ViewFactory().makeView(self)
+    @ViewBuilder func view(_ router: Router) -> some View {
+        ViewFactory(router: router).makeView(self)
     }
 }
 
 struct ViewFactory {
+    let router: Router
+    
     // MARK: - Intent
-    private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore() }
+    private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }
+    private func makeMemoIntent() -> MemoStore { MemoStore(router: router) }
     
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {
@@ -32,11 +35,11 @@ struct ViewFactory {
         case .onboarding:
             OnboardingView(intent: makeOnboardingIntent())
         case .memo:
-            Text("Memo")
+            MemoView(intent: makeMemoIntent())
         case .retrospection:
-            Text("Memo")
-        case .settingComfieZone:
-            Text("Memo")
+            Text("retrospection")
+        case .comfieZoneSetting:
+            Text("comfieZoneSetting")
         }
     }
 }

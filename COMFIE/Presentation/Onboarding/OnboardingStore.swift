@@ -34,6 +34,13 @@ class OnboardingStore: IntentStore {
         case navigateToMainScreen            // 메인 스크린으로 이동
     }
     
+    // MARK: 화면 전환을 위한 router
+    private let router: Router
+
+    init(router: Router) {
+        self.router = router
+    }
+    
     func intent(_ action: Intent) {
         switch action {
         case .nextButtonTapped:
@@ -63,6 +70,7 @@ class OnboardingStore: IntentStore {
             
         case .navigateToMainScreen:
             print("메인화면으로 이동")
+            router.isOnboardingFinished = true
         }
         return newState
     }

@@ -17,12 +17,13 @@ struct OnboardingView: View {
             Button {
                 intent(.nextButtonTapped)
             } label: {
-                Text("다음")
+                Text("메모 화면으로")
             }
         }
+//        .environment(intent)
     }
 }
 
 #Preview {
-    OnboardingView(intent: OnboardingStore())
+    OnboardingView(intent: OnboardingStore(router: Router()))
 }

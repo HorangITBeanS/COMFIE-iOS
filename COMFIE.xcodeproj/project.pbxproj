@@ -210,10 +210,10 @@
 		510341122D7993A90050C718 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
 				510341152D7993D60050C718 /* Route.swift */,
 				510341172D7993F20050C718 /* Router.swift */,
 				510341192D7994130050C718 /* Router + navigate.swift */,
+				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";

@@ -13,7 +13,9 @@ extension Router {
     }
     
     func pop() {
-        self.path.removeLast()
+        if self.path.count > 0 {
+            self.path.removeLast()
+        }
     }
     
     func popToRoot() {
