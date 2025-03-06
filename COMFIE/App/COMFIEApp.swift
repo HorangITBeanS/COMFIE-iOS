@@ -12,7 +12,7 @@ struct COMFIEApp: App {
     var body: some Scene {
         WindowGroup {
             OnboardingView(
-                intent: OnboardingIntentContainer()
+                intent: OnboardingStore()
             )
         }
     }

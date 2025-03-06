@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State var intent: OnboardingIntentContainer
+    @State var intent: OnboardingStore
     
     var body: some View {
         VStack {
@@ -24,5 +24,5 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView(intent: OnboardingIntentContainer())
+    OnboardingView(intent: OnboardingStore())
 }

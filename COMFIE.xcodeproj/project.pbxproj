@@ -16,8 +16,8 @@
 		510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FD2D777C2B0050C718 /* COMFIEUITests.swift */; };
 		510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */; };
 		510341072D777E140050C718 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341062D777E140050C718 /* OnboardingView.swift */; };
-		510341092D7782670050C718 /* OnboardingIntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341082D7782670050C718 /* OnboardingIntentContainer.swift */; };
-		5103410C2D77828C0050C718 /* Intent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410B2D77828C0050C718 /* Intent.swift */; };
+		510341092D7782670050C718 /* OnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341082D7782670050C718 /* OnboardingStore.swift */; };
+		5103410C2D77828C0050C718 /* IntentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410B2D77828C0050C718 /* IntentStore.swift */; };
 		5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103410E2D7782E90050C718 /* DesignSystem.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,8 +51,8 @@
 		510340FD2D777C2B0050C718 /* COMFIEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEUITests.swift; sourceTree = "<group>"; };
 		510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		510341062D777E140050C718 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		510341082D7782670050C718 /* OnboardingIntentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntentContainer.swift; sourceTree = "<group>"; };
-		5103410B2D77828C0050C718 /* Intent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intent.swift; sourceTree = "<group>"; };
+		510341082D7782670050C718 /* OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStore.swift; sourceTree = "<group>"; };
+		5103410B2D77828C0050C718 /* IntentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentStore.swift; sourceTree = "<group>"; };
 		5103410E2D7782E90050C718 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -169,7 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				510341062D777E140050C718 /* OnboardingView.swift */,
-				510341082D7782670050C718 /* OnboardingIntentContainer.swift */,
+				510341082D7782670050C718 /* OnboardingStore.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -177,7 +177,7 @@
 		5103410A2D7782830050C718 /* Intent */ = {
 			isa = PBXGroup;
 			children = (
-				5103410B2D77828C0050C718 /* Intent.swift */,
+				5103410B2D77828C0050C718 /* IntentStore.swift */,
 			);
 			path = Intent;
 			sourceTree = "<group>";
@@ -354,8 +354,8 @@
 			files = (
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */,
-				5103410C2D77828C0050C718 /* Intent.swift in Sources */,
-				510341092D7782670050C718 /* OnboardingIntentContainer.swift in Sources */,
+				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
+				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

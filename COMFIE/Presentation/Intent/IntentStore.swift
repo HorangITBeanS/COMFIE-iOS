@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol IntentContainer {
+protocol IntentStore {
     associatedtype State
     associatedtype Intent
     associatedtype Action
@@ -16,7 +16,7 @@ protocol IntentContainer {
     mutating func callAsFunction(_ action: Intent)
 }
 
-extension IntentContainer {
+extension IntentStore {
     mutating func callAsFunction(_ action: Self.Intent) {
         intent(action)
     }

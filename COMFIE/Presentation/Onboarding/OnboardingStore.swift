@@ -15,7 +15,7 @@ enum LocationPermissionStatus {
 }
 
 @Observable
-class OnboardingIntentContainer: IntentContainer {
+class OnboardingStore: IntentStore {
     // MARK: 화면에 사용되는 상태, 밖에서는 setter에 접근 불가능
     private(set) var state: State = .init()
     struct State {
