@@ -13,7 +13,7 @@ extension Router {
     }
     
     func pop() {
-        if self.path.count > 0 {
+        if self.path.isEmpty == false {
             self.path.removeLast()
         }
     }
