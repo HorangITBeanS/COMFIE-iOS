@@ -10,6 +10,8 @@ import SwiftUI
 
 @Observable
 class Router {
+    private let userDefaults = UserDefaultsService()
+    
     // 네비게이션 경로
     var path: [Route] = []
     
@@ -19,12 +21,11 @@ class Router {
     // 앱 최초 실행 여부 - 온보딩 화면 전환 확인
     var hasEverOnboarded: Bool = false {
         didSet {
-            UserDefaultsService().save(value: hasEverOnboarded, key: .hasEverOnboarded)
+            userDefaults.save(value: hasEverOnboarded, key: .hasEverOnboarded)
         }
     }
     
     init() {
-        let userDefaults = UserDefaultsService()
         let result = userDefaults.load(type: Bool.self, key: .hasEverOnboarded)
         
         switch result {
