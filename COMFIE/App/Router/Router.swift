@@ -11,7 +11,7 @@ import SwiftUI
 @Observable
 class Router {
     // 네비게이션 경로
-    var path: [Route] = .init()
+    var path: [Route] = []
     
     // 앱 실행 시, 2초간 로딩 화면 종료 여부
     var isLoadingViewFinished: Bool = false
@@ -36,13 +36,13 @@ class Router {
     }
     
     // 가장 상위 View - 앱 진입 시 파악
-    @ViewBuilder func rootView(_ router: Router) -> some View {
+    @ViewBuilder func rootView() -> some View {
         if isLoadingViewFinished == false {
-            Route.loading.view(router)     // 앱 진입 시, 로딩 View
+            Route.loading.view(self)     // 앱 진입 시, 로딩 View
         } else if hasEverOnboarded == false {
-            Route.onboarding.view(router)  // 앱 최초 실행 O -> 온보딩 View
+            Route.onboarding.view(self)  // 앱 최초 실행 O -> 온보딩 View
         } else {
-            Route.memo.view(router)        // 앱 최초 실행 X -> 메모 View
+            Route.memo.view(self)        // 앱 최초 실행 X -> 메모 View
         }
     }
 }

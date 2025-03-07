@@ -30,6 +30,8 @@
 		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
 		510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341282D79A5C60050C718 /* UserDefaultsError.swift */; };
 		5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103412B2D79ABC40050C718 /* ViewFactory.swift */; };
+		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
+		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,8 @@
 		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
 		510341282D79A5C60050C718 /* UserDefaultsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsError.swift; sourceTree = "<group>"; };
 		5103412B2D79ABC40050C718 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
+		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
+		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +142,7 @@
 			children = (
 				510341022D777C3B0050C718 /* App */,
 				510341042D777D000050C718 /* Presentation */,
+				517FCAC02D7AB29900A250A3 /* Domain */,
 				510341202D79A5460050C718 /* Data */,
 				510341032D777C460050C718 /* Resources */,
 			);
@@ -263,6 +268,23 @@
 			path = DIContainer;
 			sourceTree = "<group>";
 		};
+		517FCAC02D7AB29900A250A3 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				517FCAC12D7AB2A200A250A3 /* Entity */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		517FCAC12D7AB2A200A250A3 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				517FCAC22D7AB2B100A250A3 /* Memo.swift */,
+				517FCAC42D7AB31100A250A3 /* ComfieZone.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -350,11 +372,12 @@
 				};
 			};
 			buildConfigurationList = 510340A82D776EE70050C718 /* Build configuration list for PBXProject "COMFIE" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 510340A42D776EE70050C718;
 			minimizedProjectReferenceProxies = 1;
@@ -435,11 +458,13 @@
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
+				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				5103411D2D7996F50050C718 /* MemoView.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
+				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,
 				5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -536,6 +561,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -592,6 +618,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
