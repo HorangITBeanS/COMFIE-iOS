@@ -12,12 +12,12 @@ protocol IntentStore {
     associatedtype Intent
     associatedtype Action
     
-    func intent(_ action: Intent)
+    func handleIntent(_ intent: Intent)
     mutating func callAsFunction(_ action: Intent)
 }
 
 extension IntentStore {
     mutating func callAsFunction(_ action: Self.Intent) {
-        intent(action)
+        handleIntent(action)
     }
 }

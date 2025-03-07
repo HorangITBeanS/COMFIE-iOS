@@ -29,18 +29,18 @@ class MemoStore: IntentStore {
         self.router = router
     }
     
-    func intent(_ action: Intent) {
-        switch action {
+    func handleIntent(_ intent: Intent) {
+        switch intent {
         case .showRetrospectionView:
-            state = reduce(state, .navigateToRetrospectionView)
+            state = handleAction(state, .navigateToRetrospectionView)
         case .showComfieZoneSettingView:
-            state = reduce(state, .navigateToComfieZoneSettingView)
+            state = handleAction(state, .navigateToComfieZoneSettingView)
         }
     }
     
     // State가 불변 상태를 유지할 수 있도록 - 새로운 객체를 생성하여 대체한다
     // 이전 상태와 액션을 입력 받아 새로운 상태를 반환
-    private func reduce(_ state: State, _ action: Action) -> State {
+    private func handleAction(_ state: State, _ action: Action) -> State {
         let newState = state
         switch action {
         case .navigateToRetrospectionView:

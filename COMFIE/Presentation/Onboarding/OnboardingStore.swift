@@ -41,24 +41,24 @@ class OnboardingStore: IntentStore {
         self.router = router
     }
     
-    func intent(_ action: Intent) {
-        switch action {
+    func handleIntent(_ intent: Intent) {
+        switch intent {
         case .nextButtonTapped:
             // 사용자에게 위치 정보 허용 요청
-            _ = reduce(state, .requestLocationPermission)
+            _ = handleAction(state, .requestLocationPermission)
             
             // 사용자의 허용 정보에 따라 State 변경
             let permissionStatus = LocationPermissionStatus.authorizedAlways
-            state = reduce(state, .updateLocationPermissionStatus(permissionStatus))
+            state = handleAction(state, .updateLocationPermissionStatus(permissionStatus))
             
             // 다음 화면으로 이동
-            _ = reduce(state, .navigateToMainScreen)
+            _ = handleAction(state, .navigateToMainScreen)
         }
     }
     
     // State가 불변 상태를 유지할 수 있도록 - 새로운 객체를 생성하여 대체한다
     // 이전 상태와 액션을 입력 받아 새로운 상태를 반환
-    private func reduce(_ state: State, _ action: Action) -> State {
+    private func handleAction(_ state: State, _ action: Action) -> State {
         var newState = state
         switch action {
         case .requestLocationPermission:
