@@ -11,7 +11,7 @@ import SwiftUI
 struct COMFIEApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            COMFIERoutingView()
         }
     }
 }
