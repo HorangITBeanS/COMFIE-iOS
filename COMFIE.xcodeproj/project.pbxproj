@@ -199,7 +199,6 @@
 			isa = PBXGroup;
 			children = (
 				B9EA52FE2D7C906D00A32305 /* Extensions */,
-				B9EA52F12D7C8F4F00A32305 /* Fonts */,
 				5103410D2D7782C00050C718 /* DesignSystem */,
 				510340F12D777C260050C718 /* Preview Content */,
 				510340F22D777C260050C718 /* Assets.xcassets */,
@@ -239,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				5103410E2D7782E90050C718 /* DesignSystem.swift */,
+				B9EA52F12D7C8F4F00A32305 /* Fonts */,
 			);
 			path = DesignSystem;
 			sourceTree = "<group>";
