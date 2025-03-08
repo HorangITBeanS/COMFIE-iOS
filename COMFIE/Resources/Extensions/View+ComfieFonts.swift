@@ -32,7 +32,7 @@ enum ComfieFontType {
         }
     }
     
-    var kerning: CGFloat {
+    var letterSpacing: CGFloat {
         switch self {
         case .title: return 0
         case .body, .systemTitle, .systemSubtitle, .systemBody: return -2
@@ -60,6 +60,7 @@ extension View {
         
         return self
             .font(Font(font))
+            .kerning(type.letterSpacing / 100 * type.fontSize)
             .padding(.vertical, (type.lineHeight - font.lineHeight) / 2)
             .lineSpacing(type.lineHeight - font.lineHeight)
     }
