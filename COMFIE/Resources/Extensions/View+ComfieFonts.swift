@@ -54,6 +54,7 @@ enum PretendardWeight: String {
 }
 
 extension View {
+    /// 뷰에 comfieFont 메소드를 활용하여 폰트를 지정합니다.
     func comfieFont(_ type: ComfieFontType) -> some View {
         let font = UIFont(name: type.fontName.rawValue, size: type.fontSize) ?? UIFont.systemFont(ofSize: type.fontSize)
         
