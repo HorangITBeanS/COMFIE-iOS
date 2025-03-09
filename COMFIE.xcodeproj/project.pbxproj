@@ -44,6 +44,15 @@
 		B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */; };
 		B9EA53012D7C907E00A32305 /* View+ComfieFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */; };
 		B9EA53022D7C907E00A32305 /* View+ComfieFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */; };
+		B9EA53062D7CA2CA00A32305 /* CFPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA53052D7CA2C300A32305 /* CFPopupView.swift */; };
+		B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA53052D7CA2C300A32305 /* CFPopupView.swift */; };
+		B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA53052D7CA2C300A32305 /* CFPopupView.swift */; };
+		B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA53092D7CA50D00A32305 /* CFPopupType.swift */; };
+		B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA53092D7CA50D00A32305 /* CFPopupType.swift */; };
+		B9EA530C2D7CA51100A32305 /* CFPopupType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA53092D7CA50D00A32305 /* CFPopupType.swift */; };
+		B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */; };
+		B9EA53102D7CA5DC00A32305 /* StringLiterals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */; };
+		B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +106,9 @@
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ComfieFonts.swift"; sourceTree = "<group>"; };
 		B9EA53032D7C952800A32305 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B9EA53052D7CA2C300A32305 /* CFPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFPopupView.swift; sourceTree = "<group>"; };
+		B9EA53092D7CA50D00A32305 /* CFPopupType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFPopupType.swift; sourceTree = "<group>"; };
+		B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +249,8 @@
 		5103410D2D7782C00050C718 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				B9EA530D2D7CA5CE00A32305 /* Literals */,
+				B9EA53042D7CA2B900A32305 /* Components */,
 				5103410E2D7782E90050C718 /* DesignSystem.swift */,
 				B9EA52F12D7C8F4F00A32305 /* Fonts */,
 			);
@@ -321,6 +335,23 @@
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B9EA53042D7CA2B900A32305 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B9EA53092D7CA50D00A32305 /* CFPopupType.swift */,
+				B9EA53052D7CA2C300A32305 /* CFPopupView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B9EA530D2D7CA5CE00A32305 /* Literals */ = {
+			isa = PBXGroup;
+			children = (
+				B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */,
+			);
+			path = Literals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -497,6 +528,7 @@
 			files = (
 				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
 				5103411F2D7997130050C718 /* MemoStore.swift in Sources */,
+				B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
@@ -504,9 +536,11 @@
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
+				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
+				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
@@ -522,7 +556,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9EA53012D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
+				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
+				B9EA53062D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				510340FC2D777C290050C718 /* COMFIETests.swift in Sources */,
+				B9EA530C2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,8 +567,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9EA53102D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				B9EA53022D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
+				B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
+				B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
