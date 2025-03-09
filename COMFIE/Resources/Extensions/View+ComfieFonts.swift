@@ -41,8 +41,8 @@ enum ComfieFontType {
     
     var lineHeight: CGFloat {
         switch self {
-        case .title: return 10
-        case .body, .systemTitle, .systemSubtitle, .systemBody: return 13.5
+        case .title: return 100
+        case .body, .systemTitle, .systemSubtitle, .systemBody: return 135
         }
     }
 }
@@ -57,11 +57,15 @@ extension View {
     /// 뷰에 comfieFont 메소드를 활용하여 폰트를 지정합니다.
     func comfieFont(_ type: ComfieFontType) -> some View {
         let font = UIFont(name: type.fontName.rawValue, size: type.fontSize) ?? UIFont.systemFont(ofSize: type.fontSize)
-        
+        let calculatedLineHeight = font.lineHeight * (type.lineHeight / 100)
+        let kerning = type.letterSpacing / 100 * type.fontSize
+        let lineSpacing = max(0, calculatedLineHeight - font.lineHeight)
+        let verticalPadding = max(0, lineSpacing / 2)
+
         return self
             .font(Font(font))
-            .kerning(type.letterSpacing / 100 * type.fontSize)
-            .padding(.vertical, (type.lineHeight - font.lineHeight) / 2)
-            .lineSpacing(type.lineHeight - font.lineHeight)
+            .kerning(kerning)
+            .padding(.vertical, verticalPadding)
+            .lineSpacing(lineSpacing)
     }
 }
