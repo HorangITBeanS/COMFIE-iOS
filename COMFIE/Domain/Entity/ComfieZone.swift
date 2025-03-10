@@ -7,8 +7,11 @@
 
 import Foundation
 
-// 컴피존 위치 - 진짜 임시값이라서 변경 해줘
-class ComfieZone {
-    var location: String = ""
-    var customName: String?
+// 컴피존 위치
+struct ComfieZone {
+    let id: UUID = .init()
+    let longitude: Double
+    let latitude: Double
+    // 이름 변경하는 기능 없으면 let으로 변경
+    var name: String
 }
