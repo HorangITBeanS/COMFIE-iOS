@@ -129,7 +129,6 @@ extension CoreDataService {
         }
     }
     
-    // 현재 로직에서는 컴피존이 단 하나만 존재하지만, 향후 여러 개의 컴피존을 지원할 수 있도록 메서드명을 deleteAllComfieZone으로 지정하였습니다.
     func deleteAllComfieZone() {
         let request: NSFetchRequest<NSFetchRequestResult> = ComfieZoneEntity.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
