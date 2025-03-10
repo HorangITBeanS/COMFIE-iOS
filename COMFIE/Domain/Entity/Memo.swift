@@ -8,8 +8,8 @@
 import Foundation
 
 struct Memo {
-    let id: UUID = .init()
-    let createdAt: Date = .now
+    let id: UUID
+    let createdAt: Date
     var originalText: String
     var emojiText: String
     var reflectionText: String?
