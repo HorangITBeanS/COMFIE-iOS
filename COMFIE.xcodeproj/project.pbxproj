@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		510340EA2D776F5F0050C718 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 510340E92D776F5F0050C718 /* .gitignore */; };
 		510340EE2D777AA40050C718 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 510340ED2D777AA40050C718 /* .swiftlint.yml */; };
 		510340F62D777C260050C718 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F02D777C260050C718 /* Preview Assets.xcassets */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
 		510340AD2D776EE70050C718 /* COMFIE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = COMFIE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340BD2D776EE90050C718 /* COMFIETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340C72D776EE90050C718 /* COMFIEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +109,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		26D697AE2D7EC88800AC200C /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		510340A42D776EE70050C718 = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +255,7 @@
 		510341202D79A5460050C718 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				26D697AE2D7EC88800AC200C /* CoreData */,
 				510341212D79A54F0050C718 /* UserDefauls */,
 			);
 			path = Data;
@@ -456,6 +467,7 @@
 				5103410F2D7782E90050C718 /* DesignSystem.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
+				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
@@ -797,6 +809,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */,
+			);
+			currentVersion = 26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */;
+			path = UserRecordModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 510340A52D776EE70050C718 /* Project object */;
 }
