@@ -15,33 +15,33 @@ enum CFPopupType {
     
     var title: String {
         switch self {
-        case .deleteComfieZone: return StringLiterals.Popup.Title.deleteComfieZone
-        case .deleteMemo: return StringLiterals.Popup.Title.deleteMemo
-        case .deleteRetrospection: return StringLiterals.Popup.Title.deleteRetrospection
-        case .exitWithoutSaving: return StringLiterals.Popup.Title.exitWithoutSaving
+        case .deleteComfieZone: return StringLiterals.Popup.Title.deleteComfieZone.localized
+        case .deleteMemo: return StringLiterals.Popup.Title.deleteMemo.localized
+        case .deleteRetrospection: return StringLiterals.Popup.Title.deleteRetrospection.localized
+        case .exitWithoutSaving: return StringLiterals.Popup.Title.exitWithoutSaving.localized
         }
     }
     
     var subTitle: String {
         switch self {
-        case .deleteComfieZone: return StringLiterals.Popup.SubTitle.deleteComfieZone
-        case .deleteMemo: return StringLiterals.Popup.SubTitle.deleteMemo
-        case .deleteRetrospection: return StringLiterals.Popup.SubTitle.deleteRetrospection
-        case .exitWithoutSaving: return StringLiterals.Popup.SubTitle.exitWithoutSaving
+        case .deleteComfieZone: return StringLiterals.Popup.SubTitle.deleteComfieZone.localized
+        case .deleteMemo: return StringLiterals.Popup.SubTitle.deleteMemo.localized
+        case .deleteRetrospection: return StringLiterals.Popup.SubTitle.deleteRetrospection.localized
+        case .exitWithoutSaving: return StringLiterals.Popup.SubTitle.exitWithoutSaving.localized
         }
     }
     
     var leftButtonDescription: String {
         switch self {
-        case .deleteComfieZone, .deleteMemo, .deleteRetrospection: return StringLiterals.Popup.ButtonDescription.delete
-        case .exitWithoutSaving: return StringLiterals.Popup.ButtonDescription.noSave
+        case .deleteComfieZone, .deleteMemo, .deleteRetrospection: return StringLiterals.Popup.ButtonDescription.delete.localized
+        case .exitWithoutSaving: return StringLiterals.Popup.ButtonDescription.noSave.localized
         }
     }
     
     var rightButtonDescription: String {
         switch self {
-        case .deleteComfieZone, .deleteMemo, .deleteRetrospection: return StringLiterals.Popup.ButtonDescription.cancel
-        case .exitWithoutSaving: return StringLiterals.Popup.ButtonDescription.keepEdit
+        case .deleteComfieZone, .deleteMemo, .deleteRetrospection: return StringLiterals.Popup.ButtonDescription.cancel.localized
+        case .exitWithoutSaving: return StringLiterals.Popup.ButtonDescription.keepEdit.localized
         }
     }
     
