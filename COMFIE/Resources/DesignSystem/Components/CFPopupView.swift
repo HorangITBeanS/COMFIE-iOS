@@ -82,7 +82,7 @@ private struct CFPopupContentView: View {
 
 private struct CFPopupButton: View {
     let type: CFPopupType.ButtonType
-    let description: String
+    let description: LocalizedStringResource
     
     var body: some View {
         HStack {
