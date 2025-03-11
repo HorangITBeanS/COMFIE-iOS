@@ -15,9 +15,11 @@ struct CFPopupView: View {
     var body: some View {
         ZStack {
             Color.popupBackdrop.ignoresSafeArea()
+            
             CFPopup(type: type,
                     leftButtonAction: leftButtonAction,
                     rightButtonAction: rightButtonAction)
+            .padding(.horizontal, 50)
         }
     }
 }
@@ -28,16 +30,16 @@ private struct CFPopup: View {
     let rightButtonAction: (() -> Void)
     
     var body: some View {
-        Rectangle()
-            .fill(Color.white)
-            .frame(width: 302, height: 123)
-            .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.12), radius: 24)
-            .overlay(alignment: .top) {
-                CFPopupContentView(type: type,
-                                   leftButtonAction: leftButtonAction,
-                                   rightButtonAction: rightButtonAction)
-            }
+        VStack(spacing: 0) {
+            CFPopupContentView(type: type,
+                               leftButtonAction: leftButtonAction,
+                               rightButtonAction: rightButtonAction)
+            .padding(.vertical, 16)
+            .padding(.horizontal, 27)
+        }
+        .background(Color.cfWhite)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: Color.black.opacity(0.12), radius: 24)
     }
 }
 
@@ -52,13 +54,11 @@ private struct CFPopupContentView: View {
                 .comfieFont(.systemSubtitle)
                 .foregroundStyle(.popupBlack)
                 .padding(.bottom, 4)
-                .padding(.top, 16)
             
             Text(type.subTitle)
                 .comfieFont(.systemBody)
                 .foregroundStyle(.popupGray)
-            
-            Spacer()
+                .padding(.bottom, 16)
             
             HStack(spacing: 8) {
                 Button {
@@ -66,6 +66,7 @@ private struct CFPopupContentView: View {
                 } label: {
                     CFPopupButton(type: .destructive,
                                   description: type.leftButtonDescription)
+                    
                 }
                 
                 Button {
@@ -75,7 +76,6 @@ private struct CFPopupContentView: View {
                                   description: type.rightButtonDescription)
                 }
             }
-            .padding(.bottom, 16)
         }
     }
 }
@@ -85,15 +85,16 @@ private struct CFPopupButton: View {
     let description: String
     
     var body: some View {
-        Rectangle()
-            .fill(type.backgroundColor)
-            .frame(width: 120, height: 36)
-            .cornerRadius(8)
-            .overlay {
-                Text(description)
-                    .comfieFont(.systemBody)
-                    .foregroundStyle(type.textColor)
-            }
+        HStack {
+            Spacer()
+            Text(description)
+                .comfieFont(.systemBody)
+                .foregroundStyle(type.textColor)
+            Spacer()
+        }
+        .padding(.vertical, 10)
+        .background(type.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
