@@ -32,6 +32,12 @@
 		5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103412B2D79ABC40050C718 /* ViewFactory.swift */; };
 		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
 		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
+		51A7AFED2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
+		51A7AFEE2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
+		51A7AFEF2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
+		51A7AFF12D802B6200B50D1E /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFF02D802B6200B50D1E /* InfoPlist.xcstrings */; };
+		51A7AFF22D802B6200B50D1E /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFF02D802B6200B50D1E /* InfoPlist.xcstrings */; };
+		51A7AFF32D802B6200B50D1E /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFF02D802B6200B50D1E /* InfoPlist.xcstrings */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
 		B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */; };
@@ -101,6 +107,8 @@
 		5103412B2D79ABC40050C718 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
 		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
+		51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		51A7AFF02D802B6200B50D1E /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
@@ -210,6 +218,7 @@
 		510341032D777C460050C718 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				51A7AFEB2D802AFF00B50D1E /* Localization */,
 				B9EA52FE2D7C906D00A32305 /* Extensions */,
 				5103410D2D7782C00050C718 /* DesignSystem */,
 				510340F12D777C260050C718 /* Preview Content */,
@@ -317,6 +326,15 @@
 				517FCAC42D7AB31100A250A3 /* ComfieZone.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		51A7AFEB2D802AFF00B50D1E /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */,
+				51A7AFF02D802B6200B50D1E /* InfoPlist.xcstrings */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		B9EA52F12D7C8F4F00A32305 /* Fonts */ = {
@@ -469,6 +487,8 @@
 			files = (
 				510340EE2D777AA40050C718 /* .swiftlint.yml in Resources */,
 				510340EA2D776F5F0050C718 /* .gitignore in Resources */,
+				51A7AFEE2D802B4F00B50D1E /* Localizable.xcstrings in Resources */,
+				51A7AFF32D802B6200B50D1E /* InfoPlist.xcstrings in Resources */,
 				B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */,
 				B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */,
 				B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */,
@@ -482,7 +502,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9EA52F82D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */,
+				51A7AFF22D802B6200B50D1E /* InfoPlist.xcstrings in Resources */,
 				B9EA52F92D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */,
+				51A7AFEF2D802B4F00B50D1E /* Localizable.xcstrings in Resources */,
 				B9EA52FA2D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -492,7 +514,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9EA52FB2D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */,
+				51A7AFF12D802B6200B50D1E /* InfoPlist.xcstrings in Resources */,
 				B9EA52FC2D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */,
+				51A7AFED2D802B4F00B50D1E /* Localizable.xcstrings in Resources */,
 				B9EA52FD2D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
