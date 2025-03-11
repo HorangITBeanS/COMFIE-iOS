@@ -1,7 +1,198 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "comfieZoneSetting" : {
 
+    },
+    "popup_button_cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소하기"
+          }
+        }
+      }
+    },
+    "popup_button_delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
+          }
+        }
+      }
+    },
+    "popup_button_keep_edit" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속 수정"
+          }
+        }
+      }
+    },
+    "popup_button_no_save" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장 안 함"
+          }
+        }
+      }
+    },
+    "popup_subtitle_delete_comfiezone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authentication is required."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하려면 사용자 인증이 필요해요."
+          }
+        }
+      }
+    },
+    "popup_subtitle_delete_memo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this memo? \nThis action cannot be undone. "
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하면 복구할 수 없어요. 계속하시겠어요?"
+          }
+        }
+      }
+    },
+    "popup_subtitle_delete_retrospection" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this reflection? \nThis action cannot be undone. "
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하면 복구할 수 없어요. 계속하시겠어요?"
+          }
+        }
+      }
+    },
+    "popup_subtitle_exit_without_saving" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회고 수정사항이 반영되지 않습니다."
+          }
+        }
+      }
+    },
+    "popup_title_delete_comfiezone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete the COMFIE zone?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존을 삭제할까요?"
+          }
+        }
+      }
+    },
+    "popup_title_delete_memo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete this memo?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 메모를 삭제할까요?"
+          }
+        }
+      }
+    },
+    "popup_title_delete_retrospection" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete this reflection?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 회고를 삭제할까요?"
+          }
+        }
+      }
+    },
+    "popup_title_exit_without_saving" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수정사항을 저장하지 않고 나가시겠어요?"
+          }
+        }
+      }
+    },
+    "retrospection" : {
+
+    },
+    "로딩 View" : {
+
+    },
+    "메모 View" : {
+
+    },
+    "메모 화면으로" : {
+
+    },
+    "온보딩 View" : {
+
+    },
+    "컴피존 설정 화면으로" : {
+
+    },
+    "회고 화면으로" : {
+
+    }
   },
   "version" : "1.0"
 }
