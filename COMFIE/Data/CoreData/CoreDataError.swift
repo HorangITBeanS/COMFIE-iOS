@@ -12,7 +12,7 @@ enum CoreDataError: LocalizedError {
     case entityNotFound
     case deleteFailed
     
-    var erriorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .mapFromEntityFailed:
             return "CoreData Entity에서 Domain Entity로 매핑을 실패했습니다."
