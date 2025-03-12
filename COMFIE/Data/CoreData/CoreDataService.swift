@@ -8,10 +8,10 @@
 import CoreData
 
 struct CoreDataService {
-    let persistentContainer: NSPersistentContainer
+    let persistentContainer: NSPersistentCloudKitContainer
     
     init() {
-        persistentContainer = NSPersistentContainer(name: "UserRecordModel")
+        persistentContainer = NSPersistentCloudKitContainer(name: "UserRecordModel")
         persistentContainer.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("Failed to load Core Data stack: \(error)")
