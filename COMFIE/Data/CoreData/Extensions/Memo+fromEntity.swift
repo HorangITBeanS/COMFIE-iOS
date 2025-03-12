@@ -13,8 +13,7 @@ extension Memo {
             let id = entity.id,
             let createdAt = entity.createdAt,
             let originalText = entity.originalText,
-            let emojiText = entity.emojiText,
-            let reflectionText = entity.reflectionText
+            let emojiText = entity.emojiText
         else {
             return .failure(CoreDataError.mapFromEntityFailed)
         }
@@ -24,7 +23,7 @@ extension Memo {
             createdAt: createdAt,
             originalText: originalText,
             emojiText: emojiText,
-            reflectionText: reflectionText
+            reflectionText: entity.reflectionText
         )
         
         return .success(memo)
