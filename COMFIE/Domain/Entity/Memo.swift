@@ -12,5 +12,5 @@ struct Memo {
     let createdAt: Date
     var originalText: String
     var emojiText: String
-    var reflectionText: String?
+    var retrospectionText: String?
 }
