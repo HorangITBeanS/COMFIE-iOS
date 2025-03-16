@@ -14,7 +14,7 @@ extension Memo {
         entity.createdAt = memo.createdAt
         entity.originalText = memo.originalText
         entity.emojiText = memo.emojiText
-        entity.reflectionText = memo.reflectionText
+        entity.retrospectionText = memo.retrospectionText
         
         return entity
     }

@@ -11,6 +11,6 @@
         <attribute name="emojiText" attributeType="String" defaultValueString=""/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="originalText" attributeType="String" defaultValueString=""/>
-        <attribute name="reflectionText" optional="YES" attributeType="String"/>
+        <attribute name="retrospectionText" optional="YES" attributeType="String"/>
     </entity>
 </model>
