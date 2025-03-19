@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
 		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
 		26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */; };
@@ -99,6 +100,7 @@
 
 /* Begin PBXFileReference section */
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
+		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
 		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
 		26D697B22D7EE39E00AC200C /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+toEntity.swift"; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */,
 				26D697B22D7EE39E00AC200C /* CoreDataService.swift */,
 				26D697BB2D7F421A00AC200C /* CoreDataError.swift */,
+				269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
+				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
