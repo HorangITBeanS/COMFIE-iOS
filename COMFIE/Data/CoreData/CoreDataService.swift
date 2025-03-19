@@ -27,11 +27,21 @@ struct CoreDataService {
 // MARK: - CREATE
 extension CoreDataService {
     func saveComfieZone(_ comfieZone: ComfieZone) -> Result<Void, Error> {
+        // 이미 ComfieZone이 존재하는지 확인
+        let existingZoneResult = getComfieZone()
+        switch existingZoneResult {
+        case .success:
+            return .failure(CoreDataError.limitExceeded)
+        case .failure:
+            break // 존재하지 않으면 저장 진행
+        }
+        
         _ = ComfieZone
             .toEntity(
                 context: self.context,
                 comfieZone: comfieZone
             )
+        
         do {
             try self.context.save()
             return .success(())

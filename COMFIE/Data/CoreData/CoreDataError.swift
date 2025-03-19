@@ -11,6 +11,7 @@ enum CoreDataError: LocalizedError {
     case mapFromEntityFailed
     case entityNotFound
     case deleteFailed
+    case limitExceeded
     
     var errorDescription: String? {
         switch self {
@@ -20,6 +21,8 @@ enum CoreDataError: LocalizedError {
             return "요청한 CoreData Entity를 찾을 수 없습니다."
         case .deleteFailed:
             return "CoreData에서 삭제를 실패했습니다."
+        case .limitExceeded:
+            return "해당 Entity를 더 이상 만들 수 없습니다."
         }
     }
 }
