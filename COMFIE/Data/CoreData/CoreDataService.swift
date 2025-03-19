@@ -88,6 +88,30 @@ extension CoreDataService {
     }
 }
 
+// MARK: - UPDATE
+extension CoreDataService {
+    func updateMemo(newMemo: Memo) -> Result<Void, Error> {
+        let request: NSFetchRequest<MemoEntity> = MemoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", newMemo.id as CVarArg)
+        
+        do {
+            guard let entity = try self.context.fetch(request).first else {
+                return .failure(CoreDataError.entityNotFound)
+            }
+            
+            // 기존 데이터 업데이트
+            entity.originalText = newMemo.originalText
+            entity.emojiText = newMemo.emojiText
+            entity.retrospectionText = newMemo.retrospectionText
+            
+            try self.context.save()
+            return .success(())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+
 // MARK: - DELETE
 extension CoreDataService {
     func deleteMemo(by id: UUID) -> Result<Void, Error> {
