@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
+		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
+		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
+		26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */; };
+		26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B72D7F2DEF00AC200C /* ComfieZone+toEntity.swift */; };
+		26D697BA2D7F3D4700AC200C /* Memo+fromEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B92D7F3D4700AC200C /* Memo+fromEntity.swift */; };
+		26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697BB2D7F421A00AC200C /* CoreDataError.swift */; };
+		26D697BE2D7F43F400AC200C /* ComfieZone+fromEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697BD2D7F43F400AC200C /* ComfieZone+fromEntity.swift */; };
 		510340EA2D776F5F0050C718 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 510340E92D776F5F0050C718 /* .gitignore */; };
 		510340EE2D777AA40050C718 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 510340ED2D777AA40050C718 /* .swiftlint.yml */; };
 		510340F62D777C260050C718 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F02D777C260050C718 /* Preview Assets.xcassets */; };
@@ -91,6 +99,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
+		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
+		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
+		26D697B22D7EE39E00AC200C /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
+		26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+toEntity.swift"; sourceTree = "<group>"; };
+		26D697B72D7F2DEF00AC200C /* ComfieZone+toEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComfieZone+toEntity.swift"; sourceTree = "<group>"; };
+		26D697B92D7F3D4700AC200C /* Memo+fromEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+fromEntity.swift"; sourceTree = "<group>"; };
+		26D697BB2D7F421A00AC200C /* CoreDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataError.swift; sourceTree = "<group>"; };
+		26D697BD2D7F43F400AC200C /* ComfieZone+fromEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComfieZone+fromEntity.swift"; sourceTree = "<group>"; };
 		510340AD2D776EE70050C718 /* COMFIE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = COMFIE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340BD2D776EE90050C718 /* COMFIETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340C72D776EE90050C718 /* COMFIEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,6 +177,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		26D697AE2D7EC88800AC200C /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				26D697B42D7F2DCE00AC200C /* Extensions */,
+				26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */,
+				26D697B22D7EE39E00AC200C /* CoreDataService.swift */,
+				26D697BB2D7F421A00AC200C /* CoreDataError.swift */,
+				269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		26D697B42D7F2DCE00AC200C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */,
+				26D697B72D7F2DEF00AC200C /* ComfieZone+toEntity.swift */,
+				26D697B92D7F3D4700AC200C /* Memo+fromEntity.swift */,
+				26D697BD2D7F43F400AC200C /* ComfieZone+fromEntity.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		510340A42D776EE70050C718 = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				B9EA53032D7C952800A32305 /* Info.plist */,
+				269420C72D81B3FF00CB0837 /* COMFIE.entitlements */,
 				510341022D777C3B0050C718 /* App */,
 				510341042D777D000050C718 /* Presentation */,
 				517FCAC02D7AB29900A250A3 /* Domain */,
@@ -303,6 +344,7 @@
 		510341202D79A5460050C718 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				26D697AE2D7EC88800AC200C /* CoreData */,
 				510341212D79A54F0050C718 /* UserDefaults */,
 			);
 			path = Data;
@@ -571,20 +613,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26D697BE2D7F43F400AC200C /* ComfieZone+fromEntity.swift in Sources */,
 				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
+				26D697BA2D7F3D4700AC200C /* Memo+fromEntity.swift in Sources */,
 				5103411F2D7997130050C718 /* MemoStore.swift in Sources */,
 				B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
+				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
+				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
+				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
+				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
+				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
+				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
@@ -774,6 +824,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = COMFIE/COMFIE.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMFIE/Resources/Preview Content\"";
@@ -794,7 +845,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HorangITBeanS.COMFIE;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HITBS.COMFIE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -807,6 +858,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = COMFIE/COMFIE.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMFIE/Resources/Preview Content\"";
@@ -827,7 +879,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HorangITBeanS.COMFIE;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HITBS.COMFIE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -845,7 +897,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HorangITBeanS.COMFIETests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HITBS.COMFIE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -864,7 +916,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HorangITBeanS.COMFIETests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HITBS.COMFIE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -881,7 +933,7 @@
 				DEVELOPMENT_TEAM = 99KH3TLG9V;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HorangITBeanS.COMFIEUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HITBS.COMFIE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -898,7 +950,7 @@
 				DEVELOPMENT_TEAM = 99KH3TLG9V;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HorangITBeanS.COMFIEUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HITBS.COMFIE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -947,6 +999,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */,
+			);
+			currentVersion = 26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */;
+			path = UserRecordModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 510340A52D776EE70050C718 /* Project object */;
 }
