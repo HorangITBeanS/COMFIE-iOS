@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B292D91B7DD0089BD6D /* MemoView.swift */; };
 		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
 		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
@@ -31,7 +32,6 @@
 		510341162D7993D60050C718 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341152D7993D60050C718 /* Route.swift */; };
 		510341182D7993F20050C718 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341172D7993F20050C718 /* Router.swift */; };
 		5103411A2D7994130050C718 /* Router + navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341192D7994130050C718 /* Router + navigate.swift */; };
-		5103411D2D7996F50050C718 /* MemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103411C2D7996F50050C718 /* MemoView.swift */; };
 		5103411F2D7997130050C718 /* MemoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103411E2D7997130050C718 /* MemoStore.swift */; };
 		510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341242D79A58B0050C718 /* UserDefaultsService.swift */; };
 		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
@@ -92,6 +92,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		267F6B292D91B7DD0089BD6D /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
 		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
 		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
@@ -120,7 +121,6 @@
 		510341152D7993D60050C718 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		510341172D7993F20050C718 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		510341192D7994130050C718 /* Router + navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router + navigate.swift"; sourceTree = "<group>"; };
-		5103411C2D7996F50050C718 /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		5103411E2D7997130050C718 /* MemoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoStore.swift; sourceTree = "<group>"; };
 		510341242D79A58B0050C718 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
@@ -324,8 +324,8 @@
 		5103411B2D7996E40050C718 /* Memo */ = {
 			isa = PBXGroup;
 			children = (
-				5103411C2D7996F50050C718 /* MemoView.swift */,
 				5103411E2D7997130050C718 /* MemoStore.swift */,
+				267F6B292D91B7DD0089BD6D /* MemoView.swift */,
 			);
 			path = Memo;
 			sourceTree = "<group>";
@@ -617,6 +617,7 @@
 				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
+				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
 				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
@@ -626,7 +627,6 @@
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
-				5103411D2D7996F50050C718 /* MemoView.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,
 				5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */,
