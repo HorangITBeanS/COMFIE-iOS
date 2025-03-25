@@ -9,7 +9,14 @@ import SwiftUI
 
 struct LoadingView: View {
     var body: some View {
-        Text("로딩 View")
+        ZStack {
+            Color.cfWhite.ignoresSafeArea()
+            
+            // 임시 로고
+            RoundedRectangle(cornerRadius: 20)
+                .frame(width: 100, height: 100)
+                .foregroundStyle(Color(red: 0.85, green: 0.85, blue: 0.85))
+        }
     }
 }
 
