@@ -24,7 +24,7 @@ struct ViewFactory {
         case .memo:
             MemoView(intent: makeMemoIntent())
         case .retrospection:
-            Text("retrospection")
+            RetrospectionView()
         case .comfieZoneSetting:
             Text("comfieZoneSetting")
         }
