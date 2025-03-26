@@ -59,6 +59,7 @@
 		51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		B98968022D93AD1D00EA58FE /* RetrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98968012D93AD1900EA58FE /* RetrospectionView.swift */; };
+		B9896B5B2D93B75400EA58FE /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9896B5A2D93B75100EA58FE /* Date+.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
 		B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */; };
@@ -144,6 +145,7 @@
 		51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithDifferentFont.swift; sourceTree = "<group>"; };
 		51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals_Onboarding.swift; sourceTree = "<group>"; };
 		B98968012D93AD1900EA58FE /* RetrospectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionView.swift; sourceTree = "<group>"; };
+		B9896B5A2D93B75100EA58FE /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 		26D697B42D7F2DCE00AC200C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B9896B5A2D93B75100EA58FE /* Date+.swift */,
 				26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */,
 				26D697B72D7F2DEF00AC200C /* ComfieZone+toEntity.swift */,
 				26D697B92D7F3D4700AC200C /* Memo+fromEntity.swift */,
@@ -631,6 +634,7 @@
 				B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
+				B9896B5B2D93B75400EA58FE /* Date+.swift in Sources */,
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,

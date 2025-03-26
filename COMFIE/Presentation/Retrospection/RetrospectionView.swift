@@ -19,9 +19,9 @@ struct RetrospectionView: View {
                 
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        Text("2024.06.11 12:10")
+                        Text(Date().toFormattedDateTimeString())
                             .comfieFont(.systemBody)
-                            .foregroundStyle(.black.opacity(0.6))
+                            .foregroundStyle(.cfBlack.opacity(0.6))
                         
                         Spacer()
                     }
