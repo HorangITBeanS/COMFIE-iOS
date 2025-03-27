@@ -22,6 +22,7 @@ struct CFNavigationBarModifier: ViewModifier {
             
             content
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
