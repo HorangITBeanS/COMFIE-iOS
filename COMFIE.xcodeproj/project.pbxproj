@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B292D91B7DD0089BD6D /* MemoView.swift */; };
+		267F6B322D93C4600089BD6D /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B312D93C4600089BD6D /* MemoCell.swift */; };
 		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
 		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
@@ -93,6 +94,7 @@
 
 /* Begin PBXFileReference section */
 		267F6B292D91B7DD0089BD6D /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
+		267F6B312D93C4600089BD6D /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
 		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
 		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 			children = (
 				5103411E2D7997130050C718 /* MemoStore.swift */,
 				267F6B292D91B7DD0089BD6D /* MemoView.swift */,
+				267F6B312D93C4600089BD6D /* MemoCell.swift */,
 			);
 			path = Memo;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 				B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
+				267F6B322D93C4600089BD6D /* MemoCell.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
