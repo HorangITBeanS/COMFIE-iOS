@@ -58,6 +58,16 @@
 		51F8F5AF2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
+		51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */; };
+		51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
+		51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
+		51F8F5B82D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
+		51F8F5BF2D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */; };
+		51F8F5C02D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */; };
+		51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */; };
+		51F8F5C32D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */; };
+		51F8F5C42D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */; };
+		51F8F5C52D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
 		B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */; };
@@ -142,6 +152,10 @@
 		51A7B0112D81704600B50D1E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithDifferentFont.swift; sourceTree = "<group>"; };
 		51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals_Onboarding.swift; sourceTree = "<group>"; };
+		51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingView.swift; sourceTree = "<group>"; };
+		51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFNavigationBar.swift; sourceTree = "<group>"; };
+		51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfNavigationBar.swift"; sourceTree = "<group>"; };
+		51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+popGesture.swift"; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
@@ -291,6 +305,7 @@
 				5103410A2D7782830050C718 /* Intent */,
 				510341052D777E030050C718 /* Onboarding */,
 				5103411B2D7996E40050C718 /* Memo */,
+				51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -396,6 +411,23 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+		51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */ = {
+			isa = PBXGroup;
+			children = (
+				51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */,
+			);
+			path = ComfieZoneSetting;
+			sourceTree = "<group>";
+		};
+		51F8F5B92D95298000DD2E3D /* CFNavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */,
+				51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */,
+			);
+			path = CFNavigationBar;
+			sourceTree = "<group>";
+		};
 		B9EA52F12D7C8F4F00A32305 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -410,6 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
+				51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -417,6 +450,7 @@
 		B9EA53042D7CA2B900A32305 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				51F8F5B92D95298000DD2E3D /* CFNavigationBar */,
 				B9EA53092D7CA50D00A32305 /* CFPopupType.swift */,
 				B9EA53052D7CA2C300A32305 /* CFPopupView.swift */,
 				51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */,
@@ -626,6 +660,8 @@
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
+				51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
+				51F8F5C42D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
@@ -634,6 +670,7 @@
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
+				51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
@@ -645,6 +682,7 @@
 				5103411D2D7996F50050C718 /* MemoView.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,
+				51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */,
 				5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,10 +696,13 @@
 				51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51A7AFFC2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
+				51F8F5C32D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */,
 				B9EA53062D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
+				51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				510340FC2D777C290050C718 /* COMFIETests.swift in Sources */,
 				B9EA530C2D7CA51100A32305 /* CFPopupType.swift in Sources */,
+				51F8F5C02D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,12 +711,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9EA53102D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
+				51F8F5BF2D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
 				B9EA53022D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				51F8F5AD2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				51F8F5AF2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
+				51F8F5B82D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				51A7AFF92D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				51A7AFFB2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
+				51F8F5C52D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */,
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
 				B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */,
