@@ -3,24 +3,16 @@ import SwiftUI
 struct MemoCell: View {
     let memo: Memo
     let isUserInComfieZone: Bool
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text(
-                    // 나중에 메서드로 분리 예정
-                    memo.createdAt
-                        .formatted(
-                            Date.FormatStyle()
-                                .hour(.twoDigits(amPM: .omitted))
-                                .minute(.twoDigits)
-                        )
-                )
-                .comfieFont(.systemBody)
-                .foregroundStyle(Color.textDarkgray)
-
+                Text(memo.createdAt.hourAndMinuteString)
+                    .comfieFont(.systemBody)
+                    .foregroundStyle(Color.textDarkgray)
+                
                 Spacer()
-
+                
                 Button {
                     // TODO: 옵션 기능 추가 예정
                 } label: {
@@ -29,7 +21,7 @@ struct MemoCell: View {
                 }
             }
             .padding(.bottom, 4)
-
+            
             Text(isUserInComfieZone ? memo.originalText : memo.emojiText)
                 .comfieFont(.body)
                 .foregroundStyle(Color.textBlack)
