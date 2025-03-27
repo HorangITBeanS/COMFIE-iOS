@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Memo {
+struct Memo: Identifiable {
     let id: UUID
     let createdAt: Date
     var originalText: String
