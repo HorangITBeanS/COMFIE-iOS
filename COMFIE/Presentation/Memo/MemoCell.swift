@@ -8,6 +8,7 @@ struct MemoCell: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text(
+                    // 나중에 메서드로 분리 예정
                     memo.createdAt
                         .formatted(
                             Date.FormatStyle()
@@ -32,9 +33,8 @@ struct MemoCell: View {
             Text(isUserInComfieZone ? memo.originalText : memo.emojiText)
                 .comfieFont(.body)
                 .foregroundStyle(Color.textBlack)
-                .padding(.bottom, 8)
-
-            // 회고가 없는 경우도 있음
+            
+            // 회고가 있는 경우
             if let retrospectionText = memo.retrospectionText {
                 HStack {
                     Text(isUserInComfieZone ? retrospectionText : memo.emojiText)
@@ -45,6 +45,7 @@ struct MemoCell: View {
                 .padding(10)
                 .background(Color.keyBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.top, 8)
             }
         }
         .padding(12)
