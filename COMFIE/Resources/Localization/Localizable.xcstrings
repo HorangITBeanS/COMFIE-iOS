@@ -16,12 +16,42 @@
     "CoreData 테스트" : {
 
     },
+    "memo_delete_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
+          }
+        }
+      }
+    },
+    "memo_edit_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수정하기"
+          }
+        }
+      }
+    },
     "memo_empty_memo" : {
       "localizations" : {
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "아직 일기가 없어요."
+          }
+        }
+      }
+    },
+    "memo_retrospection_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회고하기"
           }
         }
       }

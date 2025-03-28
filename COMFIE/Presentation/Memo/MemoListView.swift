@@ -33,7 +33,19 @@ struct MemoListView: View {
                         
                         ForEach(group.memos) { memo in
                             // TODO: isUserInComfieZone 변경 필요
-                            MemoCell(memo: memo, isUserInComfieZone: true)
+                            MemoCell(
+                                memo: memo,
+                                isUserInComfieZone: true,
+                                onEdit: { memo in
+                                    intent(.editMemoButtonTapped(memo))
+                                },
+                                onRetrospect: { memo in
+                                    intent(.retrospectionButtonTapped(memo))
+                                },
+                                onDelete: { memo in
+                                    intent(.deleteMemoButtonTapped(memo))
+                                }
+                            )
                         }
                     }
                 }
@@ -53,7 +65,7 @@ struct MemoListView: View {
     @Previewable @State var intent = MemoStore(router: Router())
     
     MemoListView(intent: $intent)
-    .onAppear {
-        intent(.onAppear)
-    }
+        .onAppear {
+            intent(.onAppear)
+        }
 }

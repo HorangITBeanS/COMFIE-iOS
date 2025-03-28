@@ -18,8 +18,12 @@ class MemoStore: IntentStore {
     }
     
     enum Intent {
-        case retrospectionButtonTapped
         case comfieZoneSettingButtonTapped
+        
+        case retrospectionButtonTapped(Memo)
+        case deleteMemoButtonTapped(Memo)
+        case editMemoButtonTapped(Memo)
+        
         case memoInputButtonTapped
         case updateNewMemo(String)
         
@@ -28,10 +32,12 @@ class MemoStore: IntentStore {
     }
     
     enum Action {
-        case navigateToRetrospectionView  // 회고 화면으로
+        case navigateToRetrospectionView(Memo)  // 회고 화면으로
         case navigateToComfieZoneSettingView  // 컴피존 설정 화면으로
         case saveMemo
         case fetchMemos
+        case deleteMemo(Memo)
+        case editMemo(Memo)
         case setNewMemo(String)
         case hideKeyboard
     }
@@ -45,8 +51,8 @@ class MemoStore: IntentStore {
     
     func handleIntent(_ intent: Intent) {
         switch intent {
-        case .retrospectionButtonTapped:
-            state = handleAction(state, .navigateToRetrospectionView)
+        case .retrospectionButtonTapped(let memo):
+            state = handleAction(state, .navigateToRetrospectionView(memo))
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigateToComfieZoneSettingView)
         case .memoInputButtonTapped:
@@ -57,6 +63,10 @@ class MemoStore: IntentStore {
             state = handleAction(state, .setNewMemo(newText))
         case .onTapGesture:
             _ = handleAction(state, .hideKeyboard)
+        case .deleteMemoButtonTapped(let memo):
+            state = handleAction(state, .deleteMemo(memo))
+        case .editMemoButtonTapped(let memo):
+            _ = handleAction(state, .editMemo(memo))
         }
     }
     
@@ -67,7 +77,9 @@ class MemoStore: IntentStore {
         
         switch action {
         case .navigateToRetrospectionView:
+            // TODO: 메모 데이터 주입해주기
             router.push(.retrospection)
+            print("회고 화면으로 넘어가기")
         case .navigateToComfieZoneSettingView:
             router.push(.comfieZoneSetting)
         case .saveMemo:
@@ -90,6 +102,10 @@ class MemoStore: IntentStore {
                 #selector(UIResponder.resignFirstResponder),
                 to: nil, from: nil, for: nil
             )
+        case .deleteMemo(let memo):
+            print("delete: \(memo.originalText)")
+        case .editMemo(let memo):
+            print("edit: \(memo.originalText)")
         }
         return newState
     }
