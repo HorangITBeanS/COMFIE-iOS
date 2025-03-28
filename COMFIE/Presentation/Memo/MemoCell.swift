@@ -47,12 +47,6 @@ struct MemoCell: View {
 }
 
 #Preview {
-    let memo = Memo(
-        id: UUID(),
-        createdAt: .now,
-        originalText: "ddd",
-        emojiText: "ddd",
-        retrospectionText: "ddddddddddddddddddddddddddddddddddddd\ndddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-    )
+    let memo = Memo.sampleMemos[0]
     MemoCell(memo: memo, isUserInComfieZone: true)
 }
