@@ -2,10 +2,10 @@
 //  MemoStore.swift
 //  COMFIE
 //
-//  Created by Anjin on 3/6/25.
+//  Created by zaehorang on 3/6/25.
 //
 
-import Foundation
+import UIKit
 
 @Observable
 class MemoStore: IntentStore {
@@ -18,12 +18,13 @@ class MemoStore: IntentStore {
     }
     
     enum Intent {
-        case showRetrospectionView      // 회고 화면으로
+        case retrospectionButtonTapped
         case comfieZoneSettingButtonTapped
-        
         case memoInputButtonTapped
         case updateNewMemo(String)
+        
         case onAppear
+        case onTapGesture
     }
     
     enum Action {
@@ -32,6 +33,7 @@ class MemoStore: IntentStore {
         case saveMemo
         case fetchMemos
         case setNewMemo(String)
+        case hideKeyboard
     }
     
     // 화면 전환을 위한 router
@@ -53,6 +55,8 @@ class MemoStore: IntentStore {
             state = handleAction(state, .fetchMemos)
         case .updateNewMemo(let newText):
             state = handleAction(state, .setNewMemo(newText))
+        case .onTapGesture:
+            _ = handleAction(state, .hideKeyboard)
         }
     }
     
@@ -81,6 +85,11 @@ class MemoStore: IntentStore {
             newState.memos = Memo.sampleMemos
         case .setNewMemo(let text):
             newState.newMemo = text
+        case .hideKeyboard:
+            UIApplication.shared.sendAction(
+                #selector(UIResponder.resignFirstResponder),
+                to: nil, from: nil, for: nil
+            )
         }
         return newState
     }

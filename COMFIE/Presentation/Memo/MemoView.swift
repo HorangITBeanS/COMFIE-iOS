@@ -19,9 +19,14 @@ struct MemoView: View {
             Color.keyBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                navigationBarView
-                
-                MemoListView(intent: $intent)
+                Group {
+                    navigationBarView
+                    
+                    MemoListView(intent: $intent)
+                }
+                .onTapGesture {
+                    intent(.onTapGesture)
+                }
                 
                 memoInputView
             }
