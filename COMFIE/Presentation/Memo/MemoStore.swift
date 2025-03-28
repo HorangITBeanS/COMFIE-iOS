@@ -43,7 +43,7 @@ class MemoStore: IntentStore {
     
     func handleIntent(_ intent: Intent) {
         switch intent {
-        case .showRetrospectionView:
+        case .retrospectionButtonTapped:
             state = handleAction(state, .navigateToRetrospectionView)
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigateToComfieZoneSettingView)
