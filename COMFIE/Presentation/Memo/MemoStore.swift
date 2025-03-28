@@ -57,6 +57,8 @@ class MemoStore: IntentStore {
             state = handleAction(state, .navigateToComfieZoneSettingView)
         case .memoInputButtonTapped:
             state = handleAction(state, .saveMemo)
+            // 키보드 내리기
+            _ = handleAction(state, .hideKeyboard)
         case .onAppear:
             state = handleAction(state, .fetchMemos)
         case .updateNewMemo(let newText):
