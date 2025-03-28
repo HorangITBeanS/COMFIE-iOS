@@ -15,6 +15,7 @@ class MemoStore: IntentStore {
         var memos: [Memo] = []
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
+        var editingMemo: Memo?
     }
     
     enum Intent {
@@ -34,11 +35,15 @@ class MemoStore: IntentStore {
     enum Action {
         case navigateToRetrospectionView(Memo)  // 회고 화면으로
         case navigateToComfieZoneSettingView  // 컴피존 설정 화면으로
+        
         case saveMemo
         case fetchMemos
         case deleteMemo(Memo)
-        case editMemo(Memo)
+        case updateMemo(Memo)
+        
         case setNewMemo(String)
+        case startEditingMemo(Memo)
+        
         case hideKeyboard
     }
     
@@ -58,7 +63,12 @@ class MemoStore: IntentStore {
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigateToComfieZoneSettingView)
         case .memoInputButtonTapped:
-            state = handleAction(state, .saveMemo)
+            if let editingMemo = state.editingMemo {
+                state = handleAction(state, .updateMemo(editingMemo))
+            } else {
+                state = handleAction(state, .saveMemo)
+            }
+            
             // 키보드 내리기
             _ = handleAction(state, .hideKeyboard)
         case .onAppear:
@@ -70,7 +80,7 @@ class MemoStore: IntentStore {
         case .deleteMemoButtonTapped(let memo):
             state = handleAction(state, .deleteMemo(memo))
         case .editMemoButtonTapped(let memo):
-            _ = handleAction(state, .editMemo(memo))
+            state = handleAction(state, .startEditingMemo(memo))
         }
     }
     
@@ -81,50 +91,100 @@ class MemoStore: IntentStore {
         
         switch action {
         case .navigateToRetrospectionView:
-            // TODO: 메모 데이터 주입해주기
+            // TODO: 메모 데이터 주입해주기 + 네비게이션 확인
             router.push(.retrospection)
-            print("회고 화면으로 넘어가기")
         case .navigateToComfieZoneSettingView:
             router.push(.comfieZoneSetting)
-        case .saveMemo:
-            let newMemo = Memo(
-                id: UUID(),
-                createdAt: .now,
-                originalText: newState.inputMemoText,
-                emojiText: "🐯🐯🐯🐯"
-            )
             
-            switch memoRepository.save(memo: newMemo) {
-            case .success:
-                newState.memos.append(newMemo)
-                newState.inputMemoText = ""
-            case .failure(let error):
-                print("메모 저장 실패: \(error)")
-            }
-
-        case .fetchMemos:
-            switch memoRepository.fetchAllMemos() {
-            case .success(let memos):
-                newState.memos = memos
-            case .failure(let error):
-                print("메모 불러오기 실패: \(error)")
-            }
         case .setNewMemo(let text):
             newState.inputMemoText = text
+        case .saveMemo:
+            return handleSaveMemo(newState)
+        case .fetchMemos:
+            return handleFetchMemos(newState)
+        case .deleteMemo(let memo):
+            return handleDeleteMemo(newState, memo)
+        case .startEditingMemo(let memo):
+            return handleStartEditingMemo(newState, memo)
+        case .updateMemo(let updatedMemo):
+            return handleUpdateMemo(newState, updatedMemo)
+            
         case .hideKeyboard:
             UIApplication.shared.sendAction(
                 #selector(UIResponder.resignFirstResponder),
                 to: nil, from: nil, for: nil
             )
-        case .deleteMemo(let memo):
-            switch memoRepository.delete(memo: memo) {
-            case .success:
-                newState.memos.removeAll { $0.id == memo.id }
-            case .failure(let error):
-                print("메모 삭제 실패: \(error)")
+        }
+        return newState
+    }
+}
+
+// MARK: - helper method
+extension MemoStore {
+    private func handleFetchMemos(_ state: State) -> State {
+        var newState = state
+        switch memoRepository.fetchAllMemos() {
+        case .success(let memos):
+            newState.memos = memos
+        case .failure(let error):
+            print("메모 불러오기 실패: \(error)")
+        }
+        return newState
+    }
+    
+    private func handleSaveMemo(_ state: State) -> State {
+        var newState = state
+        let newMemo = Memo(
+            id: UUID(),
+            createdAt: .now,
+            originalText: newState.inputMemoText,
+            emojiText: "🐯🐯🐯🐯"
+        )
+        
+        switch memoRepository.save(memo: newMemo) {
+        case .success:
+            newState.memos.append(newMemo)
+            newState.inputMemoText = ""
+        case .failure(let error):
+            print("메모 저장 실패: \(error)")
+        }
+        return newState
+    }
+    
+    private func handleStartEditingMemo(_ state: State, _ memo: Memo) -> State {
+        var newState = state
+        newState.editingMemo = memo
+        newState.inputMemoText = memo.originalText
+        return newState
+    }
+    
+    private func handleUpdateMemo(_ state: State, _ memo: Memo) -> State {
+        var newState = state
+        var updatedMemo = memo
+        updatedMemo.originalText = newState.inputMemoText
+        
+        switch memoRepository.update(memo: updatedMemo) {
+        case .success:
+            if let index = newState.memos.firstIndex(where: { $0.id == memo.id }) {
+                newState.memos[index] = updatedMemo
             }
-        case .editMemo(let memo):
-            print("edit: \(memo.originalText)")
+            newState.editingMemo = nil
+            newState.inputMemoText = ""
+        case .failure(let error):
+            print("메모 업데이트 실패: \(error)")
+        }
+        return newState
+    }
+    
+    private func handleDeleteMemo(_ state: State, _ memo: Memo) -> State {
+        var newState = state
+        switch memoRepository.delete(memo: memo) {
+        case .success:
+            if let index = newState.memos.firstIndex(where: { $0.id == memo.id }) {
+                newState.memos.remove(at: index)
+            }
+        case .failure(let error):
+            print("메모 삭제 실패: \(error)")
         }
         return newState
     }
