@@ -40,7 +40,7 @@ struct MemoView: View {
     }
     
     // MARK: - View Property
-    var navigationBarView: some View {
+    private var navigationBarView: some View {
         HStack {
             // 컴피존 상태에 따라 로고 변경
             if isUserInComfieZone {
@@ -64,7 +64,7 @@ struct MemoView: View {
         .background(.cfWhite)
     }
     
-    var memoInputView: some View {
+    private var memoInputView: some View {
         HStack(alignment: .top, spacing: 12) {
             TextField(strings.textfieldPlaceholder.localized,
                       text:
