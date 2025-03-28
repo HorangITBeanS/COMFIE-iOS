@@ -62,7 +62,7 @@ struct MemoListView: View {
 }
 
 #Preview {
-    @Previewable @State var intent = MemoStore(router: Router())
+    @Previewable @State var intent = MemoStore(router: Router(), memoRepository: MemoRepository())
     
     MemoListView(intent: $intent)
         .onAppear {

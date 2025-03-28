@@ -107,7 +107,8 @@ struct MemoView: View {
 #Preview {
     MemoView(
         intent: MemoStore(
-            router: Router()
+            router: Router(),
+            memoRepository: MemoRepository()
         )
     )
 }

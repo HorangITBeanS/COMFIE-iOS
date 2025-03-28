@@ -44,9 +44,11 @@ class MemoStore: IntentStore {
     
     // 화면 전환을 위한 router
     private let router: Router
+    private let memoRepository: MemoRepository
     
-    init(router: Router) {
+    init(router: Router, memoRepository: MemoRepository) {
         self.router = router
+        self.memoRepository = memoRepository
     }
     
     func handleIntent(_ intent: Intent) {
@@ -92,11 +94,21 @@ class MemoStore: IntentStore {
                 emojiText: "🐯🐯🐯🐯"
             )
             
-            newState.memos.append(newMemo)
-            newState.newMemo = ""
+            switch memoRepository.save(memo: newMemo) {
+            case .success:
+                newState.memos.append(newMemo)
+                newState.newMemo = ""
+            case .failure(let error):
+                print("메모 저장 실패: \(error)")
+            }
+
         case .fetchMemos:
-            // TODO: 이후에 수정 필요
-            newState.memos = Memo.sampleMemos
+            switch memoRepository.fetchAllMemos() {
+            case .success(let memos):
+                newState.memos = memos
+            case .failure(let error):
+                print("메모 불러오기 실패: \(error)")
+            }
         case .setNewMemo(let text):
             newState.newMemo = text
         case .hideKeyboard:
@@ -105,7 +117,12 @@ class MemoStore: IntentStore {
                 to: nil, from: nil, for: nil
             )
         case .deleteMemo(let memo):
-            print("delete: \(memo.originalText)")
+            switch memoRepository.delete(memo: memo) {
+            case .success:
+                newState.memos.removeAll { $0.id == memo.id }
+            case .failure(let error):
+                print("메모 삭제 실패: \(error)")
+            }
         case .editMemo(let memo):
             print("edit: \(memo.originalText)")
         }
