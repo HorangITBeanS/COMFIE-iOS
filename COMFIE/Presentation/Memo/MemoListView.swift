@@ -23,40 +23,46 @@ struct MemoListView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                ForEach(groupedMemos, id: \.date) { group in
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(group.date)
-                            .comfieFont(.systemBody)
-                            .foregroundStyle(.textDarkgray)
-                        
-                        ForEach(group.memos) { memo in
-                            // TODO: isUserInComfieZone 변경 필요
-                            MemoCell(
-                                memo: memo,
-                                isUserInComfieZone: true,
-                                onEdit: { memo in
-                                    intent(.editMemoButtonTapped(memo))
-                                },
-                                onRetrospect: { memo in
-                                    intent(.retrospectionButtonTapped(memo))
-                                },
-                                onDelete: { memo in
-                                    intent(.deleteMemoButtonTapped(memo))
-                                }
-                            )
+        if intent.state.memos.isEmpty {
+            ZStack(alignment: .center) {
+                Rectangle()
+                    .foregroundStyle(.keyBackground) // 탭 액션을 위해 컬러 추가
+                
+                Text(strings.emptyMemoDescription.localized)
+                    .comfieFont(.body)
+                    .foregroundStyle(.textDarkgray)
+            }
+        } else {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    ForEach(groupedMemos, id: \.date) { group in
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(group.date)
+                                .comfieFont(.systemBody)
+                                .foregroundStyle(.textDarkgray)
+                            
+                            ForEach(group.memos) { memo in
+                                // TODO: isUserInComfieZone 변경 필요
+                                MemoCell(
+                                    memo: memo,
+                                    isUserInComfieZone: true,
+                                    onEdit: { memo in
+                                        intent(.editMemoButtonTapped(memo))
+                                    },
+                                    onRetrospect: { memo in
+                                        intent(.retrospectionButtonTapped(memo))
+                                    },
+                                    onDelete: { memo in
+                                        intent(.deleteMemoButtonTapped(memo))
+                                    }
+                                )
+                            }
                         }
                     }
                 }
+                .padding(24)
             }
-            .padding(24)
-        }
-        .scrollIndicators(.hidden)
-        .overlay(alignment: .center) {
-            if intent.state.memos.isEmpty {
-                Text(strings.emptyMemoDescription.localized)
-            }
+            .scrollIndicators(.hidden)
         }
     }
 }
