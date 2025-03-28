@@ -14,5 +14,6 @@ extension StringLiterals {
         static let editButtonTitle: LocalizedStringResource = "memo_edit_button_title"
         static let retrospectionButtonTitle: LocalizedStringResource = "memo_retrospection_button_title"
         static let deleteButtonTitle: LocalizedStringResource = "memo_delete_button_title"
+        static let editingCancelButtonTitle: LocalizedStringResource = "memo_editing_cancel_button_title"
     }
 }

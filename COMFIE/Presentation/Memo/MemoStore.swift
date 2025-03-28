@@ -30,6 +30,7 @@ class MemoStore: IntentStore {
         
         case onAppear
         case onTapGesture
+        case editingCancelButtonTapped
     }
     
     enum Action {
@@ -43,6 +44,7 @@ class MemoStore: IntentStore {
         
         case setNewMemo(String)
         case startEditingMemo(Memo)
+        case cancelEditing
         
         case hideKeyboard
     }
@@ -81,6 +83,8 @@ class MemoStore: IntentStore {
             state = handleAction(state, .deleteMemo(memo))
         case .editMemoButtonTapped(let memo):
             state = handleAction(state, .startEditingMemo(memo))
+        case .editingCancelButtonTapped: // Updated case
+            state = handleAction(state, .cancelEditing)
         }
     }
     
@@ -108,6 +112,8 @@ class MemoStore: IntentStore {
             return handleStartEditingMemo(newState, memo)
         case .updateMemo(let updatedMemo):
             return handleUpdateMemo(newState, updatedMemo)
+        case .cancelEditing:
+            return clearEditingState(newState)
             
         case .hideKeyboard:
             UIApplication.shared.sendAction(
@@ -186,6 +192,13 @@ extension MemoStore {
         case .failure(let error):
             print("메모 삭제 실패: \(error)")
         }
+        return newState
+    }
+    
+    private func clearEditingState(_ state: State) -> State {
+        var newState = state
+        newState.editingMemo = nil
+        newState.inputMemoText = ""
         return newState
     }
 }

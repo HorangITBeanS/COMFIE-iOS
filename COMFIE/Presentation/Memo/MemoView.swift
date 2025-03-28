@@ -27,7 +27,13 @@ struct MemoView: View {
                     intent(.onTapGesture)
                 }
                 
-                memoInputView
+                VStack(spacing: 10) {
+                    if intent.state.editingMemo != nil {
+                        editingCancelButton
+                    }
+                    
+                    memoInputView
+                }
             }
         }
         .onAppear { intent(.onAppear) }
@@ -101,6 +107,22 @@ struct MemoView: View {
             .ignoresSafeArea()
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+    }
+    
+    // TODO: 디자인 수정
+    private var editingCancelButton: some View {
+        Button {
+            intent(.editingCancelButtonTapped)
+        } label: {
+            Text(strings.editingCancelButtonTitle.localized)
+                .comfieFont(.body)
+                .foregroundStyle(.red)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 20)
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 212))
+                .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 0)
+        }
     }
 }
 

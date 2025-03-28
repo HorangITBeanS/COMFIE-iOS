@@ -36,6 +36,16 @@
         }
       }
     },
+    "memo_editing_cancel_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소하기"
+          }
+        }
+      }
+    },
     "memo_empty_memo" : {
       "localizations" : {
         "ko" : {
