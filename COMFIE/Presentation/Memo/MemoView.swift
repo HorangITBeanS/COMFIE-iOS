@@ -21,7 +21,6 @@ struct MemoView: View {
             VStack(spacing: 0) {
                 Group {
                     navigationBarView
-                    
                     MemoListView(intent: $intent)
                 }
                 .onTapGesture {
@@ -82,7 +81,11 @@ struct MemoView: View {
                     .foregroundStyle(.cfWhite)
                     .frame(width: 24, height: 24)
                     .padding(8)
-                    .background(.keyDeactivated)
+                    .background(
+                        intent.state.newMemo.isEmpty
+                        ? .keyDeactivated
+                        : .keyPrimary
+                    )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
