@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct MemoView: View {
+    private let strings = StringLiterals.Memo.self
+    
     @State var intent: MemoStore
-    @State private var newMemoText: String = ""
+    // 컴피존 관련 모델에서 주입 받아야 한다.
+    @State private var isUserInComfieZone: Bool = true
     
     var body: some View {
         ZStack {
@@ -18,29 +21,29 @@ struct MemoView: View {
             VStack(spacing: 0) {
                 navigationBarView
                 
-                ScrollView {
-                    
-                }
-                .overlay(alignment: .center) {
-                    Text("아직 메모가 없어요. \n다행이네요!")
-                }
-                .multilineTextAlignment(.center)
+                MemoListView(intent: $intent)
                 
                 memoInputView
             }
         }
+        .onAppear { intent(.onAppear) }
     }
     
+    // MARK: - View Property
     var navigationBarView: some View {
         HStack {
-            // 조건에 따라 변경하기
-            Image("icUncomfie")
-            // Image("icComfie")
+            // 컴피존 상태에 따라 로고 변경
+            if isUserInComfieZone {
+                Image("icComfie")
+            } else {
+                Image("icUncomfie")
+            }
             
             Spacer()
             
             Button {
                 // 페이지 이동
+                intent(.comfieZoneSettingButtonTapped)
             } label: {
                 Image("icLocation")
                     .frame(width: 24, height: 24)
@@ -53,16 +56,22 @@ struct MemoView: View {
     
     var memoInputView: some View {
         HStack(alignment: .top, spacing: 12) {
-            TextField("입력", text: $newMemoText, axis: .vertical)
-                .lineLimit(1...4)
-                .padding(.vertical, 9)
-                .padding(.leading, 12)
-                .padding(.trailing, 8)
-                .background(Color.keyBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+            TextField(strings.textfieldPlaceholder.localized,
+                      text:
+                        Binding(
+                            get: { intent.state.newMemo },
+                            set: { intent(.updateNewMemo($0)) }
+                        ),
+                      axis: .vertical)
+            .lineLimit(1...4)
+            .padding(.vertical, 9)
+            .padding(.leading, 12)
+            .padding(.trailing, 8)
+            .background(Color.keyBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             
             Button {
-                newMemoText = ""
+                intent(.memoInputButtonTapped)
             } label: {
                 Image(systemName: "arrow.up")
                     .foregroundStyle(.cfWhite)
