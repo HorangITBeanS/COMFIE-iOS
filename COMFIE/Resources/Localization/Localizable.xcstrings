@@ -1,8 +1,40 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "📍 ComfieZone 테스트" : {
+
+    },
+    "📝 Memo 테스트" : {
+
+    },
+    "ComfieZone 삭제" : {
+
+    },
     "comfieZoneSetting" : {
 
+    },
+    "CoreData 테스트" : {
+
+    },
+    "memo_empty_memo" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아직 일기가 없어요."
+          }
+        }
+      }
+    },
+    "memo_textfield_placeholder" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입력"
+          }
+        }
+      }
     },
     "popup_button_cancel" : {
       "localizations" : {
@@ -178,19 +210,22 @@
     "로딩 View" : {
 
     },
-    "메모 View" : {
+    "메모 화면으로" : {
 
     },
-    "메모 화면으로" : {
+    "새 ComfieZone 이름 입력" : {
+
+    },
+    "새 메모 입력" : {
 
     },
     "온보딩 View" : {
 
     },
-    "컴피존 설정 화면으로" : {
+    "저장된 ComfieZone 없음" : {
 
     },
-    "회고 화면으로" : {
+    "현재 ComfieZone: %@" : {
 
     }
   },
