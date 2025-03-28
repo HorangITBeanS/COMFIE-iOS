@@ -29,7 +29,7 @@ class MemoStore: IntentStore {
         case updateNewMemo(String)
         
         case onAppear
-        case onTapGesture
+        case backgroundTapped
         case editingCancelButtonTapped
     }
     
@@ -77,7 +77,7 @@ class MemoStore: IntentStore {
             state = handleAction(state, .fetchMemos)
         case .updateNewMemo(let newText):
             state = handleAction(state, .setNewMemo(newText))
-        case .onTapGesture:
+        case .backgroundTapped:
             _ = handleAction(state, .hideKeyboard)
         case .deleteMemoButtonTapped(let memo):
             state = handleAction(state, .deleteMemo(memo))

@@ -24,7 +24,7 @@ struct MemoView: View {
                     MemoListView(intent: $intent)
                 }
                 .onTapGesture {
-                    intent(.onTapGesture)
+                    intent(.backgroundTapped)
                 }
                 
                 VStack(spacing: 10) {
