@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B292D91B7DD0089BD6D /* MemoView.swift */; };
 		267F6B322D93C4600089BD6D /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B312D93C4600089BD6D /* MemoCell.swift */; };
+		267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */; };
 		267F6B3E2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
 		267F6B3F2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
 		267F6B402D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
@@ -98,6 +99,7 @@
 /* Begin PBXFileReference section */
 		267F6B292D91B7DD0089BD6D /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		267F6B312D93C4600089BD6D /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
+		267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoListView.swift; sourceTree = "<group>"; };
 		267F6B3D2D94F11A0089BD6D /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
 		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 				5103411E2D7997130050C718 /* MemoStore.swift */,
 				267F6B292D91B7DD0089BD6D /* MemoView.swift */,
 				267F6B312D93C4600089BD6D /* MemoCell.swift */,
+				267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */,
 			);
 			path = Memo;
 			sourceTree = "<group>";
@@ -624,6 +627,7 @@
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
 				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
+				267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
