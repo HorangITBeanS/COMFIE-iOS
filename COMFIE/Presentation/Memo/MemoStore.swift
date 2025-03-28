@@ -14,7 +14,7 @@ class MemoStore: IntentStore {
     struct State {
         var memos: [Memo] = []
         // 사용자가 텍스트 필드에 입력하는 메모
-        var newMemo: String = ""
+        var inputMemoText: String = ""
     }
     
     enum Intent {
@@ -90,14 +90,14 @@ class MemoStore: IntentStore {
             let newMemo = Memo(
                 id: UUID(),
                 createdAt: .now,
-                originalText: newState.newMemo,
+                originalText: newState.inputMemoText,
                 emojiText: "🐯🐯🐯🐯"
             )
             
             switch memoRepository.save(memo: newMemo) {
             case .success:
                 newState.memos.append(newMemo)
-                newState.newMemo = ""
+                newState.inputMemoText = ""
             case .failure(let error):
                 print("메모 저장 실패: \(error)")
             }
@@ -110,7 +110,7 @@ class MemoStore: IntentStore {
                 print("메모 불러오기 실패: \(error)")
             }
         case .setNewMemo(let text):
-            newState.newMemo = text
+            newState.inputMemoText = text
         case .hideKeyboard:
             UIApplication.shared.sendAction(
                 #selector(UIResponder.resignFirstResponder),

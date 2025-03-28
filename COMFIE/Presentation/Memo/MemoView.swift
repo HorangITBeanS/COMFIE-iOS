@@ -63,7 +63,7 @@ struct MemoView: View {
             TextField(strings.textfieldPlaceholder.localized,
                       text:
                         Binding(
-                            get: { intent.state.newMemo },
+                            get: { intent.state.inputMemoText },
                             set: { intent(.updateNewMemo($0)) }
                         ),
                       axis: .vertical)
@@ -82,7 +82,7 @@ struct MemoView: View {
                     .frame(width: 24, height: 24)
                     .padding(8)
                     .background(
-                        intent.state.newMemo.isEmpty
+                        intent.state.inputMemoText.isEmpty
                         ? .keyDeactivated
                         : .keyPrimary
                     )
