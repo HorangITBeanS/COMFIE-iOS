@@ -13,6 +13,46 @@
     "comfieZoneSetting" : {
 
     },
+    "onboarding_next_button" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음"
+          }
+        }
+      }
+    },
+    "onboarding_request_location" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE는 사용자의 위치를 기반으로 메모를 이모지로 변환해요. 원활한 사용을 위해  위치 권한을 허용해 주세요."
+          }
+        }
+      }
+    },
+    "onboarding_request_location_description" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한이 없으면 메모 이모지화 기능이 제한될 수 있어요."
+          }
+        }
+      }
+    },
+    "onboarding_request_location_highlight" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한을 허용"
+          }
+        }
+      }
+    },
     "CoreData 테스트" : {
 
     },
@@ -247,12 +287,14 @@
     "retrospection" : {
 
     },
+    "메모 View" : {
     "로딩 View" : {
 
     },
     "메모 화면으로" : {
 
     },
+    "컴피존 설정 화면으로" : {
     "새 ComfieZone 이름 입력" : {
 
     },

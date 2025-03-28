@@ -9,18 +9,57 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State var intent: OnboardingStore
+    private let strings = StringLiterals.Onboarding.self
     
     var body: some View {
-        VStack {
-            Text("온보딩 View")
+        ZStack {
+            Color.cfWhite.ignoresSafeArea()
             
-            Button {
-                intent(.nextButtonTapped)
-            } label: {
-                Text("메모 화면으로")
+            VStack(spacing: 28) {
+                // 임시 이미지
+                RoundedRectangle(cornerRadius: 20)
+                    .foregroundStyle(Color.cfGray)
+                    .frame(width: 200, height: 200)
+                
+                VStack(spacing: 12) {
+                    TextWithDifferentFont(
+                        originalString: strings.requestLocation.localized,
+                        originalFont: .body,
+                        differentFontString: strings.requestLocationHighlight.localized,
+                        differentFont: .bodyBold
+                    )
+                    .foregroundStyle(Color.textBlack)
+                    .frame(width: 260)
+                    
+                    Text(strings.requestLocationDescription)
+                        .comfieFont(.systemBody)
+                        .foregroundStyle(Color.textGray)
+                        .frame(width: 280)
+                }
+                .multilineTextAlignment(.center)
+            }
+            
+            VStack {
+                Spacer()
+                
+                Button {
+                    intent(.nextButtonTapped)
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text(strings.nextButton)
+                            .comfieFont(.body)
+                            .foregroundStyle(Color.cfWhite)
+                        Spacer()
+                    }
+                    .padding(.vertical, 14)
+                    .background(Color.keyPrimary)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 38)
             }
         }
-//        .environment(intent)
     }
 }
 
