@@ -21,6 +21,8 @@ struct CFNavigationBarModifier: ViewModifier {
             )
             
             content
+            
+            Spacer(minLength: 0)
         }
         .navigationBarBackButtonHidden()
     }
