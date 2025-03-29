@@ -27,7 +27,7 @@ struct CFNavigationBar: View {
                 .comfieFont(.title)
                 .foregroundStyle(Color.textBlack)
             
-            HStack {
+            HStack(spacing: 0) {
                 // 왼쪽 뒤로가기 버튼
                 if isBackButtonHidden == false {
                     Button {
