@@ -14,7 +14,7 @@ enum Field: Hashable {
 struct RetrospectionView: View {
     @State private var retrospectionContent: String = ""
     @FocusState private var isKeyboardFocused: Bool
-    let memo: String = "뭐라고 적어야 화가 나보일까? 미친거 아냐?"
+    let memo: String = "뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?"
     
     var body: some View {
         VStack(spacing: 0) {
@@ -54,9 +54,11 @@ struct RetrospectionView: View {
                     .comfieFont(.body)
                     .foregroundStyle(.textBlack)
                     .tint(Color.textBlack)
+                    Spacer()
                 }
                 .padding(.vertical, 20)
                 .padding(.horizontal, 24)
+                .frame(minHeight: 88)
                 .background(Color.keyBackgroundSub)
                 .listRowInsets(.zero)
                 .listRowSeparator(.hidden)
