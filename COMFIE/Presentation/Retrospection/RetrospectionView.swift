@@ -14,7 +14,7 @@ enum Field: Hashable {
 struct RetrospectionView: View {
     @State private var retrospectionContent: String = ""
     @FocusState private var isKeyboardFocused: Bool
-    let memo: String = ""
+    let memo: String = "뭐라고 적어야 화가 나보일까? 미친거 아냐?"
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,53 +22,49 @@ struct RetrospectionView: View {
             Rectangle()
                 .frame(height: 56)
             
-            ZStack(alignment: .top) {
-                Color.keyBackground.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 0) {
-                        HStack(spacing: 0) {
-                            Text(Date().toFormattedDateTimeString())
-                                .comfieFont(.systemBody)
-                                .foregroundStyle(.cfBlack.opacity(0.6))
-                            
-                            Spacer()
-                        }
-                        .padding(.bottom, 8)
-                        HStack(spacing: 0) {
-                            // memo.originalText
-                            Text(memo)
-                                .comfieFont(.body)
-                                .foregroundStyle(.textBlack)
-                            
-                            Spacer()
-                        }
+            List {
+                VStack(spacing: 0) {
+                    HStack(spacing: 0) {
+                        Text(Date().toFormattedDateTimeString())
+                            .comfieFont(.systemBody)
+                            .foregroundStyle(.cfBlack.opacity(0.6))
                         
-                        Rectangle()
-                            .frame(height: 1)
-                            .foregroundStyle(Color.cfGray)
-                            .padding(.vertical, 17)
-                        
-                        TextField("",
-                                  text: $retrospectionContent,
-                                  axis: .vertical)
-                        .comfieFont(.body)
-                        .foregroundStyle(.textBlack)
-                        .tint(.cfBlack)
-                        .focused($isKeyboardFocused)
+                        Spacer()
                     }
-                    .padding(24)
+                    .padding(.bottom, 8)
+                    
+                    HStack(spacing: 0) {
+                        // memo.originalText
+                        Text(memo)
+                            .comfieFont(.body)
+                            .foregroundStyle(.textBlack)
+                        
+                        Spacer()
+                    }
                 }
+                .padding(24)
+                .background(Color.keyBackground)
+                .listRowInsets(.zero)
+                .listRowSeparator(.hidden)
+                
+                VStack(spacing: 0) {
+                    TextField("지금 생각을 적어보세요.",
+                              text: $retrospectionContent,
+                              axis: .vertical)
+                    .comfieFont(.body)
+                    .foregroundStyle(.textBlack)
+                    .tint(Color.textBlack)
+                }
+                .padding(.vertical, 20)
+                .padding(.horizontal, 24)
+                .background(Color.keyBackgroundSub)
+                .listRowInsets(.zero)
+                .listRowSeparator(.hidden)
             }
+            .listStyle(.plain)
+            .background(Color.keyBackgroundSub)
         }
         .navigationBarBackButtonHidden()
-        .onAppear {
-            if retrospectionContent.isEmpty {
-                DispatchQueue.main.asyncAfter(deadline: .now()) {
-                    isKeyboardFocused = true
-                }
-            }
-        }
         .onTapGesture {
             endTextEditing()
         }
