@@ -55,8 +55,6 @@ class MemoStore: IntentStore {
         case memo(MemoAction)
         case input(InputAction)
         case popup(PopupAction)
-        case navigation(NavigationAction)
-        case ui(UIAction)
 
         enum MemoAction {
             case fetchAll
@@ -75,13 +73,19 @@ class MemoStore: IntentStore {
             case showDeletePopup(Memo)
             case cancelDelete
         }
+    }
+    
+    // MARK: Side Effect
+    enum SideEffect {
+        case navigation(Navigation)
+        case ui(UI)
 
-        enum NavigationAction {
+        enum Navigation {
             case toRetrospection(Memo)
             case toComfieZoneSetting
         }
 
-        enum UIAction {
+        enum UI {
             case hideKeyboard
         }
     }
@@ -119,8 +123,6 @@ class MemoStore: IntentStore {
             return handleInputAction(state, action)
         case .popup(let action):
             return handlePopupAction(state, action)
-        default:
-            return state
         }
     }
 }
@@ -150,7 +152,9 @@ extension MemoStore {
             } else {
                 newState = handleAction(state, .memo(.save))
             }
-            return handleAction(newState, .ui(.hideKeyboard))
+            
+            performSideEffect(for: .ui(.hideKeyboard))
+            return newState
         case .updateNewMemo(let text):
             return handleAction(state, .input(.updateText(text)))
         }
@@ -212,7 +216,7 @@ extension MemoStore {
 
 // MARK: - Side Effect Method
 extension MemoStore {
-    private func performSideEffect(for action: Action) {
+    private func performSideEffect(for action: SideEffect) {
         switch action {
         case .navigation(.toRetrospection(let memo)):
             // TODO: 해당 뷰에 메모를 전달줘야 한다.
@@ -221,8 +225,6 @@ extension MemoStore {
             router.push(.comfieZoneSetting)
         case .ui(.hideKeyboard):
             hideKeyboard()
-        default:
-            break
         }
     }
 }
