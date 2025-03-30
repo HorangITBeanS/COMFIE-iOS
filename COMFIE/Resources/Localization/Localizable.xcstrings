@@ -2,59 +2,54 @@
   "sourceLanguage" : "ko",
   "strings" : {
     "📍 ComfieZone 테스트" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 ComfieZone 테스트"
+          }
+        }
+      }
     },
     "📝 Memo 테스트" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📝 Memo 테스트"
+          }
+        }
+      }
     },
     "ComfieZone 삭제" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ComfieZone 삭제"
+          }
+        }
+      }
     },
     "comfieZoneSetting" : {
-
-    },
-    "onboarding_next_button" : {
       "localizations" : {
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다음"
-          }
-        }
-      }
-    },
-    "onboarding_request_location" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "COMFIE는 사용자의 위치를 기반으로 메모를 이모지로 변환해요. 원활한 사용을 위해  위치 권한을 허용해 주세요."
-          }
-        }
-      }
-    },
-    "onboarding_request_location_description" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "위치 권한이 없으면 메모 이모지화 기능이 제한될 수 있어요."
-          }
-        }
-      }
-    },
-    "onboarding_request_location_highlight" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "위치 권한을 허용"
+            "value" : "comfieZoneSetting"
           }
         }
       }
     },
     "CoreData 테스트" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CoreData 테스트"
+          }
+        }
+      }
     },
     "memo_delete_button_title" : {
       "localizations" : {
@@ -112,6 +107,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "입력"
+          }
+        }
+      }
+    },
+    "onboarding_next_button" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음"
+          }
+        }
+      }
+    },
+    "onboarding_request_location" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE는 사용자의 위치를 기반으로 메모를 이모지로 변환해요. 원활한 사용을 위해  위치 권한을 허용해 주세요."
+          }
+        }
+      }
+    },
+    "onboarding_request_location_description" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한이 없으면 메모 이모지화 기능이 제한될 수 있어요."
+          }
+        }
+      }
+    },
+    "onboarding_request_location_highlight" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한을 허용"
           }
         }
       }
@@ -285,30 +320,109 @@
       }
     },
     "retrospection" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "retrospection"
+          }
+        }
+      }
+    },
+    "로딩 View" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로딩 View"
+          }
+        }
+      }
     },
     "메모 View" : {
-    "로딩 View" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모 View"
+          }
+        }
+      }
     },
     "메모 화면으로" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모 화면으로"
+          }
+        }
+      }
     },
-    "컴피존 설정 화면으로" : {
     "새 ComfieZone 이름 입력" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 ComfieZone 이름 입력"
+          }
+        }
+      }
     },
     "새 메모 입력" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 메모 입력"
+          }
+        }
+      }
     },
     "온보딩 View" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "온보딩 View"
+          }
+        }
+      }
     },
     "저장된 ComfieZone 없음" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장된 ComfieZone 없음"
+          }
+        }
+      }
+    },
+    "컴피존 설정 화면으로" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존 설정 화면으로"
+          }
+        }
+      }
     },
     "현재 ComfieZone: %@" : {
-
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 ComfieZone: %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
