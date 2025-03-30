@@ -10,7 +10,10 @@ import UIKit
 @Observable
 class MemoStore: IntentStore {
     private(set) var state: State = .init()
+    private let router: Router // 화면 전환을 위한 router
+    private let memoRepository: MemoRepository
     
+    // MARK: State
     struct State {
         var memos: [Memo] = []
         // 사용자가 텍스트 필드에 입력하는 메모
@@ -19,24 +22,35 @@ class MemoStore: IntentStore {
         var deletingMemo: Memo?
     }
     
+    // MARK:  Intent
     enum Intent {
-        case comfieZoneSettingButtonTapped
-        case retrospectionButtonTapped(Memo)
-        case editMemoButtonTapped(Memo)
-        
-        case deleteMemoButtonTapped(Memo)
-        // 삭제 팝업 관련
-        case confirmDeleteMemoButtonTapped
-        case cancelDeleteMemoButtonTapped
-        
-        case memoInputButtonTapped
-        case updateNewMemo(String)
+        case deletePopup(PopupIntent)
+        case memoInput(MemoInputIntent)
+        case memoCell(MemoCellIntent)
         
         case onAppear
         case backgroundTapped
-        case editingCancelButtonTapped   
+        case comfieZoneSettingButtonTapped
+        
+        enum PopupIntent {
+            case confirmDeleteButtonTapped
+            case cancelDeleteButtonTapped
+        }
+        
+        enum MemoInputIntent {
+            case updateNewMemo(String)
+            case memoInputButtonTapped
+        }
+        
+        enum MemoCellIntent {
+            case editButtonTapped(Memo)
+            case retrospectionButtonTapped(Memo)
+            case deleteButtonTapped(Memo)
+            case editingCancelButtonTapped
+        }
     }
     
+    // MARK: Action
     enum Action {
         case navigateToRetrospectionView(Memo)  // 회고 화면으로
         case navigateToComfieZoneSettingView  // 컴피존 설정 화면으로
@@ -57,10 +71,7 @@ class MemoStore: IntentStore {
         case hideKeyboard
     }
     
-    // 화면 전환을 위한 router
-    private let router: Router
-    private let memoRepository: MemoRepository
-    
+    // MARK: init
     init(router: Router, memoRepository: MemoRepository) {
         self.router = router
         self.memoRepository = memoRepository
@@ -68,37 +79,19 @@ class MemoStore: IntentStore {
     
     func handleIntent(_ intent: Intent) {
         switch intent {
-        case .retrospectionButtonTapped(let memo):
-            state = handleAction(state, .navigateToRetrospectionView(memo))
-        case .comfieZoneSettingButtonTapped:
-            state = handleAction(state, .navigateToComfieZoneSettingView)
-        case .memoInputButtonTapped:
-            if let editingMemo = state.editingMemo {
-                state = handleAction(state, .updateMemo(editingMemo))
-            } else {
-                state = handleAction(state, .saveMemo)
-            }
+        case .memoCell(let memoCellIntent):
+            state = handleMemoCellIntent(memoCellIntent)
+        case .memoInput(let memoInputIntent):
+            state = handleMemoInputIntent(memoInputIntent)
+        case .deletePopup(let popupIntent):
+            state = handleDeletePopupIntent(popupIntent)
             
-            // 키보드 내리기
-            _ = handleAction(state, .hideKeyboard)
         case .onAppear:
             state = handleAction(state, .fetchMemos)
-        case .updateNewMemo(let newText):
-            state = handleAction(state, .setNewMemo(newText))
         case .backgroundTapped:
             _ = handleAction(state, .hideKeyboard)
-            
-        case .deleteMemoButtonTapped(let memo):
-            state = handleAction(state, .showDeleteMemoPopup(memo))
-        case .editMemoButtonTapped(let memo):
-            state = handleAction(state, .startEditingMemo(memo))
-        case .editingCancelButtonTapped:
-            state = handleAction(state, .cancelEditing)
-            
-        case .confirmDeleteMemoButtonTapped:
-            state = handleAction(state, .deleteMemo)
-        case .cancelDeleteMemoButtonTapped:
-            state = handleAction(state, .cancelDeleteMemo)
+        case .comfieZoneSettingButtonTapped:
+            state = handleAction(state, .navigateToComfieZoneSettingView)
         }
     }
     
@@ -146,7 +139,47 @@ class MemoStore: IntentStore {
     }
 }
 
-// MARK: - helper method
+// MARK: - Handle Intent Methods
+extension MemoStore {
+    private func handleMemoCellIntent(_ intent: Intent.MemoCellIntent) -> State {
+        switch intent {
+        case .deleteButtonTapped(let memo):
+            return handleAction(state, .showDeleteMemoPopup(memo))
+        case .editButtonTapped(let memo):
+            return handleAction(state, .startEditingMemo(memo))
+        case .editingCancelButtonTapped:
+            return handleAction(state, .cancelEditing)
+        case .retrospectionButtonTapped(let memo):
+            return handleAction(state, .navigateToRetrospectionView(memo))
+        }
+    }
+    
+    private func handleMemoInputIntent(_ intent: Intent.MemoInputIntent) -> State {
+        switch intent {
+        case .memoInputButtonTapped:
+            let newState: State
+            if let editingMemo = state.editingMemo {
+                newState = handleAction(state, .updateMemo(editingMemo))
+            } else {
+                newState = handleAction(state, .saveMemo)
+            }
+            return handleAction(newState, .hideKeyboard)
+        case .updateNewMemo(let text):
+            return handleAction(state, .setNewMemo(text))
+        }
+    }
+    
+    private func handleDeletePopupIntent(_ intent: Intent.PopupIntent) -> State {
+        switch intent {
+        case .cancelDeleteButtonTapped:
+            return handleAction(state, .cancelDeleteMemo)
+        case .confirmDeleteButtonTapped:
+            return handleAction(state, .deleteMemo)
+        }
+    }
+}
+
+// MARK: - Handle Action Methods
 extension MemoStore {
     private func handleFetchMemos(_ state: State) -> State {
         var newState = state

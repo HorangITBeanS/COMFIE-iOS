@@ -47,13 +47,13 @@ struct MemoListView: View {
                                     memo: memo,
                                     isUserInComfieZone: true,
                                     onEdit: { memo in
-                                        intent(.editMemoButtonTapped(memo))
+                                        intent(.memoCell(.editButtonTapped(memo)))
                                     },
                                     onRetrospect: { memo in
-                                        intent(.retrospectionButtonTapped(memo))
+                                        intent(.memoCell(.retrospectionButtonTapped(memo)))
                                     },
                                     onDelete: { memo in
-                                        intent(.deleteMemoButtonTapped(memo))
+                                        intent(.memoCell(.deleteButtonTapped(memo)))
                                     }
                                 )
                             }

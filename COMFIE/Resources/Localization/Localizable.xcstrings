@@ -329,39 +329,6 @@
         }
       }
     },
-    "로딩 View" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "로딩 View"
-          }
-        }
-      }
-    },
-    "메모 View" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "메모 View"
-          }
-        }
-      }
-    },
-    "메모 화면으로" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "메모 화면으로"
-          }
-        }
-      }
-    },
     "새 ComfieZone 이름 입력" : {
       "localizations" : {
         "ko" : {
@@ -382,34 +349,12 @@
         }
       }
     },
-    "온보딩 View" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "온보딩 View"
-          }
-        }
-      }
-    },
     "저장된 ComfieZone 없음" : {
       "localizations" : {
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "저장된 ComfieZone 없음"
-          }
-        }
-      }
-    },
-    "컴피존 설정 화면으로" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "컴피존 설정 화면으로"
           }
         }
       }

@@ -38,9 +38,9 @@ struct MemoView: View {
             
             if intent.state.deletingMemo != nil {
                 CFPopupView(type: .deleteMemo) {
-                    intent(.confirmDeleteMemoButtonTapped)
+                    intent(.deletePopup(.confirmDeleteButtonTapped))
                 } rightButtonAction: {
-                    intent(.cancelDeleteMemoButtonTapped)
+                    intent(.deletePopup(.cancelDeleteButtonTapped))
                 }
             }
         }
@@ -78,7 +78,7 @@ struct MemoView: View {
                       text:
                         Binding(
                             get: { intent.state.inputMemoText },
-                            set: { intent(.updateNewMemo($0)) }
+                            set: { intent(.memoInput(.updateNewMemo($0))) }
                         ),
                       axis: .vertical)
             .lineLimit(1...4)
@@ -89,7 +89,7 @@ struct MemoView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             
             Button {
-                intent(.memoInputButtonTapped)
+                intent(.memoInput(.memoInputButtonTapped))
             } label: {
                 Image(systemName: "arrow.up")
                     .foregroundStyle(.cfWhite)
@@ -120,7 +120,7 @@ struct MemoView: View {
     // TODO: 디자인 수정
     private var editingCancelButton: some View {
         Button {
-            intent(.editingCancelButtonTapped)
+            intent(.memoCell(.editingCancelButtonTapped))
         } label: {
             Text(strings.editingCancelButtonTitle.localized)
                 .comfieFont(.body)
