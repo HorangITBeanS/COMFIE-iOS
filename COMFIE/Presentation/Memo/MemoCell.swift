@@ -37,7 +37,7 @@ struct MemoCell: View {
                 .foregroundStyle(Color.textBlack)
                 .padding(10)
                 .background(Color.keyBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .padding(.top, 8)
             }
         }
