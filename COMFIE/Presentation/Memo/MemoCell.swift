@@ -48,15 +48,15 @@ struct MemoCell: View {
     
     private var menuButton: some View {
         Menu {
-            Section {
-                if !isUserInComfieZone {
-                    Button {
-                        onEdit(memo)
-                    } label: {
-                        Label(strings.editButtonTitle.localized, systemImage: "pencil")
-                    }
+            if !isUserInComfieZone {
+                // 수정하기
+                Button {
+                    onEdit(memo)
+                } label: {
+                    Label(strings.editButtonTitle.localized, systemImage: "pencil")
                 }
-                
+            } else {
+                // 회고하기
                 Button {
                     onRetrospect(memo)
                 } label: {
@@ -65,12 +65,11 @@ struct MemoCell: View {
                 }
             }
             
-            Section {
-                Button(role: .destructive) {
-                    onDelete(memo)
-                } label: {
-                    Label(strings.deleteButtonTitle.localized, systemImage: "trash")
-                }
+            // 삭제하기
+            Button(role: .destructive) {
+                onDelete(memo)
+            } label: {
+                Label(strings.deleteButtonTitle.localized, systemImage: "trash")
             }
             
         } label: {
