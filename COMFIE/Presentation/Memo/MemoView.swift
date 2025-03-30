@@ -35,6 +35,14 @@ struct MemoView: View {
                     memoInputView
                 }
             }
+            
+            if intent.state.deletingMemo != nil {
+                CFPopupView(type: .deleteMemo) {
+                    intent(.confirmDeleteMemoButtonTapped)
+                } rightButtonAction: {
+                    intent(.cancelDeleteMemoButtonTapped)
+                }
+            }
         }
         .onAppear { intent(.onAppear) }
     }

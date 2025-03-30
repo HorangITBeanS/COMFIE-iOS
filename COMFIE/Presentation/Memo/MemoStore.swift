@@ -16,21 +16,25 @@ class MemoStore: IntentStore {
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
         var editingMemo: Memo?
+        var deletingMemo: Memo?
     }
     
     enum Intent {
         case comfieZoneSettingButtonTapped
-        
         case retrospectionButtonTapped(Memo)
-        case deleteMemoButtonTapped(Memo)
         case editMemoButtonTapped(Memo)
+        
+        case deleteMemoButtonTapped(Memo)
+        // 삭제 팝업 관련
+        case confirmDeleteMemoButtonTapped
+        case cancelDeleteMemoButtonTapped
         
         case memoInputButtonTapped
         case updateNewMemo(String)
         
         case onAppear
         case backgroundTapped
-        case editingCancelButtonTapped
+        case editingCancelButtonTapped   
     }
     
     enum Action {
@@ -39,7 +43,11 @@ class MemoStore: IntentStore {
         
         case saveMemo
         case fetchMemos
-        case deleteMemo(Memo)
+        
+        case showDeleteMemoPopup(Memo)
+        case deleteMemo
+        case cancelDeleteMemo
+        
         case updateMemo(Memo)
         
         case setNewMemo(String)
@@ -79,12 +87,18 @@ class MemoStore: IntentStore {
             state = handleAction(state, .setNewMemo(newText))
         case .backgroundTapped:
             _ = handleAction(state, .hideKeyboard)
+            
         case .deleteMemoButtonTapped(let memo):
-            state = handleAction(state, .deleteMemo(memo))
+            state = handleAction(state, .showDeleteMemoPopup(memo))
         case .editMemoButtonTapped(let memo):
             state = handleAction(state, .startEditingMemo(memo))
-        case .editingCancelButtonTapped: // Updated case
+        case .editingCancelButtonTapped:
             state = handleAction(state, .cancelEditing)
+            
+        case .confirmDeleteMemoButtonTapped:
+            state = handleAction(state, .deleteMemo)
+        case .cancelDeleteMemoButtonTapped:
+            state = handleAction(state, .cancelDeleteMemo)
         }
     }
     
@@ -106,14 +120,21 @@ class MemoStore: IntentStore {
             return handleSaveMemo(newState)
         case .fetchMemos:
             return handleFetchMemos(newState)
-        case .deleteMemo(let memo):
-            return handleDeleteMemo(newState, memo)
         case .startEditingMemo(let memo):
             return handleStartEditingMemo(newState, memo)
         case .updateMemo(let updatedMemo):
             return handleUpdateMemo(newState, updatedMemo)
         case .cancelEditing:
             return clearEditingState(newState)
+            
+        case .showDeleteMemoPopup(let memo):
+            newState.deletingMemo = memo
+        case .deleteMemo:
+            if let memo = newState.deletingMemo {
+                return handleDeleteMemo(newState, memo)
+            }
+        case .cancelDeleteMemo:
+            newState.deletingMemo = nil
             
         case .hideKeyboard:
             UIApplication.shared.sendAction(
@@ -189,6 +210,7 @@ extension MemoStore {
             if let index = newState.memos.firstIndex(where: { $0.id == memo.id }) {
                 newState.memos.remove(at: index)
             }
+            newState.deletingMemo = nil
         case .failure(let error):
             print("메모 삭제 실패: \(error)")
         }
