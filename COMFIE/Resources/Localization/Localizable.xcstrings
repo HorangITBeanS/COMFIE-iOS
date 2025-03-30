@@ -281,14 +281,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Delete this memo?"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 메모를 삭제할까요?"
+            "value" : "이 일기를 삭제할까요?"
           }
         }
       }
