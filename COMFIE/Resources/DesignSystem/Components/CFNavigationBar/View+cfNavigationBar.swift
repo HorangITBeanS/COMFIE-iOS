@@ -10,14 +10,18 @@ import SwiftUI
 struct CFNavigationBarModifier: ViewModifier {
     let title: String
     let isBackButtonHidden: Bool
-    let trailingButton: CFNavigationBarButton?
+    let backButtonAction: () -> Void
+    let leadingButtons: [CFNavigationBarButton]
+    let trailingButtons: [CFNavigationBarButton]
     
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
             CFNavigationBar(
                 title: title,
                 isBackButtonHidden: isBackButtonHidden,
-                trailingButton: trailingButton
+                backButtonAction: backButtonAction,
+                leadingButtons: leadingButtons,
+                trailingButtons: trailingButtons
             )
             
             content
@@ -32,31 +36,18 @@ extension View {
     func cfNavigationBar(
         _ title: String,
         isBackButtonHidden: Bool = false,
-        trailingButton: CFNavigationBarButton? = nil
+        backButtonAction: @escaping () -> Void = {},
+        leadingButtons: [CFNavigationBarButton] = [],
+        trailingButtons: [CFNavigationBarButton] = []
     ) -> some View {
         modifier(
             CFNavigationBarModifier(
                 title: title,
                 isBackButtonHidden: isBackButtonHidden,
-                trailingButton: trailingButton
+                backButtonAction: backButtonAction,
+                leadingButtons: leadingButtons,
+                trailingButtons: trailingButtons
             )
         )
     }
-}
-
-#Preview {
-    VStack {
-        Text("hello")
-        Spacer()
-        HStack { Spacer() }
-    }
-    .background(Color.red.opacity(0.4))
-    .cfNavigationBar(
-        "title",
-        isBackButtonHidden: true,
-        trailingButton: CFNavigationBarButton(
-            image: Image(.icInfo),
-            action: {}
-        )
-    )
 }
