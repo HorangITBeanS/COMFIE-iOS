@@ -19,21 +19,26 @@ struct MemoView: View {
             Color.keyBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                Group {
-                    navigationBarView
-                    MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
-                }
-                .onTapGesture {
-                    intent(.backgroundTapped)
-                }
-                
-                VStack(spacing: 10) {
-                    // 수정 취소 버튼
-                    if intent.state.editingMemo != nil {
-                        editingCancelButton
+                navigationBarView
+                    .onTapGesture {
+                        intent(.backgroundTapped)
                     }
+                
+                ZStack(alignment: .bottom) {
                     
-                    memoInputView
+                    MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
+                        .onTapGesture {
+                            intent(.backgroundTapped)
+                        }
+                    
+                    VStack(spacing: 10) {
+                        // 수정 취소 버튼
+                        if intent.state.editingMemo != nil {
+                            editingCancelButton
+                        }
+                        memoInputView
+                    }
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                 }
             }
             
@@ -115,7 +120,6 @@ struct MemoView: View {
             .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: -4)
             .ignoresSafeArea()
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     private var editingCancelButton: some View {
