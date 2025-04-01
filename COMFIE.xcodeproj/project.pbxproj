@@ -65,9 +65,9 @@
 		51F8F5BF2D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */; };
 		51F8F5C02D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */; };
 		51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */; };
-		51F8F5C32D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */; };
-		51F8F5C42D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */; };
-		51F8F5C52D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */; };
+		51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
+		51F8F5C42D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
+		51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
 		B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */; };
@@ -155,7 +155,7 @@
 		51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingView.swift; sourceTree = "<group>"; };
 		51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFNavigationBar.swift; sourceTree = "<group>"; };
 		51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfNavigationBar.swift"; sourceTree = "<group>"; };
-		51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+popGesture.swift"; sourceTree = "<group>"; };
+		51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
@@ -442,7 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
-				51F8F5C22D952B4B00DD2E3D /* UINavigationController+popGesture.swift */,
+				51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -661,7 +661,7 @@
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
-				51F8F5C42D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */,
+				51F8F5C42D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
@@ -696,7 +696,7 @@
 				51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51A7AFFC2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
-				51F8F5C32D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */,
+				51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				B9EA53062D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
@@ -719,7 +719,7 @@
 				51A7AFF92D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				51A7AFFB2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
-				51F8F5C52D952B4B00DD2E3D /* UINavigationController+popGesture.swift in Sources */,
+				51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
 				B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */,
