@@ -55,13 +55,13 @@ struct MemoView: View {
     
     // MARK: - View Property
     private var navigationBarView: some View {
-        HStack {
-            // 컴피존 상태에 따라 로고 변경
-            if isUserInComfieZone {
-                Image("icComfie")
-            } else {
-                Image("icUncomfie")
+        HStack(spacing: 0) {
+            HStack(spacing: 8) {
+                // 컴피존 상태에 따라 로고 변경
+                Image(isUserInComfieZone ? .icComfie : .icUncomfie)
+                Image(.icLocation)
             }
+            .frame(height: 24)
             
             Spacer()
             
@@ -69,7 +69,7 @@ struct MemoView: View {
                 // 페이지 이동
                 intent(.comfieZoneSettingButtonTapped)
             } label: {
-                Image("icLocation")
+                Image(.icEllipsis)
                     .frame(width: 24, height: 24)
             }
         }
