@@ -90,6 +90,7 @@ struct CFNavigationBar: View {
     }
     .cfNavigationBar(
         "title",
+        backButtonAction: { },
         trailingButtons: [
             CFNavigationBarButton {
                 // action
