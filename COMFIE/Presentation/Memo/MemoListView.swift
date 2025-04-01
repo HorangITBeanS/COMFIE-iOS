@@ -11,6 +11,8 @@ struct MemoListView: View {
     private let strings = StringLiterals.Memo.self
     
     @Binding var intent: MemoStore
+    // TODO: isUserInComfieZone 변경 필요
+    @Binding var isUserInComfieZone: Bool
     
     // createdAt 날짜 문자열(dotYMDFormat 기준)로 메모들을 그룹화하고 정렬한 결과
     private var groupedMemos: [(date: String, memos: [Memo])] {
@@ -42,10 +44,9 @@ struct MemoListView: View {
                                 .foregroundStyle(.textDarkgray)
                             
                             ForEach(group.memos) { memo in
-                                // TODO: isUserInComfieZone 변경 필요
                                 MemoCell(
                                     memo: memo,
-                                    isUserInComfieZone: true,
+                                    isUserInComfieZone: isUserInComfieZone,
                                     onEdit: { memo in
                                         intent(.memoCell(.editButtonTapped(memo)))
                                     },
@@ -69,8 +70,9 @@ struct MemoListView: View {
 
 #Preview {
     @Previewable @State var intent = MemoStore(router: Router(), memoRepository: MemoRepository())
+    @Previewable @State var isUserInComfieZone = true
     
-    MemoListView(intent: $intent)
+    MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
         .onAppear {
             intent(.onAppear)
         }

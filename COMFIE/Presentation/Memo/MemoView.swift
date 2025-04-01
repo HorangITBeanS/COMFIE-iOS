@@ -21,13 +21,14 @@ struct MemoView: View {
             VStack(spacing: 0) {
                 Group {
                     navigationBarView
-                    MemoListView(intent: $intent)
+                    MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
                 }
                 .onTapGesture {
                     intent(.backgroundTapped)
                 }
                 
                 VStack(spacing: 10) {
+                    // 수정 취소 버튼
                     if intent.state.editingMemo != nil {
                         editingCancelButton
                     }
@@ -117,17 +118,16 @@ struct MemoView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
-    // TODO: 디자인 수정
     private var editingCancelButton: some View {
         Button {
             intent(.memoCell(.editingCancelButtonTapped))
         } label: {
             Text(strings.editingCancelButtonTitle.localized)
                 .comfieFont(.body)
-                .foregroundStyle(.red)
+                .foregroundStyle(.destructiveRed)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 20)
-                .background(.white)
+                .background(.cfWhite)
                 .clipShape(RoundedRectangle(cornerRadius: 212))
                 .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 0)
         }
