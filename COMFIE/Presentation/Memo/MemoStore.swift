@@ -197,6 +197,7 @@ extension MemoStore {
         case .startEditing(let memo):
             return startEditingMemo(newState, memo)
         case .cancelEditing:
+            hideKeyboard()
             return clearEditingState(newState)
         }
         return newState
