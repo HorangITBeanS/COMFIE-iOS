@@ -11,16 +11,19 @@ struct MemoCell: View {
     private let strings = StringLiterals.Memo.self
     
     let memo: Memo
-    let isEditing: Bool
     
+    @Binding var intent: MemoStore
+    
+    // TODO: isUserInComfieZone 변경 필요
     let isUserInComfieZone: Bool
     
-    let isMemoHidden: Bool
-    let toggleMemoVisibility: (Memo) -> Void
+    private var isEditing: Bool {
+        intent.state.isEditingMemo(memo)
+    }
     
-    let onEdit: (Memo) -> Void
-    let onRetrospect: (Memo) -> Void
-    let onDelete: (Memo) -> Void
+    private var isMemoHidden: Bool {
+        intent.state.isMemoHidden(memo)
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -34,7 +37,7 @@ struct MemoCell: View {
                     if memo.retrospectionText != nil {
                         Button {
                             withAnimation(.easeIn(duration: 0.2)) {
-                                toggleMemoVisibility(memo)
+                                intent(.memoCell(.hideMemo(memo)))
                             }
                         } label: {
                             Image(.icBack)
@@ -83,14 +86,14 @@ struct MemoCell: View {
             if !isUserInComfieZone {
                 // 수정하기
                 Button {
-                    onEdit(memo)
+                    intent(.memoCell(.editButtonTapped(memo)))
                 } label: {
                     Label(strings.editButtonTitle.localized, systemImage: "pencil")
                 }
             } else {
                 // 회고하기
                 Button {
-                    onRetrospect(memo)
+                    intent(.memoCell(.retrospectionButtonTapped(memo)))
                 } label: {
                     Label(strings.retrospectionButtonTitle.localized, systemImage: "ellipsis.message")
                         .foregroundStyle(.red)
@@ -99,38 +102,24 @@ struct MemoCell: View {
             
             // 삭제하기
             Button(role: .destructive) {
-                onDelete(memo)
+                intent(.memoCell(.deleteButtonTapped(memo)))
             } label: {
                 Label(strings.deleteButtonTitle.localized, systemImage: "trash")
             }
             
         } label: {
-            Image("icEllipsis")
+            Image(.icEllipsis)
                 .frame(width: 19, height: 20)
         }
     }
 }
 
 #Preview {
-    let memo = Memo.sampleMemos[1]
-    var isMemoHidden = false
+    @Previewable @State var intent = MemoStore(router: Router(), memoRepository: MockMemoRepository())
     
     MemoCell(
-        memo: memo,
-        isEditing: false,
-        isUserInComfieZone: false,
-        isMemoHidden: isMemoHidden,
-        toggleMemoVisibility: { _ in
-            isMemoHidden.toggle()
-        },
-        onEdit: { _ in
-            print("onEdit")
-        },
-        onRetrospect: { _ in
-            print("onRetrospect")
-        },
-        onDelete: { _ in
-            print("onDelete")
-        }
+        memo: intent.state.memos[3],
+        intent: $intent,
+        isUserInComfieZone: false
     )
 }

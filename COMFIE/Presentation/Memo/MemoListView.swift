@@ -46,21 +46,8 @@ struct MemoListView: View {
                             ForEach(group.memos) { memo in
                                 MemoCell(
                                     memo: memo,
-                                    isEditing: intent.state.isEditingMemo(memo),
-                                    isUserInComfieZone: isUserInComfieZone,
-                                    isMemoHidden: intent.state.isMemoHidden(memo),
-                                    toggleMemoVisibility: { memo in
-                                        intent(.memoCell(.hideMemo(memo)))
-                                    },
-                                    onEdit: { memo in
-                                        intent(.memoCell(.editButtonTapped(memo)))
-                                    },
-                                    onRetrospect: { memo in
-                                        intent(.memoCell(.retrospectionButtonTapped(memo)))
-                                    },
-                                    onDelete: { memo in
-                                        intent(.memoCell(.deleteButtonTapped(memo)))
-                                    }
+                                    intent: $intent,
+                                    isUserInComfieZone: isUserInComfieZone
                                 )
                             }
                         }
