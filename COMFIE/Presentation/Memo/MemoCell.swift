@@ -1,3 +1,10 @@
+//
+//  MemoCell.swift
+//  COMFIE
+//
+//  Created by zaehorang on 4/2/25.
+//
+
 import SwiftUI
 
 struct MemoCell: View {
@@ -44,7 +51,7 @@ struct MemoCell: View {
             }
         }
         .padding(12)
-        background(isEditing ? Color.keySecondary : Color.cfWhite)
+        .background(isEditing ? Color.keySecondary : Color.cfWhite)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
@@ -83,6 +90,7 @@ struct MemoCell: View {
 
 #Preview {
     let memo = Memo.sampleMemos[0]
+    
     MemoCell(
         memo: memo,
         isEditing: false,

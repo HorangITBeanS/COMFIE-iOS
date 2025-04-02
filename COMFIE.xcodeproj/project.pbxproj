@@ -11,7 +11,6 @@
 		267F6B2C2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
 		267F6B2D2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
 		267F6B2E2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
-		267F6B322D93C4600089BD6D /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B312D93C4600089BD6D /* MemoCell.swift */; };
 		267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */; };
 		267F6B3E2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
 		267F6B3F2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
@@ -19,6 +18,7 @@
 		267F6B4D2D969F590089BD6D /* MemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B4C2D969F590089BD6D /* MemoRepository.swift */; };
 		267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */; };
 		267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */; };
+		267F6B602D9CFABF0089BD6D /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5F2D9CFABF0089BD6D /* MemoCell.swift */; };
 		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
 		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
@@ -112,12 +112,12 @@
 /* Begin PBXFileReference section */
 		267F6B292D91B7DD0089BD6D /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Memo.swift"; sourceTree = "<group>"; };
-		267F6B312D93C4600089BD6D /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoListView.swift; sourceTree = "<group>"; };
 		267F6B3D2D94F11A0089BD6D /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
 		267F6B4C2D969F590089BD6D /* MemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepository.swift; sourceTree = "<group>"; };
 		267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepositoryProtocol.swift; sourceTree = "<group>"; };
 		267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMemoRepository.swift; sourceTree = "<group>"; };
+		267F6B5F2D9CFABF0089BD6D /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
 		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
 		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
@@ -373,7 +373,7 @@
 			children = (
 				5103411E2D7997130050C718 /* MemoStore.swift */,
 				267F6B292D91B7DD0089BD6D /* MemoView.swift */,
-				267F6B312D93C4600089BD6D /* MemoCell.swift */,
+				267F6B5F2D9CFABF0089BD6D /* MemoCell.swift */,
 				267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */,
 			);
 			path = Memo;
@@ -664,7 +664,6 @@
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
-				267F6B322D93C4600089BD6D /* MemoCell.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
@@ -672,6 +671,7 @@
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
+				267F6B602D9CFABF0089BD6D /* MemoCell.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
 				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
 				267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */,
