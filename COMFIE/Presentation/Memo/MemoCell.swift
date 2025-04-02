@@ -15,16 +15,37 @@ struct MemoCell: View {
     
     let isUserInComfieZone: Bool
     
+    let isMemoHidden: Bool
+    let toggleMemoVisibility: (Memo) -> Void
+    
     let onEdit: (Memo) -> Void
     let onRetrospect: (Memo) -> Void
     let onDelete: (Memo) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text(memo.createdAt.hourAndMinuteString)
-                    .comfieFont(.systemBody)
-                    .foregroundStyle(Color.textDarkgray)
+            HStack(spacing: 0) {
+                
+                HStack(spacing: 4) {
+                    Text(memo.createdAt.hourAndMinuteString)
+                        .comfieFont(.systemBody)
+                        .foregroundStyle(Color.textDarkgray)
+                    
+                    if memo.retrospectionText != nil {
+                        Button {
+                            withAnimation(.easeIn(duration: 0.2)) {
+                                toggleMemoVisibility(memo)
+                            }
+                        } label: {
+                            Image(.icBack)
+                                .resizable()
+                                .frame(width: 9, height: 14)
+                                .rotationEffect(.degrees(isMemoHidden ? 270 : 180))
+                        }
+                        .padding(.vertical, 1)
+                    }
+                }
+                .padding(.vertical, 2)
                 
                 Spacer()
                 
@@ -32,9 +53,11 @@ struct MemoCell: View {
             }
             .padding(.bottom, 4)
             
-            Text(isUserInComfieZone ? memo.originalText : memo.emojiText)
-                .comfieFont(.body)
-                .foregroundStyle(Color.textBlack)
+            if isMemoHidden || memo.retrospectionText == nil {
+                Text(isUserInComfieZone ? memo.originalText : memo.emojiText)
+                    .comfieFont(.body)
+                    .foregroundStyle(Color.textBlack)
+            }
             
             // 회고가 있는 경우
             if let retrospectionText = memo.retrospectionText {
@@ -89,12 +112,17 @@ struct MemoCell: View {
 }
 
 #Preview {
-    let memo = Memo.sampleMemos[0]
+    let memo = Memo.sampleMemos[1]
+    var isMemoHidden = false
     
     MemoCell(
         memo: memo,
         isEditing: false,
-        isUserInComfieZone: true,
+        isUserInComfieZone: false,
+        isMemoHidden: isMemoHidden,
+        toggleMemoVisibility: { _ in
+            isMemoHidden.toggle()
+        },
         onEdit: { _ in
             print("onEdit")
         },

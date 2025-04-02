@@ -142,7 +142,7 @@ struct MemoView: View {
     MemoView(
         intent: MemoStore(
             router: Router(),
-            memoRepository: MemoRepository()
+            memoRepository: MockMemoRepository()
         )
     )
 }

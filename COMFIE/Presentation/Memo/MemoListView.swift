@@ -46,8 +46,12 @@ struct MemoListView: View {
                             ForEach(group.memos) { memo in
                                 MemoCell(
                                     memo: memo,
-                                    isEditing: intent.state.editingMemo?.id == memo.id,
+                                    isEditing: intent.state.isEditingMemo(memo),
                                     isUserInComfieZone: isUserInComfieZone,
+                                    isMemoHidden: intent.state.isMemoHidden(memo),
+                                    toggleMemoVisibility: { memo in
+                                        intent(.memoCell(.hideMemo(memo)))
+                                    },
                                     onEdit: { memo in
                                         intent(.memoCell(.editButtonTapped(memo)))
                                     },
