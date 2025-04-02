@@ -12,7 +12,7 @@ struct MemoView: View {
     
     @State var intent: MemoStore
     // 컴피존 관련 모델에서 주입 받아야 한다.
-    @State private var isUserInComfieZone: Bool = true
+    @State private var isUserInComfieZone: Bool = false
     
     var body: some View {
         ZStack {
@@ -23,23 +23,24 @@ struct MemoView: View {
                     .onTapGesture {
                         intent(.backgroundTapped)
                     }
-                
-                ZStack(alignment: .bottom) {
-                    
+                 
+                ZStack {
                     MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
                         .onTapGesture {
                             intent(.backgroundTapped)
                         }
                     
-                    VStack(spacing: 10) {
-                        // 수정 취소 버튼
-                        if intent.state.editingMemo != nil {
+                    if intent.state.editingMemo != nil {
+                        VStack {
+                            Spacer()
                             editingCancelButton
+                                .padding(.bottom, 10)
                         }
-                        memoInputView
                     }
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
                 }
+                
+                memoInputView
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             
             if intent.state.deletingMemo != nil {
