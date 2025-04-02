@@ -12,9 +12,9 @@
 		267F6B2D2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
 		267F6B2E2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
 		267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */; };
-		267F6B3E2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
-		267F6B3F2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
-		267F6B402D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
+		267F6B3E2D94F11A0089BD6D /* Date+ in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+ */; };
+		267F6B3F2D94F11A0089BD6D /* Date+ in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+ */; };
+		267F6B402D94F11A0089BD6D /* Date+ in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+ */; };
 		267F6B4D2D969F590089BD6D /* MemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B4C2D969F590089BD6D /* MemoRepository.swift */; };
 		267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */; };
 		267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */; };
@@ -69,7 +69,6 @@
 		51F8F5AF2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
-		51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */; };
 		51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
 		51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
 		51F8F5B82D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
@@ -123,7 +122,7 @@
 		267F6B292D91B7DD0089BD6D /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Memo.swift"; sourceTree = "<group>"; };
 		267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoListView.swift; sourceTree = "<group>"; };
-		267F6B3D2D94F11A0089BD6D /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
+		267F6B3D2D94F11A0089BD6D /* Date+ */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Date+"; sourceTree = "<group>"; };
 		267F6B4C2D969F590089BD6D /* MemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepository.swift; sourceTree = "<group>"; };
 		267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepositoryProtocol.swift; sourceTree = "<group>"; };
 		267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMemoRepository.swift; sourceTree = "<group>"; };
@@ -170,7 +169,6 @@
 		51A7B0112D81704600B50D1E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithDifferentFont.swift; sourceTree = "<group>"; };
 		51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals_Onboarding.swift; sourceTree = "<group>"; };
-		51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingView.swift; sourceTree = "<group>"; };
 		51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFNavigationBar.swift; sourceTree = "<group>"; };
 		51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfNavigationBar.swift"; sourceTree = "<group>"; };
 		51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
@@ -341,7 +339,6 @@
 				5103410A2D7782830050C718 /* Intent */,
 				510341052D777E030050C718 /* Onboarding */,
 				5103411B2D7996E40050C718 /* Memo */,
-				51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -450,14 +447,6 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
-		51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */ = {
-			isa = PBXGroup;
-			children = (
-				51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */,
-			);
-			path = ComfieZoneSetting;
-			sourceTree = "<group>";
-		};
 		51F8F5B92D95298000DD2E3D /* CFNavigationBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,7 +471,7 @@
 			children = (
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
 				51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */,
-				267F6B3D2D94F11A0089BD6D /* Date+String.swift */,
+				267F6B3D2D94F11A0089BD6D /* Date+ */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -722,7 +711,7 @@
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
-				267F6B3F2D94F11A0089BD6D /* Date+String.swift in Sources */,
+				267F6B3F2D94F11A0089BD6D /* Date+ in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
@@ -730,7 +719,6 @@
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,
-				51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */,
 				5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -746,7 +734,7 @@
 				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				267F6B2E2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
-				267F6B3E2D94F11A0089BD6D /* Date+String.swift in Sources */,
+				267F6B3E2D94F11A0089BD6D /* Date+ in Sources */,
 				B9EA53062D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
@@ -773,7 +761,7 @@
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
 				B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				267F6B2C2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
-				267F6B402D94F11A0089BD6D /* Date+String.swift in Sources */,
+				267F6B402D94F11A0089BD6D /* Date+ in Sources */,
 				510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
