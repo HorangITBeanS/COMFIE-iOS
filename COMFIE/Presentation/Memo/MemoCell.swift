@@ -25,30 +25,36 @@ struct MemoCell: View {
         intent.state.isMemoHidden(memo)
     }
     
+    private var hasRetrospection: Bool {
+        memo.retrospectionText != nil
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 0) {
                 
-                HStack(spacing: 4) {
-                    Text(memo.createdAt.hourAndMinuteString)
-                        .comfieFont(.systemBody)
-                        .foregroundStyle(Color.textDarkgray)
+                Button {
+                    withAnimation(.easeIn(duration: 0.2)) {
+                        intent(.memoCell(.hideMemo(memo)))
+                    }
+                } label: {
                     
-                    if memo.retrospectionText != nil {
-                        Button {
-                            withAnimation(.easeIn(duration: 0.2)) {
-                                intent(.memoCell(.hideMemo(memo)))
-                            }
-                        } label: {
+                    HStack(spacing: 4) {
+                        Text(memo.createdAt.hourAndMinuteString)
+                            .comfieFont(.systemBody)
+                            .foregroundStyle(Color.textDarkgray)
+                        
+                        if hasRetrospection {
                             Image(.icBack)
                                 .resizable()
                                 .frame(width: 9, height: 14)
+                                .padding(.vertical, 1)
                                 .rotationEffect(.degrees(isMemoHidden ? 270 : 180))
                         }
-                        .padding(.vertical, 1)
                     }
                 }
                 .padding(.vertical, 2)
+                .disabled(!hasRetrospection)
                 
                 Spacer()
                 
