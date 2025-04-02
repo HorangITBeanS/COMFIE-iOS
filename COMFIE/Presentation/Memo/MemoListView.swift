@@ -46,6 +46,7 @@ struct MemoListView: View {
                             ForEach(group.memos) { memo in
                                 MemoCell(
                                     memo: memo,
+                                    isEditing: intent.state.editingMemo?.id == memo.id,
                                     isUserInComfieZone: isUserInComfieZone,
                                     onEdit: { memo in
                                         intent(.memoCell(.editButtonTapped(memo)))

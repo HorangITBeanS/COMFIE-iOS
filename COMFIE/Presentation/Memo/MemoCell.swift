@@ -4,6 +4,8 @@ struct MemoCell: View {
     private let strings = StringLiterals.Memo.self
     
     let memo: Memo
+    let isEditing: Bool
+    
     let isUserInComfieZone: Bool
     
     let onEdit: (Memo) -> Void
@@ -42,7 +44,7 @@ struct MemoCell: View {
             }
         }
         .padding(12)
-        .background(Color.cfWhite)
+        background(isEditing ? Color.keySecondary : Color.cfWhite)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
@@ -83,6 +85,7 @@ struct MemoCell: View {
     let memo = Memo.sampleMemos[0]
     MemoCell(
         memo: memo,
+        isEditing: false,
         isUserInComfieZone: true,
         onEdit: { _ in
             print("onEdit")
