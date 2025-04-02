@@ -11,7 +11,7 @@ import UIKit
 class MemoStore: IntentStore {
     private(set) var state: State = .init()
     private let router: Router
-    private let memoRepository: MemoRepository
+    private let memoRepository: MemoRepositoryProtocol
     
     // MARK: State
     struct State {
@@ -91,7 +91,7 @@ class MemoStore: IntentStore {
     }
     
     // MARK: Init
-    init(router: Router, memoRepository: MemoRepository) {
+    init(router: Router, memoRepository: MemoRepositoryProtocol) {
         self.router = router
         self.memoRepository = memoRepository
     }

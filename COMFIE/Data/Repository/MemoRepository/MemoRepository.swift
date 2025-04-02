@@ -5,9 +5,7 @@
 //  Created by zaehorang on 3/28/25.
 //
 
-import Foundation
-
-final class MemoRepository {
+final class MemoRepository: MemoRepositoryProtocol {
     private let coreDataService: CoreDataService
 
     init(coreDataService: CoreDataService = CoreDataService()) {

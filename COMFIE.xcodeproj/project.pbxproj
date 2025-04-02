@@ -17,6 +17,8 @@
 		267F6B3F2D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
 		267F6B402D94F11A0089BD6D /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+String.swift */; };
 		267F6B4D2D969F590089BD6D /* MemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B4C2D969F590089BD6D /* MemoRepository.swift */; };
+		267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */; };
+		267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */; };
 		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
 		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
@@ -114,6 +116,8 @@
 		267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoListView.swift; sourceTree = "<group>"; };
 		267F6B3D2D94F11A0089BD6D /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
 		267F6B4C2D969F590089BD6D /* MemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepository.swift; sourceTree = "<group>"; };
+		267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepositoryProtocol.swift; sourceTree = "<group>"; };
+		267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMemoRepository.swift; sourceTree = "<group>"; };
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
 		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
 		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
@@ -194,9 +198,19 @@
 		267F6B4B2D969F4B0089BD6D /* Repository */ = {
 			isa = PBXGroup;
 			children = (
-				267F6B4C2D969F590089BD6D /* MemoRepository.swift */,
+				267F6B5C2D9CEF7C0089BD6D /* MemoRepository */,
 			);
 			path = Repository;
+			sourceTree = "<group>";
+		};
+		267F6B5C2D9CEF7C0089BD6D /* MemoRepository */ = {
+			isa = PBXGroup;
+			children = (
+				267F6B4C2D969F590089BD6D /* MemoRepository.swift */,
+				267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */,
+				267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */,
+			);
+			path = MemoRepository;
 			sourceTree = "<group>";
 		};
 		26D697AE2D7EC88800AC200C /* CoreData */ = {
@@ -663,6 +677,7 @@
 				267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
+				267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */,
 				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
@@ -674,6 +689,7 @@
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
+				267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */,
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,

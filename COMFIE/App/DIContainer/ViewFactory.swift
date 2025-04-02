@@ -10,7 +10,7 @@ import SwiftUI
 struct ViewFactory {
     let router: Router
     // TODO: MemoRepository를 어디서 주입할 지 고민하기
-    let memoRepository = MemoRepository()
+    let memoRepository: MemoRepositoryProtocol = MemoRepository()
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }
