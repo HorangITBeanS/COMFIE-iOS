@@ -1,5 +1,5 @@
 //
-//  Date+String.swift
+//  Date+.swift
 //  COMFIE
 //
 //  Created by zaehorang on 3/27/25.
@@ -9,11 +9,9 @@ import Foundation
 
 extension Date {
     var hourAndMinuteString: String {
-        formatted(
-            Date.FormatStyle()
-                .hour(.twoDigits(amPM: .omitted))
-                .minute(.twoDigits)
-        )
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: self)
     }
     
     var dotYMDFormat: String {

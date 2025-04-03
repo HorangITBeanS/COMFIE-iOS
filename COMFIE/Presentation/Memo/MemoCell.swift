@@ -33,7 +33,6 @@ struct MemoCell: View {
         !isMemoHidden || !hasRetrospection
     }
     
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 0) {
