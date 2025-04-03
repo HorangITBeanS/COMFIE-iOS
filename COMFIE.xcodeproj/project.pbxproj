@@ -12,9 +12,9 @@
 		267F6B2D2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
 		267F6B2E2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */; };
 		267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */; };
-		267F6B3E2D94F11A0089BD6D /* Date+ in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+ */; };
-		267F6B3F2D94F11A0089BD6D /* Date+ in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+ */; };
-		267F6B402D94F11A0089BD6D /* Date+ in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+ */; };
+		267F6B3E2D94F11A0089BD6D /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+.swift */; };
+		267F6B3F2D94F11A0089BD6D /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+.swift */; };
+		267F6B402D94F11A0089BD6D /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B3D2D94F11A0089BD6D /* Date+.swift */; };
 		267F6B4D2D969F590089BD6D /* MemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B4C2D969F590089BD6D /* MemoRepository.swift */; };
 		267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */; };
 		267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */; };
@@ -122,7 +122,7 @@
 		267F6B292D91B7DD0089BD6D /* MemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoView.swift; sourceTree = "<group>"; };
 		267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Memo.swift"; sourceTree = "<group>"; };
 		267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoListView.swift; sourceTree = "<group>"; };
-		267F6B3D2D94F11A0089BD6D /* Date+ */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Date+"; sourceTree = "<group>"; };
+		267F6B3D2D94F11A0089BD6D /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		267F6B4C2D969F590089BD6D /* MemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepository.swift; sourceTree = "<group>"; };
 		267F6B582D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoRepositoryProtocol.swift; sourceTree = "<group>"; };
 		267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMemoRepository.swift; sourceTree = "<group>"; };
@@ -471,7 +471,7 @@
 			children = (
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
 				51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */,
-				267F6B3D2D94F11A0089BD6D /* Date+ */,
+				267F6B3D2D94F11A0089BD6D /* Date+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -711,7 +711,7 @@
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
-				267F6B3F2D94F11A0089BD6D /* Date+ in Sources */,
+				267F6B3F2D94F11A0089BD6D /* Date+.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
@@ -734,7 +734,7 @@
 				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				267F6B2E2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
-				267F6B3E2D94F11A0089BD6D /* Date+ in Sources */,
+				267F6B3E2D94F11A0089BD6D /* Date+.swift in Sources */,
 				B9EA53062D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
@@ -761,7 +761,7 @@
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
 				B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				267F6B2C2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
-				267F6B402D94F11A0089BD6D /* Date+ in Sources */,
+				267F6B402D94F11A0089BD6D /* Date+.swift in Sources */,
 				510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
