@@ -22,12 +22,7 @@ class MemoStore: IntentStore {
         var inputMemoText: String = ""
         var editingMemo: Memo?
         var deletingMemo: Memo?
-        
-        var hideMemoIDs: Set<UUID> = []
-        
-        func isMemoHidden(_ memo: Memo) -> Bool {
-                hideMemoIDs.contains(memo.id)
-            }
+
         func isEditingMemo(_ memo: Memo) -> Bool {
             editingMemo?.id == memo.id
         }
@@ -58,8 +53,6 @@ class MemoStore: IntentStore {
             case retrospectionButtonTapped(Memo)
             case deleteButtonTapped(Memo)
             case editingCancelButtonTapped
-            
-            case hideMemo(Memo)
         }
     }
     
@@ -74,8 +67,6 @@ class MemoStore: IntentStore {
             case save
             case update(Memo)
             case delete
-            
-            case hideMemo(Memo)
         }
 
         enum InputAction {
@@ -159,8 +150,6 @@ extension MemoStore {
         case .retrospectionButtonTapped(let memo):
             performSideEffect(for: .navigation(.toRetrospection(memo)))
             return state
-        case .hideMemo(let memo):
-            return handleAction(state, .memo(.hideMemo(memo)))
         }
     }
     
@@ -205,12 +194,6 @@ extension MemoStore {
         case .delete:
             if let memo = newState.deletingMemo {
                 return deleteMemo(newState, memo)
-            }
-        case .hideMemo(let memo):
-            if newState.hideMemoIDs.contains(memo.id) {
-                newState.hideMemoIDs.remove(memo.id)
-            } else {
-                newState.hideMemoIDs.insert(memo.id)
             }
         }
         return newState

@@ -12,6 +12,8 @@ struct MemoCell: View {
     
     let memo: Memo
     
+    @State private var isMemoHidden: Bool = true
+    
     @Binding var intent: MemoStore
     
     // TODO: isUserInComfieZone 변경 필요
@@ -21,13 +23,16 @@ struct MemoCell: View {
         intent.state.isEditingMemo(memo)
     }
     
-    private var isMemoHidden: Bool {
-        intent.state.isMemoHidden(memo)
-    }
-    
     private var hasRetrospection: Bool {
         memo.retrospectionText != nil
     }
+    
+    private var shouldShowMemo: Bool {
+        // 회고가 없으면 무조건 메모를 보여주고,
+        // 회고가 있는 경우엔 사용자가 펼쳤을 때만 보여준다
+        !isMemoHidden || !hasRetrospection
+    }
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -35,10 +40,9 @@ struct MemoCell: View {
                 
                 Button {
                     withAnimation(.easeIn(duration: 0.2)) {
-                        intent(.memoCell(.hideMemo(memo)))
+                        isMemoHidden.toggle()
                     }
                 } label: {
-                    
                     HStack(spacing: 4) {
                         Text(memo.createdAt.hourAndMinuteString)
                             .comfieFont(.systemBody)
@@ -49,7 +53,7 @@ struct MemoCell: View {
                                 .resizable()
                                 .frame(width: 9, height: 14)
                                 .padding(.vertical, 1)
-                                .rotationEffect(.degrees(isMemoHidden ? 270 : 180))
+                                .rotationEffect(.degrees(isMemoHidden ? 180 : 270))
                         }
                     }
                 }
@@ -62,7 +66,7 @@ struct MemoCell: View {
             }
             .padding(.bottom, 4)
             
-            if isMemoHidden || memo.retrospectionText == nil {
+            if shouldShowMemo {
                 Text(isUserInComfieZone ? memo.originalText : memo.emojiText)
                     .comfieFont(.body)
                     .foregroundStyle(Color.textBlack)
