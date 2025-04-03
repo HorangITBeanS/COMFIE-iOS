@@ -18,6 +18,10 @@ struct MemoView: View {
     // 컴피존 관련 모델에서 주입 받아야 한다.
     @State private var isUserInComfieZone: Bool = false
     
+    private var isEditingMemo: Bool {
+        intent.state.editingMemo != nil
+    }
+    
     var body: some View {
         ZStack {
             Color.keyBackground.ignoresSafeArea()
@@ -34,7 +38,7 @@ struct MemoView: View {
                             intent(.backgroundTapped)
                         }
                     
-                    if intent.state.editingMemo != nil {
+                    if isEditingMemo {
                         VStack {
                             Spacer()
                             editingCancelButton
@@ -120,7 +124,7 @@ struct MemoView: View {
             Button {
                 intent(.memoInput(.memoInputButtonTapped))
             } label: {
-                Image(.icSend)
+                Image(isEditingMemo ? .icCheck : .icSend)
                     .resizable()
                     .foregroundStyle(.cfWhite)
                     .frame(width: 24, height: 24)
