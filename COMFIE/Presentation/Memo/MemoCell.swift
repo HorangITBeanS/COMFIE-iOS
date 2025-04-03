@@ -121,7 +121,7 @@ struct MemoCell: View {
 }
 
 #Preview {
-    @Previewable @State var intent = MemoStore(router: Router(), memoRepository: MockMemoRepository())
+    @Previewable @State var intent = MemoStore(memoRepository: MockMemoRepository())
     
     MemoCell(
         memo: intent.state.memos[3],

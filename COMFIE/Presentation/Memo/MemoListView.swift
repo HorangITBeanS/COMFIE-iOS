@@ -61,7 +61,7 @@ struct MemoListView: View {
 }
 
 #Preview {
-    @Previewable @State var intent = MemoStore(router: Router(), memoRepository: MockMemoRepository())
+    @Previewable @State var intent = MemoStore(memoRepository: MockMemoRepository())
     @Previewable @State var isUserInComfieZone = false
     
     MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)

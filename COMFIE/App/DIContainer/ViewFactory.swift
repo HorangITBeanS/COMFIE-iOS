@@ -14,7 +14,7 @@ struct ViewFactory {
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }
-    private func makeMemoIntent() -> MemoStore { MemoStore(router: router, memoRepository: memoRepository) }
+    private func makeMemoIntent() -> MemoStore { MemoStore(memoRepository: memoRepository) }
     
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {

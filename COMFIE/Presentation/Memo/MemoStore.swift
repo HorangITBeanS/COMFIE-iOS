@@ -11,7 +11,6 @@ import Foundation
 @Observable
 class MemoStore: IntentStore {
     private(set) var state: State = .init()
-    private let router: Router
     private let memoRepository: MemoRepositoryProtocol
     
     let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
@@ -108,8 +107,7 @@ class MemoStore: IntentStore {
     }
     
     // MARK: Init
-    init(router: Router, memoRepository: MemoRepositoryProtocol) {
-        self.router = router
+    init(memoRepository: MemoRepositoryProtocol) {
         self.memoRepository = memoRepository
     }
     
@@ -247,16 +245,6 @@ extension MemoStore {
 extension MemoStore {
     private func performSideEffect(for action: SideEffect) {
         sideEffectPublisher.send(action)
-        
-        switch action {
-        case .navigation(.toRetrospection(let memo)):
-            // TODO: 해당 뷰에 메모를 전달줘야 한다.
-            router.push(.retrospection)
-        case .navigation(.toComfieZoneSetting):
-            router.push(.comfieZoneSetting)
-        default:
-            break
-        }
     }
 }
 
