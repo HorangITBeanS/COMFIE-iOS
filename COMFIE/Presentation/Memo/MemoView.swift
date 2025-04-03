@@ -77,9 +77,12 @@ struct MemoView: View {
             HStack(spacing: 8) {
                 // 컴피존 상태에 따라 로고 변경
                 Image(isUserInComfieZone ? .icComfie : .icUncomfie)
+                    .resizable()
+                    .frame(width: isUserInComfieZone ? 84 : 115, height: 25)
                 Image(.icLocation)
+                    .resizable()
+                    .frame(width: 24, height: 24)
             }
-            .frame(height: 24)
             
             Spacer()
             
@@ -88,6 +91,7 @@ struct MemoView: View {
                 intent(.comfieZoneSettingButtonTapped)
             } label: {
                 Image(.icEllipsis)
+                    .resizable()
                     .frame(width: 24, height: 24)
             }
         }
@@ -116,7 +120,8 @@ struct MemoView: View {
             Button {
                 intent(.memoInput(.memoInputButtonTapped))
             } label: {
-                Image(systemName: "arrow.up")
+                Image(.icSend)
+                    .resizable()
                     .foregroundStyle(.cfWhite)
                     .frame(width: 24, height: 24)
                     .padding(8)

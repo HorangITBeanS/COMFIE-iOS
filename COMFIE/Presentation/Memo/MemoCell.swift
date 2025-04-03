@@ -119,6 +119,7 @@ struct MemoCell: View {
             
         } label: {
             Image(.icEllipsis)
+                .resizable()
                 .frame(width: 19, height: 20)
         }
     }

@@ -183,7 +183,7 @@ extension MemoStore {
 // MARK: - Handle Action Methods
 extension MemoStore {
     private func handleMemoAction(_ state: State, _ action: Action.MemoAction) -> State {
-        var newState = state
+        let newState = state
         switch action {
         case .fetchAll:
             return fetchMemos(newState)
