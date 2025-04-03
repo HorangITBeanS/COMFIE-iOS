@@ -11,6 +11,9 @@ struct MemoView: View {
     private let strings = StringLiterals.Memo.self
     
     @State var intent: MemoStore
+    
+    @FocusState private var isMemoInputFieldFocused: Bool
+    
     // 컴피존 관련 모델에서 주입 받아야 한다.
     @State private var isUserInComfieZone: Bool = false
     
@@ -52,6 +55,16 @@ struct MemoView: View {
             }
         }
         .onAppear { intent(.onAppear) }
+        .onReceive(intent.sideEffectPublisher) { effect in
+            switch effect {
+            case .ui(.setMemoInputFocus):
+                isMemoInputFieldFocused = true
+            case .ui(.removeMemoInputFocus):
+                isMemoInputFieldFocused = false
+            default:
+                break
+            }
+        }
     }
     
     // MARK: - View Property
@@ -89,6 +102,7 @@ struct MemoView: View {
                         ),
                       axis: .vertical)
             .lineLimit(1...4)
+            .focused($isMemoInputFieldFocused)
             .padding(.vertical, 9)
             .padding(.leading, 12)
             .padding(.trailing, 8)

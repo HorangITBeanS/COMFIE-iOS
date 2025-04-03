@@ -5,13 +5,16 @@
 //  Created by zaehorang on 3/6/25.
 //
 
-import UIKit
+import Combine
+import Foundation
 
 @Observable
 class MemoStore: IntentStore {
     private(set) var state: State = .init()
     private let router: Router
     private let memoRepository: MemoRepositoryProtocol
+    
+    let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
     
     // MARK: State
     struct State {
@@ -99,7 +102,8 @@ class MemoStore: IntentStore {
         }
 
         enum UI {
-            case hideKeyboard
+            case removeMemoInputFocus
+            case setMemoInputFocus
         }
     }
     
@@ -122,7 +126,7 @@ class MemoStore: IntentStore {
         case .onAppear:
             state = handleAction(state, .memo(.fetchAll))
         case .backgroundTapped:
-            performSideEffect(for: .ui(.hideKeyboard))
+            performSideEffect(for: .ui(.removeMemoInputFocus))
         case .comfieZoneSettingButtonTapped:
             performSideEffect(for: .navigation(.toComfieZoneSetting))
         }
@@ -147,9 +151,13 @@ extension MemoStore {
         case .deleteButtonTapped(let memo):
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
-            return handleAction(state, .input(.startEditing(memo)))
+            let newState = handleAction(state, .input(.startEditing(memo)))
+            performSideEffect(for: .ui(.setMemoInputFocus))
+            return newState
         case .editingCancelButtonTapped:
-            return handleAction(state, .input(.cancelEditing))
+            let newState = handleAction(state, .input(.cancelEditing))
+            performSideEffect(for: .ui(.removeMemoInputFocus))
+            return newState
         case .retrospectionButtonTapped(let memo):
             performSideEffect(for: .navigation(.toRetrospection(memo)))
             return state
@@ -168,7 +176,7 @@ extension MemoStore {
                 newState = handleAction(state, .memo(.save))
             }
             
-            performSideEffect(for: .ui(.hideKeyboard))
+            performSideEffect(for: .ui(.removeMemoInputFocus))
             return newState
         case .updateNewMemo(let text):
             return handleAction(state, .input(.updateText(text)))
@@ -218,7 +226,6 @@ extension MemoStore {
         case .startEditing(let memo):
             return startEditingMemo(newState, memo)
         case .cancelEditing:
-            hideKeyboard()
             return clearEditingState(newState)
         }
         return newState
@@ -239,14 +246,16 @@ extension MemoStore {
 // MARK: - Side Effect Method
 extension MemoStore {
     private func performSideEffect(for action: SideEffect) {
+        sideEffectPublisher.send(action)
+        
         switch action {
         case .navigation(.toRetrospection(let memo)):
             // TODO: 해당 뷰에 메모를 전달줘야 한다.
             router.push(.retrospection)
         case .navigation(.toComfieZoneSetting):
             router.push(.comfieZoneSetting)
-        case .ui(.hideKeyboard):
-            hideKeyboard()
+        default:
+            break
         }
     }
 }
@@ -328,12 +337,5 @@ extension MemoStore {
         newState.editingMemo = nil
         newState.inputMemoText = ""
         return newState
-    }
-    
-    private func hideKeyboard() {
-        UIApplication.shared.sendAction(
-            #selector(UIResponder.resignFirstResponder),
-            to: nil, from: nil, for: nil
-        )
     }
 }
