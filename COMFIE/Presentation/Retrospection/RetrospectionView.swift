@@ -7,14 +7,10 @@
 
 import SwiftUI
 
-enum Field: Hashable {
-    case content
-}
-
 struct RetrospectionView: View {
     @State private var retrospectionContent: String = ""
     @FocusState private var isKeyboardFocused: Bool
-    let memo: String = "뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?뭐라고 적어야 화가 나보일까? 미친거 아냐?"
+    let memo: String = "뭐라고 적어야 화가 나보일까??"
     
     var body: some View {
         VStack(spacing: 0) {
