@@ -37,6 +37,7 @@
 		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
 		510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341282D79A5C60050C718 /* UserDefaultsError.swift */; };
 		5103412C2D79ABC40050C718 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103412B2D79ABC40050C718 /* ViewFactory.swift */; };
+		5149D3BE2D9FF10E00173C30 /* ComfizoneSettingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BD2D9FF10E00173C30 /* ComfizoneSettingStore.swift */; };
 		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
 		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
 		51A7AFED2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
@@ -143,6 +144,7 @@
 		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
 		510341282D79A5C60050C718 /* UserDefaultsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsError.swift; sourceTree = "<group>"; };
 		5103412B2D79ABC40050C718 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
+		5149D3BD2D9FF10E00173C30 /* ComfizoneSettingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfizoneSettingStore.swift; sourceTree = "<group>"; };
 		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
 		51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 			isa = PBXGroup;
 			children = (
 				51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */,
+				5149D3BD2D9FF10E00173C30 /* ComfizoneSettingStore.swift */,
 			);
 			path = ComfieZoneSetting;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26D697BE2D7F43F400AC200C /* ComfieZone+fromEntity.swift in Sources */,
+				5149D3BE2D9FF10E00173C30 /* ComfizoneSettingStore.swift in Sources */,
 				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
 				26D697BA2D7F3D4700AC200C /* Memo+fromEntity.swift in Sources */,
 				5103411F2D7997130050C718 /* MemoStore.swift in Sources */,
