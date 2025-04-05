@@ -40,6 +40,8 @@
 		5149D3BE2D9FF10E00173C30 /* ComfieZoneSettingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */; };
 		5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */; };
 		5149D3C22DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
+		5149D3C32DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
+		5149D3C42DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
 		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
 		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
 		51A7AFED2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
