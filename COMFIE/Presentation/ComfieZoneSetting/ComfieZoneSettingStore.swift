@@ -1,15 +1,15 @@
 //
-//  ComfizoneSettingStore.swift
+//  ComfieZoneSettingStore.swift
 //  COMFIE
 //
 //  Created by Anjin on 4/4/25.
 //
 
-import Foundation
 import MapKit
+import SwiftUI
 
 @Observable
-class ComfizoneSettingStore: IntentStore {
+class ComfieZoneSettingStore: IntentStore {
     private(set) var state: State = .init()
     struct State {
         var initialPosition = MKCoordinateRegion(
@@ -20,10 +20,13 @@ class ComfizoneSettingStore: IntentStore {
             latitudinalMeters: 200,  // 지도 반경
             longitudinalMeters: 200
         )
+        
+        var showInfoPopup: Bool = false
     }
     
     enum Intent {
         case infoButtonTapped  // 안내 버튼 클릭
+        case closeInfoPopup  // 안내 팝업 닫기
     }
     
     enum Action { }
@@ -31,7 +34,11 @@ class ComfizoneSettingStore: IntentStore {
     func handleIntent(_ intent: Intent) {
         switch intent {
         case .infoButtonTapped:
-            print("정보버튼 클릭")
+            state.showInfoPopup = true
+        case .closeInfoPopup:
+            withAnimation {
+                state.showInfoPopup = false
+            }
         }
     }
 }

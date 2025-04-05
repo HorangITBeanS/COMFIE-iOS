@@ -9,8 +9,8 @@ import MapKit
 import SwiftUI
 
 struct ComfieZoneSettingView: View {
-    @State var intent: ComfizoneSettingStore
-    private var state: ComfizoneSettingStore.State { intent.state }
+    @State var intent: ComfieZoneSettingStore
+    private var state: ComfieZoneSettingStore.State { intent.state }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -83,6 +83,6 @@ struct ComfieZoneSettingView: View {
 
 #Preview {
     ComfieZoneSettingView(
-        intent: ComfizoneSettingStore()
+        intent: ComfieZoneSettingStore()
     )
 }
