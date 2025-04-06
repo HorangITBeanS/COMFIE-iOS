@@ -75,7 +75,6 @@ class RetrospectionStore: IntentStore {
         switch intent {
         case .onAppear:
             state = handleAction(state, .fetchMemo)
-            state = handleAction(state, .showCompleteButton)
             performSideEffect(for: .ui(.setContentFieldFocus))
         case .backgroundTapped:
             performSideEffect(for: .ui(.removeContentFieldFocus))
