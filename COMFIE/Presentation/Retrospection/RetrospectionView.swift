@@ -9,6 +9,8 @@ import SwiftUI
 
 struct RetrospectionView: View {
     @State private var retrospectionContent: String = ""
+    @FocusState private var isKeyboardFocused: Bool
+    let memo: String = "안녕하세요 안녕하세요 안녕하세요"
     
     var body: some View {
         VStack(spacing: 0) {
@@ -16,9 +18,7 @@ struct RetrospectionView: View {
             Rectangle()
                 .frame(height: 56)
             
-            ZStack(alignment: .top) {
-                Color.keyBackground.ignoresSafeArea()
-                
+            List {
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         Text(Date().toFormattedDateTimeString())
@@ -28,31 +28,44 @@ struct RetrospectionView: View {
                         Spacer()
                     }
                     .padding(.bottom, 8)
+                    
                     HStack(spacing: 0) {
-                        // memo.originalText 연결
-                        Text("뭐라고 적어야 화가 나보일까? 미친거 아냐?")
+                        // memo.originalText
+                        Text(memo)
                             .comfieFont(.body)
                             .foregroundStyle(.textBlack)
                         
                         Spacer()
                     }
-                    
-                    Rectangle()
-                        .frame(height: 1)
-                        .foregroundStyle(.cfGray)
-                        .padding(.vertical, 17)
-                    
-                    TextField("",
+                }
+                .padding(24)
+                .background(Color.keyBackground)
+                .listRowInsets(.zero)
+                .listRowSeparator(.hidden)
+                
+                VStack(spacing: 0) {
+                    TextField("지금 생각을 적어보세요.",
                               text: $retrospectionContent,
                               axis: .vertical)
                     .comfieFont(.body)
                     .foregroundStyle(.textBlack)
-                    .tint(.cfBlack)
+                    .tint(Color.textBlack)
+                    Spacer()
                 }
-                .padding(24)
+                .padding(.vertical, 20)
+                .padding(.horizontal, 24)
+                .frame(minHeight: 88)
+                .background(Color.keySubBackground)
+                .listRowInsets(.zero)
+                .listRowSeparator(.hidden)
             }
+            .listStyle(.plain)
+            .background(Color.keySubBackground)
         }
         .navigationBarBackButtonHidden()
+        .onTapGesture {
+            endTextEditing()
+        }
     }
 }
 
