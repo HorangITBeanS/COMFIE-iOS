@@ -16,6 +16,6 @@ enum Route {
     case comfieZoneSetting
     
     @ViewBuilder func view(_ router: Router) -> some View {
-        ViewFactory(router: router).makeView(self)
+        DIContainer(router: router).makeView(self)
     }
 }

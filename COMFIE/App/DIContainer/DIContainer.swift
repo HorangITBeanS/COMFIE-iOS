@@ -1,5 +1,5 @@
 //
-//  ViewFactory.swift
+//  DIContainer.swift
 //  COMFIE
 //
 //  Created by Anjin on 3/6/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ViewFactory {
+struct DIContainer {
     let router: Router
     // TODO: MemoRepository를 어디서 주입할 지 고민하기
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
