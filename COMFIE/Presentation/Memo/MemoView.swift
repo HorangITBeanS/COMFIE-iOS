@@ -13,7 +13,6 @@ struct MemoView: View {
     @State var intent: MemoStore
     
     @FocusState private var isMemoInputFieldFocused: Bool
-    @Environment(Router.self) private var router
     
     // 컴피존 관련 모델에서 주입 받아야 한다.
     @State private var isUserInComfieZone: Bool = false
@@ -66,11 +65,6 @@ struct MemoView: View {
                 isMemoInputFieldFocused = true
             case .ui(.removeMemoInputFocus):
                 isMemoInputFieldFocused = false
-            case .navigation(.toComfieZoneSetting):
-                router.push(.comfieZoneSetting)
-            case .navigation(.toRetrospection(let memo)):
-                // TODO: 이후에 회고 뷰에 메모를 전달해줘야 한다.
-                router.push(.retrospection)
             }
         }
     }
@@ -169,6 +163,7 @@ struct MemoView: View {
 #Preview {
     MemoView(
         intent: MemoStore(
+            router: Router(),
             memoRepository: MockMemoRepository()
         )
     )

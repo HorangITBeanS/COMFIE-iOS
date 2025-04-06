@@ -11,10 +11,6 @@ import Foundation
 @Observable
 class MemoStore: IntentStore {
     private(set) var state: State = .init()
-    private let memoRepository: MemoRepositoryProtocol
-    
-    let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
-    
     // MARK: State
     struct State {
         var memos: [Memo] = []
@@ -61,7 +57,8 @@ class MemoStore: IntentStore {
         case memo(MemoAction)
         case input(InputAction)
         case popup(PopupAction)
-
+        case navigation(NavigationAction)
+        
         enum MemoAction {
             case fetchAll
             case save
@@ -79,17 +76,16 @@ class MemoStore: IntentStore {
             case showDeletePopup(Memo)
             case cancelDelete
         }
+        
+        enum NavigationAction {
+            case toRetrospection(Memo)
+            case toComfieZoneSetting
+        }
     }
     
     // MARK: Side Effect
     enum SideEffect {
-        case navigation(Navigation)
         case ui(UI)
-
-        enum Navigation {
-            case toRetrospection(Memo)
-            case toComfieZoneSetting
-        }
 
         enum UI {
             case removeMemoInputFocus
@@ -97,8 +93,14 @@ class MemoStore: IntentStore {
         }
     }
     
+    private let router: Router
+    private let memoRepository: MemoRepositoryProtocol
+    
+    let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    
     // MARK: Init
-    init(memoRepository: MemoRepositoryProtocol) {
+    init(router: Router, memoRepository: MemoRepositoryProtocol) {
+        self.router = router
         self.memoRepository = memoRepository
     }
     
@@ -117,7 +119,7 @@ class MemoStore: IntentStore {
         case .backgroundTapped:
             performSideEffect(for: .ui(.removeMemoInputFocus))
         case .comfieZoneSettingButtonTapped:
-            performSideEffect(for: .navigation(.toComfieZoneSetting))
+            state = handleAction(state, .navigation(.toComfieZoneSetting))
         }
     }
 
@@ -129,6 +131,8 @@ class MemoStore: IntentStore {
             return handleInputAction(state, action)
         case .popup(let action):
             return handlePopupAction(state, action)
+        case .navigation(let action):
+            return handleNavigationAction(state, action)
         }
     }
 }
@@ -148,8 +152,8 @@ extension MemoStore {
             performSideEffect(for: .ui(.removeMemoInputFocus))
             return newState
         case .retrospectionButtonTapped(let memo):
-            performSideEffect(for: .navigation(.toRetrospection(memo)))
-            return state
+            let newState = handleNavigationAction(state, .toRetrospection(memo))
+            return newState
         }
     }
     
@@ -221,6 +225,18 @@ extension MemoStore {
             newState.deletingMemo = nil
         }
         return newState
+    }
+    
+    private func handleNavigationAction(_ state: State, _ action: Action.NavigationAction) -> State {
+        switch action {
+        case .toRetrospection(let memo):
+            // TODO: 이후에 회고 뷰에 메모를 전달해줘야 한다.
+            router.push(.retrospection)
+            return state
+        case .toComfieZoneSetting:
+            router.push(.comfieZoneSetting)
+            return state
+        }
     }
 }
 
