@@ -14,16 +14,6 @@ struct MemoListView: View {
     // TODO: isUserInComfieZone 변경 필요
     @Binding var isUserInComfieZone: Bool
     
-    // createdAt 날짜 문자열(dotYMDFormat 기준)로 메모들을 그룹화하고 정렬한 결과
-    private var groupedMemos: [(date: String, memos: [Memo])] {
-        let grouped = Dictionary(grouping: intent.state.memos) { memo in
-            memo.createdAt.dotYMDFormat
-        }
-        return grouped
-            .sorted { $0.key < $1.key }
-            .map { (key, value) in (date: key, memos: value) }
-    }
-    
     var body: some View {
         if intent.state.memos.isEmpty {
             ZStack(alignment: .center) {
@@ -37,7 +27,7 @@ struct MemoListView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    ForEach(groupedMemos, id: \.date) { group in
+                    ForEach(intent.state.groupedMemos, id: \.date) { group in
                         VStack(alignment: .leading, spacing: 12) {
                             Text(group.date)
                                 .comfieFont(.systemBody)

@@ -14,11 +14,19 @@ class MemoStore: IntentStore {
     // MARK: State
     struct State {
         var memos: [Memo] = []
+        // createdAt 날짜 문자열(dotYMDFormat 기준)로 메모들을 그룹화하고 정렬한 결과
+        var groupedMemos: [(date: String, memos: [Memo])] {
+            let grouped = Dictionary(grouping: memos) { $0.createdAt.dotYMDFormat }
+            return grouped
+                .sorted { $0.key < $1.key }
+                .map { (key, value) in (date: key, memos: value) }
+        }
+        
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
         var editingMemo: Memo?
         var deletingMemo: Memo?
-
+        
         func isEditingMemo(_ memo: Memo) -> Bool {
             editingMemo?.id == memo.id
         }
@@ -65,7 +73,7 @@ class MemoStore: IntentStore {
             case update(Memo)
             case delete
         }
-
+        
         enum InputAction {
             case updateText(String)
             case startEditing(Memo)
@@ -86,7 +94,7 @@ class MemoStore: IntentStore {
     // MARK: Side Effect
     enum SideEffect {
         case ui(UI)
-
+        
         enum UI {
             case removeMemoInputFocus
             case setMemoInputFocus
@@ -122,7 +130,7 @@ class MemoStore: IntentStore {
             state = handleAction(state, .navigation(.toComfieZoneSetting))
         }
     }
-
+    
     private func handleAction(_ state: State, _ action: Action) -> State {
         switch action {
         case .memo(let action):
