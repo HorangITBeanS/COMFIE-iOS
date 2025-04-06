@@ -13,9 +13,9 @@ import SwiftUI
 class RetrospectionStore: IntentStore {
     private(set) var state: State = .init()
     
-    private let router: Router
-    
     let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    
+    private let router: Router
     
     init(router: Router) {
         self.router = router
@@ -32,7 +32,7 @@ class RetrospectionStore: IntentStore {
         case onAppear
         case backgroundTapped
         case contentFieldTapped
-        case updateNewRetrospection(String)
+        case updateRetrospection(String)
         
         // 네비게이션바 내 버튼
         case backButtonTapped
@@ -82,7 +82,7 @@ class RetrospectionStore: IntentStore {
         case .contentFieldTapped:
             performSideEffect(for: .ui(.setContentFieldFocus))
             state = handleAction(state, .showCompleteButton)
-        case .updateNewRetrospection(let content): state = handleAction(state, .updateRetrospection(content))
+        case .updateRetrospection(let content): state = handleAction(state, .updateRetrospection(content))
             
         case .backButtonTapped: state = handleAction(state, .saveRetrospection)
         case .deleteMenuButtonTapped:
