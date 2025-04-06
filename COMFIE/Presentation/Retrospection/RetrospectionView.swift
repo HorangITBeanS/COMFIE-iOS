@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RetrospectionView: View {
+    @State private var retrospectionContent: String = ""
+    
     var body: some View {
         VStack(spacing: 0) {
             // 임시 네비게이션바
@@ -27,6 +29,7 @@ struct RetrospectionView: View {
                     }
                     .padding(.bottom, 8)
                     HStack(spacing: 0) {
+                        // memo.originalText 연결
                         Text("뭐라고 적어야 화가 나보일까? 미친거 아냐?")
                             .comfieFont(.body)
                             .foregroundStyle(.textBlack)
@@ -39,13 +42,17 @@ struct RetrospectionView: View {
                         .foregroundStyle(.cfGray)
                         .padding(.vertical, 17)
                     
-                    Text("내가 정말 이런저런 어쩌구 상황에 스트레스를 많이 받는 것 같다. 앞으론 내가 힘들때에는 확실하게 거절할 수 있어야겠다. 나 거절 진짜 못하는데!!!!!!!!!!! 거절 어려워!!!!!!!!!!!!")
-                        .comfieFont(.body)
-                        .foregroundStyle(.textBlack)
+                    TextField("",
+                              text: $retrospectionContent,
+                              axis: .vertical)
+                    .comfieFont(.body)
+                    .foregroundStyle(.textBlack)
+                    .tint(.cfBlack)
                 }
                 .padding(24)
             }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
