@@ -11,5 +11,6 @@ extension StringLiterals {
     enum Retrospection {
         static let title: LocalizedStringResource = "retrospection_title"
         static let contentPlaceholder: LocalizedStringResource = "retrospection_content_placeholder"
+        static let deleteRetrospection: LocalizedStringResource = "retrospection_delete"
     }
 }

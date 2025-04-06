@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "" : {
+
+    },
     "📍 ComfieZone 테스트" : {
       "localizations" : {
         "ko" : {
@@ -331,6 +334,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "지금 생각을 적어보세요."
+          }
+        }
+      }
+    },
+    "retrospection_delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Delete"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
           }
         }
       }
