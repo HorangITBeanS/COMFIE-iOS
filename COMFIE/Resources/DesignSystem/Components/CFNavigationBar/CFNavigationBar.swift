@@ -7,18 +7,6 @@
 
 import SwiftUI
 
-enum CFNavigationBarButtonContent {
-    case button(action: () -> Void, label: AnyView)
-    case menu(label: AnyView, menuItems: [MenuItem])
-    
-    struct MenuItem {
-        let title: String
-        let role: ButtonRole?
-        let systemImage: String?
-        let action: () -> Void
-    }
-}
-
 struct CFNavigationBarButton: Identifiable {
     let id: UUID = UUID()
     let action: () -> Void
