@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct RetrospectionView: View {
-    @State private var retrospectionContent: String = ""
+    @State var intent: RetrospectionStore
     @FocusState private var isKeyboardFocused: Bool
-    let memo: String = "안녕하세요 안녕하세요 안녕하세요"
     private let stringLiterals = StringLiterals.Retrospection.self
     
     var body: some View {
@@ -42,8 +41,7 @@ struct RetrospectionView: View {
                     .padding(.bottom, 8)
                     
                     HStack(spacing: 0) {
-                        // memo.originalText
-                        Text(memo)
+                        Text(intent.state.originalMemo)
                             .comfieFont(.body)
                             .foregroundStyle(.textBlack)
                         
@@ -57,7 +55,10 @@ struct RetrospectionView: View {
                 
                 VStack(spacing: 0) {
                     TextField(stringLiterals.contentPlaceholder.localized,
-                              text: $retrospectionContent,
+                              text: Binding(
+                                get: { intent.state.inputContent },
+                                set: { intent(.updateNewRetrospection($0)) }
+                            ),
                               axis: .vertical)
                     .comfieFont(.body)
                     .foregroundStyle(.textBlack)
@@ -78,9 +79,10 @@ struct RetrospectionView: View {
         .onTapGesture {
             endTextEditing()
         }
+        .onAppear { intent(.onAppear) }
     }
 }
 
 #Preview {
-    RetrospectionView()
+    RetrospectionView(intent: .init(router: .init()))
 }

@@ -17,6 +17,7 @@ struct DIContainer {
     private func makeMemoIntent() -> MemoStore {
         MemoStore(router: router, memoRepository: memoRepository)
     }
+    private func makeRetrospectionIntent() -> RetrospectionStore { RetrospectionStore(router: router) }
     
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {
@@ -28,7 +29,7 @@ struct DIContainer {
         case .memo:
             MemoView(intent: makeMemoIntent())
         case .retrospection:
-            RetrospectionView()
+            RetrospectionView(intent: makeRetrospectionIntent())
         case .comfieZoneSetting:
             Text("comfieZoneSetting")
         }
