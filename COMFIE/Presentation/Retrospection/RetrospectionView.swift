@@ -57,7 +57,12 @@ struct RetrospectionView: View {
                         .foregroundStyle(.textBlack)
                         .tint(.textBlack)
                         .focused($isKeyboardFocused)
-                        
+                        .onChange(of: isKeyboardFocused) { _, isFocused in
+                            if isFocused {
+                                intent(.contentFieldTapped)
+                            }
+                        }
+
                         Spacer()
                     }
                     .padding(.vertical, 20)

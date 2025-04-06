@@ -23,7 +23,7 @@ struct CFNavigationBarButton: Identifiable {
     let id: UUID = UUID()
     let action: () -> Void
     let label: AnyView
-
+    
     init<Content: View>(
         action: @escaping () -> Void,
         @ViewBuilder label: () -> Content
@@ -84,16 +84,16 @@ struct CFNavigationBar: View {
         }
     }
     
-        @ViewBuilder
-        private func navigationButtons(for buttons: [CFNavigationBarButton]) -> some View {
-            ForEach(buttons) { button in
-                Button {
-                    button.action()
-                } label: {
-                    button.label
-                }
+    @ViewBuilder
+    private func navigationButtons(for buttons: [CFNavigationBarButton]) -> some View {
+        ForEach(buttons) { button in
+            Button {
+                button.action()
+            } label: {
+                button.label
             }
         }
+    }
 }
 
 #Preview {
