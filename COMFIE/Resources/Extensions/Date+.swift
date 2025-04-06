@@ -17,4 +17,11 @@ extension Date {
     var dotYMDFormat: String {
         self.formatted(.dateTime.year().month(.twoDigits).day(.twoDigits))
     }
+
+    func toFormattedDateTimeString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd HH:mm"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter.string(from: self)
+    }
 }

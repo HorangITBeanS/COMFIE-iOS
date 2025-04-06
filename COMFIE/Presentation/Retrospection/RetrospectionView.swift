@@ -19,9 +19,9 @@ struct RetrospectionView: View {
                 
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        Text("2024.06.11 12:10")
+                        Text(Date().toFormattedDateTimeString())
                             .comfieFont(.systemBody)
-                            .foregroundStyle(.black.opacity(0.6))
+                            .foregroundStyle(.cfBlack.opacity(0.6))
                         
                         Spacer()
                     }
@@ -36,7 +36,7 @@ struct RetrospectionView: View {
                     
                     Rectangle()
                         .frame(height: 1)
-                        .foregroundStyle(Color.cfGray)
+                        .foregroundStyle(.cfGray)
                         .padding(.vertical, 17)
                     
                     Text("내가 정말 이런저런 어쩌구 상황에 스트레스를 많이 받는 것 같다. 앞으론 내가 힘들때에는 확실하게 거절할 수 있어야겠다. 나 거절 진짜 못하는데!!!!!!!!!!! 거절 어려워!!!!!!!!!!!!")
