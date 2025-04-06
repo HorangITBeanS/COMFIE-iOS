@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 @Observable
 class RetrospectionStore: IntentStore {
@@ -32,9 +33,13 @@ class RetrospectionStore: IntentStore {
         case backgroundTapped
         case contentFieldTapped
         case updateNewRetrospection(String)
+        
+        // 네비게이션바 내 버튼
         case backButtonTapped
         case deleteMenuButtonTapped
+        case completeButtonTapped
         
+        // 삭제 팝업 내 버튼
         case deleteRetrospectionButtonTapped
         case cancelDeleteRetrospectionButtonTapped
     }
@@ -69,6 +74,7 @@ class RetrospectionStore: IntentStore {
         switch intent {
         case .onAppear:
             state = handleAction(state, .fetchMemo)
+            state = handleAction(state, .showCompleteButton)
             performSideEffect(for: .ui(.setContentFieldFocus))
         case .backgroundTapped:
             performSideEffect(for: .ui(.removeContentFieldFocus))
@@ -77,10 +83,15 @@ class RetrospectionStore: IntentStore {
             performSideEffect(for: .ui(.setContentFieldFocus))
             state = handleAction(state, .showCompleteButton)
         case .updateNewRetrospection(let content): print("updateNewRetrospection: \(content)")
+            
         case .backButtonTapped: state = handleAction(state, .saveRetrospection)
         case .deleteMenuButtonTapped:
-            state = handleAction(state, .showDeletePopupView)
+            withAnimation { state = handleAction(state, .showDeletePopupView) }
             performSideEffect(for: .ui(.removeContentFieldFocus))
+        case .completeButtonTapped:
+            performSideEffect(for: .ui(.removeContentFieldFocus))
+            state = handleAction(state, .hideCompleteButton)
+            
         case .deleteRetrospectionButtonTapped: state = handleAction(state, .deleteRetrospection)
         case .cancelDeleteRetrospectionButtonTapped: state = handleAction(state, .hideDeletePopupView)
         }

@@ -19,12 +19,7 @@ struct RetrospectionView: View {
                                 isBackButtonHidden: false,
                                 backButtonAction: { intent(.backButtonTapped) },
                                 leadingButtons: [],
-                                trailingButtons: [
-                                    CFNavigationBarButton(
-                                        action: { },
-                                        label: { menuButton }
-                                    )
-                                ])
+                                trailingButtons: retrospectionTrailingButtons)
                 
                 List {
                     VStack(spacing: 0) {
@@ -60,7 +55,7 @@ struct RetrospectionView: View {
                                   axis: .vertical)
                         .comfieFont(.body)
                         .foregroundStyle(.textBlack)
-                        .tint(Color.textBlack)
+                        .tint(.textBlack)
                         .focused($isKeyboardFocused)
                         
                         Spacer()
@@ -106,6 +101,30 @@ struct RetrospectionView: View {
                 .resizable()
                 .frame(width: 24, height: 24)
         }
+    }
+    
+    private var retrospectionTrailingButtons: [CFNavigationBarButton] {
+        var buttons: [CFNavigationBarButton] = []
+        buttons.append(
+            CFNavigationBarButton(
+                action: { },
+                label: { menuButton }
+            )
+        )
+        if intent.state.showCompleteButton {
+            buttons.append(
+                CFNavigationBarButton(
+                    action: { intent(.completeButtonTapped) },
+                    label: {
+                        Text("완료")
+                            .comfieFont(.systemTitle)
+                            .foregroundStyle(.keyPrimary)
+                    }
+                )
+            )
+        }
+        
+        return buttons
     }
 }
 
