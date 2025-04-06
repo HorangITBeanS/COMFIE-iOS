@@ -48,6 +48,7 @@ class RetrospectionStore: IntentStore {
     
     enum Action {
         case fetchMemo
+        case updateRetrospection(String)
         
         case showCompleteButton
         case hideCompleteButton
@@ -82,7 +83,7 @@ class RetrospectionStore: IntentStore {
         case .contentFieldTapped:
             performSideEffect(for: .ui(.setContentFieldFocus))
             state = handleAction(state, .showCompleteButton)
-        case .updateNewRetrospection(let content): print("updateNewRetrospection: \(content)")
+        case .updateNewRetrospection(let content): state = handleAction(state, .updateRetrospection(content))
             
         case .backButtonTapped: state = handleAction(state, .saveRetrospection)
         case .deleteMenuButtonTapped:
@@ -101,7 +102,7 @@ class RetrospectionStore: IntentStore {
         var newState = state
         switch action {
         case .fetchMemo: print("fetchMemo")
-            
+        case .updateRetrospection(let text): newState.inputContent = text
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
             
