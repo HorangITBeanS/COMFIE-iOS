@@ -11,12 +11,24 @@ struct RetrospectionView: View {
     @State private var retrospectionContent: String = ""
     @FocusState private var isKeyboardFocused: Bool
     let memo: String = "안녕하세요 안녕하세요 안녕하세요"
+    private let stringLiterals = StringLiterals.Retrospection.self
     
     var body: some View {
         VStack(spacing: 0) {
-            // 임시 네비게이션바
-            Rectangle()
-                .frame(height: 56)
+            CFNavigationBar(title: stringLiterals.title.localized,
+                            isBackButtonHidden: false,
+                            backButtonAction: { },
+                            leadingButtons: [],
+                            trailingButtons: [
+                                CFNavigationBarButton(
+                                    action: { },
+                                    label: {
+                                        Image(.icEllipsis)
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                    }
+                                )
+                            ])
             
             List {
                 VStack(spacing: 0) {
@@ -44,7 +56,7 @@ struct RetrospectionView: View {
                 .listRowSeparator(.hidden)
                 
                 VStack(spacing: 0) {
-                    TextField("지금 생각을 적어보세요.",
+                    TextField(stringLiterals.contentPlaceholder.localized,
                               text: $retrospectionContent,
                               axis: .vertical)
                     .comfieFont(.body)
