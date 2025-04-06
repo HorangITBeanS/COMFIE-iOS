@@ -50,7 +50,7 @@ struct RetrospectionView: View {
                         TextField(stringLiterals.contentPlaceholder.localized,
                                   text: Binding(
                                     get: { intent.state.inputContent },
-                                    set: { intent(.updateNewRetrospection($0)) }
+                                    set: { intent(.updateRetrospection($0)) }
                                   ),
                                   axis: .vertical)
                         .comfieFont(.body)
