@@ -12,5 +12,6 @@ extension StringLiterals {
         static let title: LocalizedStringResource = "retrospection_title"
         static let contentPlaceholder: LocalizedStringResource = "retrospection_content_placeholder"
         static let deleteRetrospection: LocalizedStringResource = "retrospection_delete"
+        static let doneButton: LocalizedStringResource = "retrospection_done_button"
     }
 }

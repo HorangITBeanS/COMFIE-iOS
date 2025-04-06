@@ -121,7 +121,7 @@ struct RetrospectionView: View {
                 CFNavigationBarButton(
                     action: { intent(.completeButtonTapped) },
                     label: {
-                        Text("완료")
+                        Text(stringLiterals.doneButton.localized)
                             .comfieFont(.systemTitle)
                             .foregroundStyle(.keyPrimary)
                     }

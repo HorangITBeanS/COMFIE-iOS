@@ -354,6 +354,22 @@
         }
       }
     },
+    "retrospection_done_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Done"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
+          }
+        }
+      }
+    },
     "retrospection_title" : {
       "localizations" : {
         "en" : {
@@ -395,9 +411,6 @@
           }
         }
       }
-    },
-    "완료" : {
-
     },
     "저장된 ComfieZone 없음" : {
       "localizations" : {
