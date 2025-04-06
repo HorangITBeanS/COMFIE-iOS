@@ -21,50 +21,15 @@ enum CFNavigationBarButtonContent {
 
 struct CFNavigationBarButton: Identifiable {
     let id: UUID = UUID()
-    let content: CFNavigationBarButtonContent
-    
-    static func button(
-        action: @escaping () -> Void,
-        @ViewBuilder label: () -> some View
-    ) -> CFNavigationBarButton {
-        .init(content: .button(action: action, label: AnyView(label())))
-    }
-    
-    static func menu(
-        @ViewBuilder label: () -> some View,
-        menuItems: [CFNavigationBarButtonContent.MenuItem]
-    ) -> CFNavigationBarButton {
-        .init(content: .menu(label: AnyView(label()), menuItems: menuItems))
-    }
-}
+    let action: () -> Void
+    let label: AnyView
 
-@ViewBuilder
-private func navigationButtons(for buttons: [CFNavigationBarButton]) -> some View {
-    ForEach(buttons) { button in
-        switch button.content {
-        case let .button(action, label):
-            Button(action: action) {
-                label
-            }
-            
-        case let .menu(label, menuItems):
-            Menu {
-                ForEach(menuItems.indices, id: \.self) { index in
-                    let item = menuItems[index]
-                    Button(role: item.role) {
-                        item.action()
-                    } label: {
-                        if let systemImage = item.systemImage {
-                            Label(item.title, systemImage: systemImage)
-                        } else {
-                            Text(item.title)
-                        }
-                    }
-                }
-            } label: {
-                label
-            }
-        }
+    init<Content: View>(
+        action: @escaping () -> Void,
+        @ViewBuilder label: () -> Content
+    ) {
+        self.action = action
+        self.label = AnyView(label())
     }
 }
 
@@ -118,6 +83,17 @@ struct CFNavigationBar: View {
                 .frame(width: 24, height: 24)
         }
     }
+    
+        @ViewBuilder
+        private func navigationButtons(for buttons: [CFNavigationBarButton]) -> some View {
+            ForEach(buttons) { button in
+                Button {
+                    button.action()
+                } label: {
+                    button.label
+                }
+            }
+        }
 }
 
 #Preview {
@@ -128,7 +104,7 @@ struct CFNavigationBar: View {
         "title",
         backButtonAction: { },
         trailingButtons: [
-            CFNavigationBarButton.button {
+            CFNavigationBarButton {
                 // action
             } label: {
                 Image(.icInfo)
