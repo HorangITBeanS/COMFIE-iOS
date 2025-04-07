@@ -50,6 +50,7 @@ struct RetrospectionView: View {
                         .comfieFont(.body)
                         .foregroundStyle(.textBlack)
                         .tint(.textBlack)
+                        .multilineTextAlignment(.leading)
                         .focused($isKeyboardFocused)
                         .onChange(of: isKeyboardFocused) { _, isFocused in
                             if isFocused {
@@ -65,6 +66,9 @@ struct RetrospectionView: View {
                     .background(Color.keySubBackground)
                     .listRowInsets(.zero)
                     .listRowSeparator(.hidden)
+                    .highPriorityGesture(
+                        TapGesture().onEnded { intent(.contentFieldTapped) }
+                    )
                 }
                 .listStyle(.plain)
                 .background(Color.keySubBackground)
