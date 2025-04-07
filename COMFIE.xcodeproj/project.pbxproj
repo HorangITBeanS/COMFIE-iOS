@@ -82,12 +82,9 @@
 		B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
 		B96CDB332DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
 		B96CDB342DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
-		B96CDB362DA2377A004EA2E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB352DA23778004EA2E9 /* View+.swift */; };
-		B96CDB372DA2377A004EA2E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB352DA23778004EA2E9 /* View+.swift */; };
-		B96CDB382DA2377A004EA2E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB352DA23778004EA2E9 /* View+.swift */; };
-		B96CDB3A2DA238EA004EA2E9 /* EdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets.swift */; };
-		B96CDB3B2DA238EA004EA2E9 /* EdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets.swift */; };
-		B96CDB3C2DA238EA004EA2E9 /* EdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets.swift */; };
+		B96CDB3A2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */; };
+		B96CDB3B2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */; };
+		B96CDB3C2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */; };
 		B96CDB3E2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB3F2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
@@ -188,8 +185,7 @@
 		51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionView.swift; sourceTree = "<group>"; };
 		B96CDB312DA236B0004EA2E9 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
-		B96CDB352DA23778004EA2E9 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
-		B96CDB392DA238E7004EA2E9 /* EdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeInsets.swift; sourceTree = "<group>"; };
+		B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdgeInsets+.swift"; sourceTree = "<group>"; };
 		B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Retrospection.swift"; sourceTree = "<group>"; };
 		B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionStore.swift; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
@@ -499,8 +495,7 @@
 		B9EA52FE2D7C906D00A32305 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B96CDB392DA238E7004EA2E9 /* EdgeInsets.swift */,
-				B96CDB352DA23778004EA2E9 /* View+.swift */,
+				B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */,
 				B96CDB312DA236B0004EA2E9 /* Date+.swift */,
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
 				51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */,
@@ -740,7 +735,7 @@
 				267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */,
 				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
-				B96CDB3C2DA238EA004EA2E9 /* EdgeInsets.swift in Sources */,
+				B96CDB3C2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
 				51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
@@ -769,10 +764,9 @@
 				B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
 				B96CDB342DA236B1004EA2E9 /* Date+.swift in Sources */,
 				51A7AFF82D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
-				B96CDB3B2DA238EA004EA2E9 /* EdgeInsets.swift in Sources */,
+				B96CDB3B2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				B9EA53012D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
-				B96CDB382DA2377A004EA2E9 /* View+.swift in Sources */,
 				51A7AFFC2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
@@ -798,7 +792,7 @@
 				51F8F5AD2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				51F8F5AF2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51F8F5B82D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
-				B96CDB3A2DA238EA004EA2E9 /* EdgeInsets.swift in Sources */,
+				B96CDB3A2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				51A7AFF92D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */,
 				51A7AFFB2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
