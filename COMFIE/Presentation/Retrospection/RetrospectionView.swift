@@ -15,63 +15,66 @@ struct RetrospectionView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                List {
-                    VStack(spacing: 0) {
-                        HStack(spacing: 0) {
-                            // memo.createdDate 연결 필요
-                            Text(Date().toFormattedDateTimeString())
-                                .comfieFont(.systemBody)
-                                .foregroundStyle(.cfBlack.opacity(0.6))
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            HStack(spacing: 0) {
+                                // memo.createdDate 연결 필요
+                                Text(Date().toFormattedDateTimeString())
+                                    .comfieFont(.systemBody)
+                                    .foregroundStyle(.cfBlack.opacity(0.6))
+                                
+                                Spacer()
+                            }
+                            .padding(.bottom, 8)
                             
-                            Spacer()
-                        }
-                        .padding(.bottom, 8)
-                        
-                        HStack(spacing: 0) {
-                            Text(intent.state.originalMemo)
-                                .comfieFont(.body)
-                                .foregroundStyle(.textBlack)
-                            
-                            Spacer()
-                        }
-                    }
-                    .padding(24)
-                    .background(Color.keyBackground)
-                    .listRowInsets(.zero)
-                    .listRowSeparator(.hidden)
-                    
-                    VStack(spacing: 0) {
-                        TextField(stringLiterals.contentPlaceholder.localized,
-                                  text: Binding(
-                                    get: { intent.state.inputContent },
-                                    set: { intent(.updateRetrospection($0)) }
-                                  ),
-                                  axis: .vertical)
-                        .comfieFont(.body)
-                        .foregroundStyle(.textBlack)
-                        .tint(.textBlack)
-                        .multilineTextAlignment(.leading)
-                        .focused($isKeyboardFocused)
-                        .onChange(of: isKeyboardFocused) { _, isFocused in
-                            if isFocused {
-                                intent(.contentFieldTapped)
+                            HStack(spacing: 0) {
+                                Text(intent.state.originalMemo)
+                                    .comfieFont(.body)
+                                    .foregroundStyle(.textBlack)
+                                
+                                Spacer()
                             }
                         }
-
-                        Spacer()
+                        .padding(24)
+                        .background(Color.keyBackground)
+                        
+                        VStack(spacing: 0) {
+                            TextField(stringLiterals.contentPlaceholder.localized,
+                                      text: Binding(
+                                        get: { intent.state.inputContent },
+                                        set: { intent(.updateRetrospection($0)) }
+                                      ),
+                                      axis: .vertical)
+                            .comfieFont(.body)
+                            .foregroundStyle(.textBlack)
+                            .tint(.textBlack)
+                            .multilineTextAlignment(.leading)
+                            .focused($isKeyboardFocused)
+                            .onChange(of: intent.state.inputContent) {
+                                withAnimation {
+                                    proxy.scrollTo(ViewID.textField, anchor: .bottom)
+                                }
+                            }
+                            .onChange(of: isKeyboardFocused) { _, isFocused in
+                                if isFocused {
+                                    intent(.contentFieldTapped)
+                                }
+                            }
+                            .id(ViewID.textField)
+                            
+                            Spacer()
+                        }
+                        .padding(.vertical, 20)
+                        .padding(.horizontal, 24)
+                        .frame(minHeight: 88)
+                        .background(Color.keySubBackground)
+                        .highPriorityGesture(
+                            TapGesture().onEnded { intent(.contentFieldTapped) }
+                        )
                     }
-                    .padding(.vertical, 20)
-                    .padding(.horizontal, 24)
-                    .frame(minHeight: 88)
                     .background(Color.keySubBackground)
-                    .listRowInsets(.zero)
-                    .listRowSeparator(.hidden)
-                    .highPriorityGesture(
-                        TapGesture().onEnded { intent(.contentFieldTapped) }
-                    )
                 }
-                .listStyle(.plain)
-                .background(Color.keySubBackground)
             }
             .cfNavigationBar(
                 stringLiterals.title.localized,
@@ -132,6 +135,10 @@ struct RetrospectionView: View {
         }
         
         return buttons
+    }
+    
+    private enum ViewID {
+        case textField
     }
 }
 
