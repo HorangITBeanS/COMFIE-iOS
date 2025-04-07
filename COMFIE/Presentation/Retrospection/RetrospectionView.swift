@@ -15,12 +15,6 @@ struct RetrospectionView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                CFNavigationBar(title: stringLiterals.title.localized,
-                                isBackButtonHidden: false,
-                                backButtonAction: { intent(.backButtonTapped) },
-                                leadingButtons: [],
-                                trailingButtons: retrospectionTrailingButtons)
-                
                 List {
                     VStack(spacing: 0) {
                         HStack(spacing: 0) {
@@ -75,7 +69,11 @@ struct RetrospectionView: View {
                 .listStyle(.plain)
                 .background(Color.keySubBackground)
             }
-            .navigationBarBackButtonHidden()
+            .cfNavigationBar(
+                stringLiterals.title.localized,
+                backButtonAction: { intent(.backButtonTapped) },
+                trailingButtons: retrospectionTrailingButtons
+            )
             .onTapGesture { intent(.backgroundTapped) }
             .onAppear { intent(.onAppear) }
             .onReceive(intent.sideEffectPublisher) { sideEffect in
