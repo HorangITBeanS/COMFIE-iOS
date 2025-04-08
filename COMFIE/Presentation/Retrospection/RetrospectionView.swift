@@ -14,7 +14,16 @@ struct RetrospectionView: View {
     
     var body: some View {
         ZStack {
+            Color.keySubBackground.ignoresSafeArea()
+            
             VStack(spacing: 0) {
+                CFNavigationBar(title: stringLiterals.title.localized,
+                                isBackButtonHidden: false,
+                                backButtonAction: { intent(.backButtonTapped) },
+                                leadingButtons: [],
+                                trailingButtons: retrospectionTrailingButtons)
+                .onTapGesture(perform: { intent(.backgroundTapped) })
+                
                 ScrollViewReader { proxy in
                     ScrollView {
                         VStack(spacing: 0) {
@@ -38,6 +47,9 @@ struct RetrospectionView: View {
                         }
                         .padding(24)
                         .background(Color.keyBackground)
+                        .highPriorityGesture(
+                            TapGesture().onEnded { intent(.backgroundTapped) }
+                        )
                         
                         VStack(spacing: 0) {
                             TextField(stringLiterals.contentPlaceholder.localized,
@@ -68,20 +80,12 @@ struct RetrospectionView: View {
                         .padding(.vertical, 20)
                         .padding(.horizontal, 24)
                         .frame(minHeight: 88)
-                        .background(Color.keySubBackground)
-                        .highPriorityGesture(
-                            TapGesture().onEnded { intent(.contentFieldTapped) }
-                        )
                     }
                     .background(Color.keySubBackground)
+                    .onTapGesture(perform: { intent(.contentFieldTapped) })
                 }
             }
-            .cfNavigationBar(
-                stringLiterals.title.localized,
-                backButtonAction: { intent(.backButtonTapped) },
-                trailingButtons: retrospectionTrailingButtons
-            )
-            .onTapGesture { intent(.backgroundTapped) }
+            .navigationBarBackButtonHidden(true)
             .onAppear { intent(.onAppear) }
             .onReceive(intent.sideEffectPublisher) { sideEffect in
                 switch sideEffect {
