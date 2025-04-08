@@ -68,8 +68,8 @@ struct RetrospectionView: View {
                                     proxy.scrollTo(ViewID.textField, anchor: .bottom)
                                 }
                             }
-                            .onChange(of: isKeyboardFocused) { _, isFocused in
-                                if isFocused {
+                            .onChange(of: isKeyboardFocused) {
+                                if isKeyboardFocused {
                                     intent(.contentFieldTapped)
                                 }
                             }
