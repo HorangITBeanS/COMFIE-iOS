@@ -78,6 +78,17 @@
 		51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
 		51F8F5C42D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
 		51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
+		B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */; };
+		B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
+		B96CDB332DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
+		B96CDB342DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
+		B96CDB3A2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */; };
+		B96CDB3B2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */; };
+		B96CDB3C2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */; };
+		B96CDB3E2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
+		B96CDB3F2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
+		B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
+		B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
 		B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */; };
@@ -172,6 +183,11 @@
 		51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFNavigationBar.swift; sourceTree = "<group>"; };
 		51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfNavigationBar.swift"; sourceTree = "<group>"; };
 		51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
+		B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionView.swift; sourceTree = "<group>"; };
+		B96CDB312DA236B0004EA2E9 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
+		B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdgeInsets+.swift"; sourceTree = "<group>"; };
+		B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Retrospection.swift"; sourceTree = "<group>"; };
+		B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionStore.swift; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
@@ -336,6 +352,7 @@
 		510341042D777D000050C718 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				B96CDB2E2DA235AC004EA2E9 /* Retrospection */,
 				5103410A2D7782830050C718 /* Intent */,
 				510341052D777E030050C718 /* Onboarding */,
 				5103411B2D7996E40050C718 /* Memo */,
@@ -456,6 +473,15 @@
 			path = CFNavigationBar;
 			sourceTree = "<group>";
 		};
+		B96CDB2E2DA235AC004EA2E9 /* Retrospection */ = {
+			isa = PBXGroup;
+			children = (
+				B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */,
+				B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */,
+			);
+			path = Retrospection;
+			sourceTree = "<group>";
+		};
 		B9EA52F12D7C8F4F00A32305 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -469,6 +495,8 @@
 		B9EA52FE2D7C906D00A32305 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */,
+				B96CDB312DA236B0004EA2E9 /* Date+.swift */,
 				B9EA52FF2D7C907300A32305 /* View+ComfieFonts.swift */,
 				51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */,
 				267F6B3D2D94F11A0089BD6D /* Date+.swift */,
@@ -490,6 +518,7 @@
 		B9EA530D2D7CA5CE00A32305 /* StringLiterals */ = {
 			isa = PBXGroup;
 			children = (
+				B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */,
 				B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */,
 				51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */,
 				51A7AFFA2D809E7700B50D1E /* StringLiterals+Popup.swift */,
@@ -689,6 +718,7 @@
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
+				B96CDB3E2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
@@ -705,15 +735,19 @@
 				267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */,
 				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,
+				B96CDB3C2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
 				51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
+				B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
+				B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				267F6B3F2D94F11A0089BD6D /* Date+.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
+				B96CDB332DA236B1004EA2E9 /* Date+.swift in Sources */,
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */,
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
@@ -727,7 +761,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
+				B96CDB342DA236B1004EA2E9 /* Date+.swift in Sources */,
 				51A7AFF82D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
+				B96CDB3B2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				B9EA53012D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51A7AFFC2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
@@ -748,13 +785,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B96CDB3F2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
 				B9EA53102D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				51F8F5BF2D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
 				B9EA53022D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				51F8F5AD2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				51F8F5AF2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51F8F5B82D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
+				B96CDB3A2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				51A7AFF92D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
+				B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */,
 				51A7AFFB2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
