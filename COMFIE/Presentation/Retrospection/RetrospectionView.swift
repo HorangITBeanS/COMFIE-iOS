@@ -81,7 +81,6 @@ struct RetrospectionView: View {
                         .padding(.horizontal, 24)
                         .frame(minHeight: 88)
                     }
-                    .background(Color.keySubBackground)
                     .onTapGesture(perform: { intent(.contentFieldTapped) })
                 }
             }
