@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MoreView: View {
+    @State var intent: MoreStore
+    private var state: MoreStore.State { intent.state }
     private let strings = StringLiterals.More.self
     
     var body: some View {
@@ -17,20 +19,20 @@ struct MoreView: View {
                 CFList(sectionTitle: strings.termsSectionTitle.localized) {
                     CFListRow(
                         title: strings.serviceTerm.localized,
-                        action: { print(strings.serviceTerm.localized) },
+                        action: { intent(.serviceTermRowTapped) },
                         trailingView: forwardImage
                     )
                     
                     CFListRow(
                         title: strings.privacyPolicy.localized,
-                        action: { print(strings.privacyPolicy.localized) },
+                        action: { intent(.privacyPolicyRowTapped) },
                         trailingView: forwardImage
                     )
                     
                     CFListRow(
                         title: strings.locationTerm.localized,
                         isLast: true,
-                        action: { },
+                        action: { intent(.locationTermRowTapped) },
                         trailingView: forwardImage
                     )
                 }
@@ -39,13 +41,13 @@ struct MoreView: View {
                 CFList(sectionTitle: strings.customerSupportSectionTitle.localized) {
                     CFListRow(
                         title: strings.sendFeedback.localized,
-                        action: { }
+                        action: { intent(.sendFeedbackRowTapped) }
                     )
                     
                     CFListRow(
                         title: strings.makers.localized,
                         isLast: true,
-                        action: { }
+                        action: { intent(.makersRowTapped) }
                     )
                 }
             }
@@ -55,7 +57,7 @@ struct MoreView: View {
             Spacer()
             
             // 현재 버전
-            Text(strings.currentVersion.localized)
+            Text(strings.currentVersion.localized + state.currentVersion)
                 .comfieFont(.systemBody)
                 .foregroundStyle(Color.textDarkgray)
                 .padding(.bottom, 26)
@@ -74,5 +76,5 @@ struct MoreView: View {
 }
 
 #Preview {
-    MoreView()
+    MoreView(intent: MoreStore(router: .init()))
 }

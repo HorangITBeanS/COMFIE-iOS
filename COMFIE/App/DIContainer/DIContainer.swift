@@ -22,6 +22,7 @@ struct DIContainer {
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {
         switch route {
+        // MARK: - 메인 화면
         case .loading:
             LoadingView()
         case .onboarding:
@@ -33,7 +34,19 @@ struct DIContainer {
         case .comfieZoneSetting:
             Text("comfieZoneSetting")
         case .more:
-            MoreView()
+            MoreView(intent: makeMoreIntent())
+            
+        // MARK: - 메인 화면 > 더보기(more)
+        case .serviceTerm:
+            Text("serviceTerm")
+        case .privacyPolicy:
+            Text("privacyPolicy")
+        case .locationTerm:
+            Text("locationTerm")
+        case .sendFeedback:
+            Text("sendFeedback")
+        case .makers:
+            Text("makers")
         }
     }
 }
