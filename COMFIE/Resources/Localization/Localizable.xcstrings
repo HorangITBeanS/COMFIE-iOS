@@ -1,8 +1,118 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
-    "comfieZoneSetting" : {
+    "" : {
 
+    },
+    "📍 ComfieZone 테스트" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 ComfieZone 테스트"
+          }
+        }
+      }
+    },
+    "📝 Memo 테스트" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📝 Memo 테스트"
+          }
+        }
+      }
+    },
+    "ComfieZone 삭제" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ComfieZone 삭제"
+          }
+        }
+      }
+    },
+    "comfieZoneSetting" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "comfieZoneSetting"
+          }
+        }
+      }
+    },
+    "CoreData 테스트" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CoreData 테스트"
+          }
+        }
+      }
+    },
+    "memo_delete_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
+          }
+        }
+      }
+    },
+    "memo_edit_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수정하기"
+          }
+        }
+      }
+    },
+    "memo_editing_cancel_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소하기"
+          }
+        }
+      }
+    },
+    "memo_empty_memo" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아직 일기가 없어요."
+          }
+        }
+      }
+    },
+    "memo_retrospection_button_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회고하기"
+          }
+        }
+      }
+    },
+    "memo_textfield_placeholder" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입력"
+          }
+        }
+      }
     },
     "onboarding_next_button" : {
       "localizations" : {
@@ -174,14 +284,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Delete this memo?"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 메모를 삭제할까요?"
+            "value" : "이 일기를 삭제할까요?"
           }
         }
       }
@@ -212,17 +322,115 @@
         }
       }
     },
-    "retrospection" : {
+    "retrospection_content_placeholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Write what’s on your mind."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 생각을 적어보세요."
+          }
+        }
+      }
+    },
+    "retrospection_delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Delete"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
+          }
+        }
+      }
+    },
+    "retrospection_done_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Done"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
+          }
+        }
+      }
+    },
+    "retrospection_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reflection"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회고"
+          }
+        }
+      }
+    },
+    "trash" : {
 
     },
     "메모 View" : {
 
     },
-    "컴피존 설정 화면으로" : {
-
+    "새 ComfieZone 이름 입력" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 ComfieZone 이름 입력"
+          }
+        }
+      }
     },
-    "회고 화면으로" : {
-
+    "새 메모 입력" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 메모 입력"
+          }
+        }
+      }
+    },
+    "저장된 ComfieZone 없음" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장된 ComfieZone 없음"
+          }
+        }
+      }
+    },
+    "현재 ComfieZone: %@" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 ComfieZone: %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

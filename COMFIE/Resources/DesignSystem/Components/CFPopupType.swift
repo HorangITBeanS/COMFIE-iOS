@@ -51,7 +51,7 @@ enum CFPopupType {
         
         var backgroundColor: Color {
             switch self {
-            case .destructive: return Color.popupRed
+            case .destructive: return Color.destructiveRed
             case .cancel: return Color.cfLightgray
             }
         }
