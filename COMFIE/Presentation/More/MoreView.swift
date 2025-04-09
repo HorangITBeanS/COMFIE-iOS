@@ -12,15 +12,63 @@ struct MoreView: View {
     
     var body: some View {
         VStack {
-            Text("약관 및 정책")
+            VStack(spacing: 24) {
+                // 약관 및 정책
+                CFList(sectionTitle: strings.termsSectionTitle.localized) {
+                    CFListRow(
+                        title: strings.serviceTerm.localized,
+                        action: { },
+                        trailingView: forwardImage
+                    )
+                    
+                    CFListRow(
+                        title: strings.privacyPolicy.localized,
+                        action: { },
+                        trailingView: forwardImage
+                    )
+                    
+                    CFListRow(
+                        title: strings.locationTerm.localized,
+                        isLast: true,
+                        action: { },
+                        trailingView: forwardImage
+                    )
+                }
+                
+                // 고객 지원
+                CFList(sectionTitle: strings.customerSupportSectionTitle.localized) {
+                    CFListRow(
+                        title: strings.sendFeedback.localized,
+                        action: { }
+                    )
+                    
+                    CFListRow(
+                        title: strings.makers.localized,
+                        isLast: true,
+                        action: { }
+                    )
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 24)
             
             Spacer()
             
-            Text("현재 버전")
+            // 현재 버전
+            Text(strings.currentVersion.localized)
+                .comfieFont(.systemBody)
+                .foregroundStyle(Color.textDarkgray)
+                .padding(.bottom, 26)
         }
         .frame(maxWidth: .infinity)
         .background(Color.keyBackground)
         .cfNavigationBar(strings.navigationTitle.localized)
+    }
+    
+    private var forwardImage: some View {
+        Image(.icBack)
+            .resizable()
+            .frame(width: 14, height: 20)
     }
 }
 
