@@ -40,11 +40,11 @@ struct DIContainer {
             
         // MARK: - 메인 화면 > 더보기(more)
         case .serviceTerm:
-            Text("serviceTerm")
+            TermView(type: .service)
         case .privacyPolicy:
-            Text("privacyPolicy")
+            TermView(type: .privacy)
         case .locationTerm:
-            Text("locationTerm")
+            TermView(type: .location)
         case .sendFeedback:
             Text("sendFeedback")
         case .makers:
