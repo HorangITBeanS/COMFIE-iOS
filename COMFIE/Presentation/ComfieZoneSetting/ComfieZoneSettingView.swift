@@ -67,7 +67,8 @@ struct ComfieZoneSettingView: View {
         }
         .background(Color.cfWhite)
         .cfNavigationBar("현재위치", trailingButtons: [infoButton])
-        .comfieZoneInfoPopupView(  // 컴피존 안내 팝업
+        // 컴피존 안내 팝업
+        .comfieZoneInfoPopupView(
             showPopup: state.showInfoPopup,
             onDismiss: { intent(.closeInfoPopup) }
         )

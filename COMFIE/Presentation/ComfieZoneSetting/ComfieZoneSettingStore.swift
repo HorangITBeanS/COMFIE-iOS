@@ -12,6 +12,10 @@ import SwiftUI
 class ComfieZoneSettingStore: IntentStore {
     private(set) var state: State = .init()
     struct State {
+        /// 컴피존 안내 팝업
+        var showInfoPopup: Bool = false
+        
+        /// 지도 초기 위치
         var initialPosition = MKCoordinateRegion(
             center: CLLocationCoordinate2D(  // 정자역
                 latitude: 37.3663000,
@@ -20,13 +24,11 @@ class ComfieZoneSettingStore: IntentStore {
             latitudinalMeters: 200,  // 지도 반경
             longitudinalMeters: 200
         )
-        
-        var showInfoPopup: Bool = false
     }
     
     enum Intent {
-        case infoButtonTapped  // 안내 버튼 클릭
-        case closeInfoPopup  // 안내 팝업 닫기
+        case infoButtonTapped  // 컴피존 안내 버튼 클릭
+        case closeInfoPopup    // 컴피존 안내 팝업 닫기
     }
     
     enum Action { }
