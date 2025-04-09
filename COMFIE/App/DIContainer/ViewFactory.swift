@@ -13,6 +13,7 @@ struct ViewFactory {
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }
     private func makeMemoIntent() -> MemoStore { MemoStore(router: router) }
+    private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore { ComfieZoneSettingStore() }
     
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {
@@ -26,7 +27,7 @@ struct ViewFactory {
         case .retrospection:
             Text("retrospection")
         case .comfieZoneSetting:
-            Text("comfieZoneSetting")
+            ComfieZoneSettingView(intent: makeComfieZoneSettingIntent())
         }
     }
 }
