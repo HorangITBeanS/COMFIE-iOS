@@ -41,19 +41,21 @@ struct CFListRow<Content: View>: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text(title)
-                    .comfieFont(.body)
-                    .foregroundStyle(Color.textBlack)
-                
-                Spacer()
-                
-                trailingView
+            Button {
+                action()
+            } label: {
+                HStack {
+                    Text(title)
+                        .comfieFont(.body)
+                        .foregroundStyle(Color.textBlack)
+                    
+                    Spacer()
+                    
+                    trailingView
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .contentShape(Rectangle())
-            .onTapGesture(perform: action)
             
             if isLast == false {
                 Rectangle()
@@ -63,8 +65,4 @@ struct CFListRow<Content: View>: View {
             }
         }
     }
-}
-
-#Preview {
-    MoreView()
 }
