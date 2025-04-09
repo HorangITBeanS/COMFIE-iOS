@@ -65,8 +65,9 @@ struct MoreView: View {
         .cfNavigationBar(strings.navigationTitle.localized)
     }
     
+    // > 이미지
     private var forwardImage: some View {
-        Image(.icBack)
+        Image(.icForward)
             .resizable()
             .frame(width: 14, height: 20)
     }
