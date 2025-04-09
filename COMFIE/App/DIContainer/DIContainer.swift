@@ -32,6 +32,8 @@ struct DIContainer {
             RetrospectionView(intent: makeRetrospectionIntent())
         case .comfieZoneSetting:
             Text("comfieZoneSetting")
+        case .more:
+            MoreView()
         }
     }
 }

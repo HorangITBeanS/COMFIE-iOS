@@ -14,6 +14,7 @@ enum Route {
     case memo
     case retrospection
     case comfieZoneSetting
+    case more
     
     @ViewBuilder func view(_ router: Router) -> some View {
         DIContainer(router: router).makeView(self)
