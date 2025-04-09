@@ -10,14 +10,14 @@ import SwiftUI
 struct CFListRow<Content: View>: View {
     let title: String
     let isLast: Bool
-    let action: (() -> Void)?
+    let action: () -> Void
     @ViewBuilder var trailingView: Content
     
     // trailingView를 closure로 주입하는 경우
     init(
         title: String,
         isLast: Bool = false,
-        action: (() -> Void)? = nil,
+        action: @escaping () -> Void = { },
         @ViewBuilder trailingView: () -> Content = { EmptyView() }
     ) {
         self.title = title
@@ -30,7 +30,7 @@ struct CFListRow<Content: View>: View {
     init(
         title: String,
         isLast: Bool = false,
-        action: (() -> Void)? = nil,
+        action: @escaping () -> Void = { },
         trailingView: Content
     ) {
         self.title = title
@@ -40,7 +40,7 @@ struct CFListRow<Content: View>: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text(title)
                     .comfieFont(.body)
@@ -50,12 +50,21 @@ struct CFListRow<Content: View>: View {
                 
                 trailingView
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .contentShape(Rectangle())
+            .onTapGesture(perform: action)
             
             if isLast == false {
                 Rectangle()
                     .frame(height: 1)
                     .foregroundStyle(Color.keyBackground)
+                    .padding(.horizontal, 16)
             }
         }
     }
+}
+
+#Preview {
+    MoreView()
 }

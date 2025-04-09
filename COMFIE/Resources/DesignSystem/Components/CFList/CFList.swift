@@ -22,12 +22,11 @@ struct CFList<Content: View>: View {
             }
             
             // List
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 0) {
                 rowsView
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .padding(.horizontal, 16)
+            .padding(.vertical, 4)
             .background(Color.cfWhite)
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }

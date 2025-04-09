@@ -17,13 +17,13 @@ struct MoreView: View {
                 CFList(sectionTitle: strings.termsSectionTitle.localized) {
                     CFListRow(
                         title: strings.serviceTerm.localized,
-                        action: { },
+                        action: { print(strings.serviceTerm.localized) },
                         trailingView: forwardImage
                     )
                     
                     CFListRow(
                         title: strings.privacyPolicy.localized,
-                        action: { },
+                        action: { print(strings.privacyPolicy.localized) },
                         trailingView: forwardImage
                     )
                     
