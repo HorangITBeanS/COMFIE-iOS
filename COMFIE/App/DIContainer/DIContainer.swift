@@ -9,7 +9,8 @@ import SwiftUI
 
 struct DIContainer {
     let router: Router
-    // TODO: MemoRepository를 어디서 주입할 지 고민하기
+    
+    // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
     
     // MARK: - Intent
