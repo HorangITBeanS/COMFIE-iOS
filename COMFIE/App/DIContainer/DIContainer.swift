@@ -18,6 +18,7 @@ struct DIContainer {
         MemoStore(router: router, memoRepository: memoRepository)
     }
     private func makeRetrospectionIntent() -> RetrospectionStore { RetrospectionStore(router: router) }
+    private func makeMoreIntent() -> MoreStore { MoreStore(router: router) }
     
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {
