@@ -114,6 +114,96 @@
         }
       }
     },
+    "more_current_version" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 버전"
+          }
+        }
+      }
+    },
+    "more_customer_support_section_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고객 지원"
+          }
+        }
+      }
+    },
+    "more_location_term" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치기반서비스 이용약관"
+          }
+        }
+      }
+    },
+    "more_makers" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE를 만든 사람들"
+          }
+        }
+      }
+    },
+    "more_navigation_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더보기"
+          }
+        }
+      }
+    },
+    "more_privacy_policy" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "more_send_feedback" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "의견 보내기"
+          }
+        }
+      }
+    },
+    "more_service_term" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서비스 이용약관"
+          }
+        }
+      }
+    },
+    "more_terms_section_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "약관 및 정책"
+          }
+        }
+      }
+    },
     "onboarding_next_button" : {
       "localizations" : {
         "ko" : {
