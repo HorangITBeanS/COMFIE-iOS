@@ -50,3 +50,16 @@ extension StringLiterals.More {
         static let navigatioinTitle: LocalizedStringResource = "more_send_feedback_navigation_title"
     }
 }
+
+// 더보기 > 만든 사람들
+extension StringLiterals.More {
+    enum Makers {
+        static let navigatioinTitle: LocalizedStringResource = "more_makers_navigation_title"
+        
+        static let contactSectiontitle: LocalizedStringResource = "more_makers_contact_sectiontitle"
+        static let instagram: LocalizedStringResource = "more_makers_instagram"
+        static let instagramContent: LocalizedStringResource = "more_makers_instagram_content"
+        static let email: LocalizedStringResource = "more_makers_email"
+        static let emailContent: LocalizedStringResource = "more_makers_email_content"
+    }
+}

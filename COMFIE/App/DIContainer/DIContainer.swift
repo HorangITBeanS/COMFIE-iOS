@@ -48,7 +48,7 @@ struct DIContainer {
         case .sendFeedback:
             SendFeedbackView()
         case .makers:
-            Text("makers")
+            MakersView()
         }
     }
 }

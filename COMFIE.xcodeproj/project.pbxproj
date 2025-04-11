@@ -64,6 +64,7 @@
 		51895AF02DA6C65100AFA569 /* TermView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895AEF2DA6C65100AFA569 /* TermView.swift */; };
 		51895AF22DA8ED4900AFA569 /* SendFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895AF12DA8ED4900AFA569 /* SendFeedbackView.swift */; };
 		51895AF42DA8F74100AFA569 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895AF32DA8F74100AFA569 /* MailView.swift */; };
+		51895AF62DA8FBF500AFA569 /* MakersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895AF52DA8FBF500AFA569 /* MakersView.swift */; };
 		51A7AFED2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
 		51A7AFEE2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
 		51A7AFEF2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
@@ -195,6 +196,7 @@
 		51895AEF2DA6C65100AFA569 /* TermView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermView.swift; sourceTree = "<group>"; };
 		51895AF12DA8ED4900AFA569 /* SendFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendFeedbackView.swift; sourceTree = "<group>"; };
 		51895AF32DA8F74100AFA569 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
+		51895AF52DA8FBF500AFA569 /* MakersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakersView.swift; sourceTree = "<group>"; };
 		51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		51A7AFF02D802B6200B50D1E /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		51A7AFF62D809DD600B50D1E /* LocalizedStringResource+localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalizedStringResource+localized.swift"; sourceTree = "<group>"; };
@@ -501,6 +503,7 @@
 				51895AEF2DA6C65100AFA569 /* TermView.swift */,
 				51895AF12DA8ED4900AFA569 /* SendFeedbackView.swift */,
 				51895AF32DA8F74100AFA569 /* MailView.swift */,
+				51895AF52DA8FBF500AFA569 /* MakersView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -806,6 +809,7 @@
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				267F6B3F2D94F11A0089BD6D /* Date+.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
+				51895AF62DA8FBF500AFA569 /* MakersView.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51895AF42DA8F74100AFA569 /* MailView.swift in Sources */,
 				B96CDB332DA236B1004EA2E9 /* Date+.swift in Sources */,
