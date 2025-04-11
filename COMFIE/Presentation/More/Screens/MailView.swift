@@ -11,6 +11,7 @@ import SwiftUI
 struct MailView: UIViewControllerRepresentable {
     var onDismiss: () -> Void
     @Binding var result: Result<MFMailComposeResult, Error>?
+    private let strings = StringLiterals.More.SendFeedback.self
 
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
         var parent: MailView
@@ -38,11 +39,8 @@ struct MailView: UIViewControllerRepresentable {
         let mailVC = MFMailComposeViewController()
         
         mailVC.mailComposeDelegate = context.coordinator
-        mailVC.setToRecipients(["comfie.team@gmail.com"])
-        mailVC.setSubject("COMFIE에게 문의하기")
-        
-        let body = ""
-        mailVC.setMessageBody(body, isHTML: false)
+        mailVC.setToRecipients([strings.mailRecipient.localized])
+        mailVC.setSubject(strings.mailTitle.localized)
         
         return mailVC
     }

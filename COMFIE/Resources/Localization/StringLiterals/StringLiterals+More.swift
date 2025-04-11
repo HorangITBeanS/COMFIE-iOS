@@ -48,6 +48,8 @@ extension StringLiterals.More {
 extension StringLiterals.More {
     enum SendFeedback {
         static let navigatioinTitle: LocalizedStringResource = "more_send_feedback_navigation_title"
+        static let mailTitle: LocalizedStringResource = "more_send_feedback_mail_title"
+        static let mailRecipient: LocalizedStringResource = "more_send_feedback_mail_recipient"
     }
 }
 

@@ -323,6 +323,38 @@
         }
       }
     },
+    "more_send_feedback_mail_recipient" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "comfie.team@gmail.com"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "comfie.team@gmail.com"
+          }
+        }
+      }
+    },
+    "more_send_feedback_mail_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Feedback for COMFIE"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE 문의"
+          }
+        }
+      }
+    },
     "more_send_feedback_navigation_title" : {
       "localizations" : {
         "en" : {
