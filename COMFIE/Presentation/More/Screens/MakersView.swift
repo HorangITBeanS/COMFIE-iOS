@@ -30,22 +30,14 @@ struct MakersView: View {
             CFList(sectionTitle: strings.contactSectiontitle.localized) {
                 CFListRow(
                     title: strings.instagram.localized,
-                    trailingView: {
-                        Text(strings.instagramContent)
-                            .comfieFont(.body)
-                            .foregroundStyle(Color.textBlack)
-                    }
+                    trailingView: trailingTextView(strings.instagramContent)
                 )
                 .disabled(true)
                 
                 CFListRow(
                     title: strings.email.localized,
                     isLast: true,
-                    trailingView: {
-                        Text(strings.emailContent)
-                            .comfieFont(.body)
-                            .foregroundStyle(Color.textBlack)
-                    }
+                    trailingView: trailingTextView(strings.emailContent)
                 )
             }
             .padding(.horizontal, 24)
@@ -54,6 +46,13 @@ struct MakersView: View {
         }
         .background(Color.keyBackground)
         .cfNavigationBar(strings.navigatioinTitle.localized)
+    }
+    
+    @ViewBuilder
+    private func trailingTextView(_ text: LocalizedStringResource) -> some View {
+        Text(text)
+            .comfieFont(.body)
+            .foregroundStyle(Color.textBlack)
     }
 }
 
