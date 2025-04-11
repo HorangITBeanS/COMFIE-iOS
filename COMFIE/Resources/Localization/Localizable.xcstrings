@@ -188,6 +188,16 @@
         }
       }
     },
+    "more_send_feedback_navigation_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "의견 보내기"
+          }
+        }
+      }
+    },
     "more_service_term" : {
       "localizations" : {
         "ko" : {

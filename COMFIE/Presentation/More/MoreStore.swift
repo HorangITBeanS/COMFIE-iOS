@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MessageUI
 
 @Observable
 class MoreStore: IntentStore {
@@ -18,6 +19,10 @@ class MoreStore: IntentStore {
             
             return " \(version)"
         }
+        
+        // 메일앱 활성화 여부
+        var isMailAppActivate: Bool = false
+        var showMailSheet: Bool = false
     }
     
     enum Intent {
@@ -25,7 +30,10 @@ class MoreStore: IntentStore {
         case privacyPolicyRowTapped
         case locationTermRowTapped
         
+        // 의견 보내기 - 메일앱 활성화 체크 후 화면 전환
         case sendFeedbackRowTapped
+        case dismissMailSheet
+        
         case makersRowTapped
     }
     
@@ -34,6 +42,7 @@ class MoreStore: IntentStore {
         case navigateToPrivacyPolicy
         case navigateToLocationTerm
         
+        case checkMailAppActivate
         case navigateToSendFeedback
         case navigateToMakers
     }
@@ -53,9 +62,19 @@ class MoreStore: IntentStore {
         case .locationTermRowTapped:
             _ = handleAction(state, .navigateToLocationTerm)
         case .sendFeedbackRowTapped:
-            _ = handleAction(state, .navigateToSendFeedback)
+            // 메일앱 활성화 여부 확인
+            state = handleAction(state, .checkMailAppActivate)
+            if state.isMailAppActivate {
+                // 활성화 O > 메일앱 시트
+                state.showMailSheet = true
+            } else {
+                // 활성화 X > 기본 화면
+                _ = handleAction(state, .navigateToSendFeedback)
+            }
         case .makersRowTapped:
             _ = handleAction(state, .navigateToMakers)
+        case .dismissMailSheet:
+            state.showMailSheet = false
         }
     }
     
@@ -68,6 +87,8 @@ class MoreStore: IntentStore {
             router.push(.privacyPolicy)
         case .navigateToLocationTerm:
             router.push(.locationTerm)
+        case .checkMailAppActivate:
+            newState.isMailAppActivate = MFMailComposeViewController.canSendMail()
         case .navigateToSendFeedback:
             router.push(.sendFeedback)
         case .navigateToMakers:

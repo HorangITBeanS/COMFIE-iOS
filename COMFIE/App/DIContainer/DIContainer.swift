@@ -46,7 +46,7 @@ struct DIContainer {
         case .locationTerm:
             TermView(type: .location)
         case .sendFeedback:
-            Text("sendFeedback")
+            SendFeedbackView()
         case .makers:
             Text("makers")
         }
