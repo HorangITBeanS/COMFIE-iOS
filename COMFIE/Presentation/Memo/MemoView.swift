@@ -72,21 +72,25 @@ struct MemoView: View {
     // MARK: - View Property
     private var navigationBarView: some View {
         HStack(spacing: 0) {
-            HStack(spacing: 8) {
-                // 컴피존 상태에 따라 로고 변경
-                Image(isUserInComfieZone ? .icComfie : .icUncomfie)
-                    .resizable()
-                    .frame(width: isUserInComfieZone ? 84 : 115, height: 25)
-                Image(.icLocation)
-                    .resizable()
-                    .frame(width: 24, height: 24)
+            Button {
+                // 페이지 이동
+                intent(.comfieZoneSettingButtonTapped)
+            } label: {
+                HStack(spacing: 8) {
+                    // 컴피존 상태에 따라 로고 변경
+                    Image(isUserInComfieZone ? .icComfie : .icUncomfie)
+                        .resizable()
+                        .frame(width: isUserInComfieZone ? 84 : 115, height: 25)
+                    Image(.icLocation)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
             }
             
             Spacer()
             
             Button {
-                // 페이지 이동
-                intent(.comfieZoneSettingButtonTapped)
+                intent(.moreButtonTapped)
             } label: {
                 Image(.icEllipsis)
                     .resizable()

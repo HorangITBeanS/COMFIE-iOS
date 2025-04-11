@@ -41,6 +41,7 @@ class MemoStore: IntentStore {
         case onAppear
         case backgroundTapped
         case comfieZoneSettingButtonTapped
+        case moreButtonTapped
         
         enum PopupIntent {
             case confirmDeleteButtonTapped
@@ -88,6 +89,7 @@ class MemoStore: IntentStore {
         enum NavigationAction {
             case toRetrospection(Memo)
             case toComfieZoneSetting
+            case toMore
         }
     }
     
@@ -128,6 +130,8 @@ class MemoStore: IntentStore {
             performSideEffect(for: .ui(.removeMemoInputFocus))
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigation(.toComfieZoneSetting))
+        case .moreButtonTapped:
+            state = handleAction(state, .navigation(.toMore))
         }
     }
     
@@ -240,11 +244,12 @@ extension MemoStore {
         case .toRetrospection(let memo):
             // TODO: 이후에 회고 뷰에 메모를 전달해줘야 한다.
             router.push(.retrospection)
-            return state
         case .toComfieZoneSetting:
             router.push(.comfieZoneSetting)
-            return state
+        case .toMore:
+            router.push(.more)
         }
+        return state
     }
 }
 

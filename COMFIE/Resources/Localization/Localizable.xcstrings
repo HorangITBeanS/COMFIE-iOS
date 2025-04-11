@@ -35,7 +35,6 @@
       }
     },
     "comfieZoneSetting" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ko" : {
           "stringUnit" : {
