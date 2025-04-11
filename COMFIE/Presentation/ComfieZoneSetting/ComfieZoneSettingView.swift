@@ -11,6 +11,7 @@ import SwiftUI
 struct ComfieZoneSettingView: View {
     @State var intent: ComfieZoneSettingStore
     private var state: ComfieZoneSettingStore.State { intent.state }
+    private let strings = StringLiterals.ComfieZoneSetting.self
     
     var body: some View {
         VStack(spacing: 0) {
@@ -66,13 +67,13 @@ struct ComfieZoneSettingView: View {
             )
         }
         .background(Color.cfWhite)
-        .cfNavigationBar("현재위치", trailingButtons: [infoButton])
+        .cfNavigationBar(strings.navigationTitle.localized, trailingButtons: [infoButton])
         // 컴피존 안내 팝업
         .comfieZoneInfoPopupView(
             showPopup: state.showInfoPopup,
             onDismiss: { intent(.closeInfoPopup) }
         )
-        // 네비게이션바 삭제
+        // 기본 네비게이션바 삭제
         .toolbar(.hidden, for: .navigationBar)
     }
     

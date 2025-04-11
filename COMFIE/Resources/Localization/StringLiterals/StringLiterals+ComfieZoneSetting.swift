@@ -9,6 +9,8 @@ import Foundation
 
 extension StringLiterals {
     enum ComfieZoneSetting {
+        static let navigationTitle: LocalizedStringResource = "comfiezone_setting_navigation_title"
+        
         enum InfoPopup {
             static let title: LocalizedStringResource = "comfiezone_setting_info_popup_title"
             static let description: LocalizedStringResource = "comfiezone_setting_info_popup_description"
