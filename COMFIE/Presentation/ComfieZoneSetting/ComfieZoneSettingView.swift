@@ -72,6 +72,8 @@ struct ComfieZoneSettingView: View {
             showPopup: state.showInfoPopup,
             onDismiss: { intent(.closeInfoPopup) }
         )
+        // 네비게이션바 삭제
+        .toolbar(.hidden, for: .navigationBar)
     }
     
     // 네비게이션 바 우측 정보 버튼
