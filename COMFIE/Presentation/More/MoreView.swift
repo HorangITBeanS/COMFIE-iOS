@@ -5,12 +5,15 @@
 //  Created by Anjin on 4/9/25.
 //
 
+import MessageUI
 import SwiftUI
 
 struct MoreView: View {
     @State var intent: MoreStore
     private var state: MoreStore.State { intent.state }
     private let strings = StringLiterals.More.self
+    
+    @State var mailViewResult: Result<MFMailComposeResult, Error>?
     
     var body: some View {
         VStack {
@@ -69,7 +72,12 @@ struct MoreView: View {
         .sheet(
             isPresented: .constant(state.showMailSheet),
             onDismiss: { intent(.dismissMailSheet) },
-            content: { Text("메일앱") }
+            content: {
+                MailView(
+                    onDismiss: { intent(.dismissMailSheet) },
+                    result: $mailViewResult
+                )
+            }
         )
     }
     
