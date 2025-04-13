@@ -60,10 +60,7 @@ struct MoreView: View {
             Spacer()
             
             // 현재 버전
-            Text(strings.currentVersion.localized + state.currentVersion)
-                .comfieFont(.systemBody)
-                .foregroundStyle(Color.textDarkgray)
-                .padding(.bottom, 26)
+            currentVersionView
         }
         .frame(maxWidth: .infinity)
         .background(Color.keyBackground)
@@ -86,6 +83,19 @@ struct MoreView: View {
         Image(.icForward)
             .resizable()
             .frame(width: 14, height: 20)
+    }
+    
+    // 현재 버전
+    private var currentVersionView: some View {
+        HStack(spacing: 0) {
+            Text(strings.currentVersion.localized)
+                .foregroundStyle(Color.textBlack)
+            
+            Text(state.currentVersion)
+                .foregroundStyle(Color.textDarkgray)
+        }
+        .comfieFont(.systemBody)
+        .padding(.bottom, 26)
     }
 }
 
