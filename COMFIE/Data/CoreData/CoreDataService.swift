@@ -64,6 +64,23 @@ extension CoreDataService {
             return .failure(error)
         }
     }
+    
+    func saveRetrospection(_ memo: Memo) -> Result<Void, Error> {
+        let request: NSFetchRequest<MemoEntity> = MemoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", memo.id as CVarArg)
+        
+        do {
+            if let entity = try context.fetch(request).first {
+                entity.retrospectionText = memo.retrospectionText
+                try context.save()
+                return .success(())
+            } else {
+                return .failure(NSError(domain: "MemoNotFound", code: 404, userInfo: nil))
+            }
+        } catch {
+            return .failure(error)
+        }
+    }
 }
 
 // MARK: - READ
@@ -173,6 +190,23 @@ extension CoreDataService {
             print("All comfieZone records deleted successfully.")
         } catch {
             print("Failed to delete all comfieZone records: \(error)")
+        }
+    }
+    
+    func deleteRetrospectionText(for memo: Memo) -> Result<Void, Error> {
+        let request = MemoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", memo.id as CVarArg)
+        
+        do {
+            if let entity = try context.fetch(request).first {
+                entity.retrospectionText = nil
+                try context.save()
+                return .success(())
+            } else {
+                return .failure(NSError(domain: "MemoNotFound", code: 404, userInfo: nil))
+            }
+        } catch {
+            return .failure(error)
         }
     }
 }

@@ -13,7 +13,7 @@ final class RetrospectionRepository: RetrospectionRepsitoryProtocol {
     }
     
     func update(memo: Memo) -> Result<Void, any Error> {
-        coreDataService.updateRetrospectionText(for: memo, with: memo.retrospectionText ?? "")
+        coreDataService.saveRetrospection(memo)
     }
     
     func delete(memo: Memo) -> Result<Void, any Error> {
