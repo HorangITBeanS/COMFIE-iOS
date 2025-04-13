@@ -147,5 +147,6 @@ struct RetrospectionView: View {
 
 #Preview {
     RetrospectionView(intent: .init(router: .init(),
+                                    repository: RetrospectionRepository(coreDataService: .init()),
                                     memo: Memo(id: .init(), createdAt: .distantFuture, originalText: "", emojiText: "")))
 }

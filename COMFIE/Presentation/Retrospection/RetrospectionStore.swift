@@ -15,14 +15,14 @@ class RetrospectionStore: IntentStore {
     let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
     
     private let router: Router
+    private let repository: RetrospectionRepsitoryProtocol
     
     let memo: Memo
     
-    init(router: Router, memo: Memo) {
+    init(router: Router, repository: RetrospectionRepsitoryProtocol, memo: Memo) {
         self.router = router
+        self.repository = repository
         self.memo = memo
-        
-        self.state.originalMemo = memo.originalText
     }
     
     struct State {
@@ -51,17 +51,21 @@ class RetrospectionStore: IntentStore {
     // MARK: - Action
     
     enum Action {
+        // retrospection CRUD
         case fetchMemo
         case updateRetrospection(String)
-        
-        case showCompleteButton
-        case hideCompleteButton
-        
         case saveRetrospection
         case deleteRetrospection
         
+        // complete Button
+        case showCompleteButton
+        case hideCompleteButton
+        
+        // delete-Popup view
         case showDeletePopupView
         case hideDeletePopupView
+        
+        case popToLast
     }
     
     // MARK: - Side Effect
@@ -96,7 +100,9 @@ class RetrospectionStore: IntentStore {
             performSideEffect(for: .ui(.removeContentFieldFocus))
             state = handleAction(state, .hideCompleteButton)
             
-        case .deleteRetrospectionButtonTapped: state = handleAction(state, .deleteRetrospection)
+        case .deleteRetrospectionButtonTapped:
+            state = handleAction(state, .deleteRetrospection)
+            _ = handleAction(state, .popToLast)
         case .cancelDeleteRetrospectionButtonTapped: state = handleAction(state, .hideDeletePopupView)
         }
     }
@@ -104,17 +110,54 @@ class RetrospectionStore: IntentStore {
     private func handleAction(_ state: State, _ action: Action) -> State {
         var newState = state
         switch action {
-        case .fetchMemo: print("fetchMemo")
+        case .fetchMemo:
+            newState.originalMemo = memo.originalText
+            if let retrospection = memo.retrospectionText {
+                newState.inputContent = retrospection
+            }
         case .updateRetrospection(let text): newState.inputContent = text
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
             
-        case .saveRetrospection: print("saveRetrospection")
-        case .deleteRetrospection: print("deleteRetrospection")
+        case .saveRetrospection: _ = saveRetrospection(newState)
+        case .deleteRetrospection: _ = deleteRetrospection(newState)
             
         case .showDeletePopupView: newState.showDeletePopupView = true
         case .hideDeletePopupView: newState.showDeletePopupView = false
+        case .popToLast: router.pop()
         }
+        return newState
+    }
+}
+
+//MARK: - Helper Methods
+extension RetrospectionStore {
+    private func saveRetrospection(_ state: State) -> State {
+        var newState = state
+        let memo = Memo(id: memo.id,
+                        createdAt: memo.createdAt,
+                        originalText: memo.originalText,
+                        emojiText: memo.emojiText,
+                        retrospectionText: newState.inputContent)
+        switch repository.update(memo: memo) {
+        case .success(let success):
+            print("저장 성공!")
+        case .failure(let failure):
+            print("\(memo)저장을 실패했습니다.")
+        }
+        
+        return newState
+    }
+    
+    private func deleteRetrospection(_ state: State) -> State {
+        var newState = state
+        switch repository.delete(memo: memo) {
+        case .success(let success):
+            print("삭제 성공!")
+        case .failure(let failure):
+            print("\(memo)삭제를 실패했습니다.")
+        }
+        
         return newState
     }
 }
