@@ -16,7 +16,7 @@ struct MoreView: View {
     @State var mailViewResult: Result<MFMailComposeResult, Error>?
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             VStack(spacing: 24) {
                 // 약관 및 정책
                 CFList(sectionTitle: strings.termsSectionTitle.localized) {
