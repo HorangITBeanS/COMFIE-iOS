@@ -16,8 +16,13 @@ class RetrospectionStore: IntentStore {
     
     private let router: Router
     
-    init(router: Router) {
+    let memo: Memo
+    
+    init(router: Router, memo: Memo) {
         self.router = router
+        self.memo = memo
+        
+        self.state.originalMemo = memo.originalText
     }
     
     struct State {

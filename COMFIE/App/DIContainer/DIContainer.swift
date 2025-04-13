@@ -27,7 +27,9 @@ struct DIContainer {
         ComfieZoneSettingStore(popupIntent: makeComfieZoneSettingPopupIntent())
     }
     
-    private func makeRetrospectionIntent() -> RetrospectionStore { RetrospectionStore(router: router) }
+    private func makeRetrospectionIntent(memo: Memo) -> RetrospectionStore {
+        RetrospectionStore(router: router, memo: memo)
+    }
     private func makeMoreIntent() -> MoreStore { MoreStore(router: router) }
     
     // MARK: - View
@@ -40,8 +42,8 @@ struct DIContainer {
             OnboardingView(intent: makeOnboardingIntent())
         case .memo:
             MemoView(intent: makeMemoIntent())
-        case .retrospection:
-            RetrospectionView(intent: makeRetrospectionIntent())
+        case .retrospection(let memo):
+            RetrospectionView(intent: makeRetrospectionIntent(memo: memo))
         case .comfieZoneSetting:
             ComfieZoneSettingView(intent: makeComfieZoneSettingIntent())
         case .more:

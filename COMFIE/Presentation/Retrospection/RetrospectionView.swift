@@ -146,5 +146,6 @@ struct RetrospectionView: View {
 }
 
 #Preview {
-    RetrospectionView(intent: .init(router: .init()))
+    RetrospectionView(intent: .init(router: .init(),
+                                    memo: Memo(id: .init(), createdAt: .distantFuture, originalText: "", emojiText: "")))
 }
