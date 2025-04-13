@@ -34,12 +34,50 @@
         }
       }
     },
-    "comfieZoneSetting" : {
+    "comfiezone_setting_info_popup_caption" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting a COMFIE zone later\nmay require your confirmation."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "comfieZoneSetting"
+            "value" : "추후 컴피존 삭제를 원하는 경우\n사용자 확인을 요청할 수 있어요."
+          }
+        }
+      }
+    },
+    "comfiezone_setting_info_popup_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In a COMFIE zone, you can read\ndiary in its original text.\nOutside, it turns into emojis."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내가 쓴 일기를 볼 수 있는 공간을 의미해요.\n컴피존 밖에서는 작성한 일기가\n이모지로 변환돼요."
+          }
+        }
+      }
+    },
+    "comfiezone_setting_info_popup_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE zone"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존이란?"
           }
         }
       }
@@ -802,6 +840,12 @@
           }
         }
       }
+    },
+    "컴피존" : {
+
+    },
+    "컴피존이 없어요!" : {
+
     },
     "현재 ComfieZone: %@" : {
       "localizations" : {
