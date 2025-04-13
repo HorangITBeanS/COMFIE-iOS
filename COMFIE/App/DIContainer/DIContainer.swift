@@ -9,14 +9,19 @@ import SwiftUI
 
 struct DIContainer {
     let router: Router
-    // TODO: MemoRepository를 어디서 주입할 지 고민하기
+    
+    // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }
     private func makeMemoIntent() -> MemoStore {
-        MemoStore(router: router, memoRepository: memoRepository)
+        MemoStore(
+            router: router,
+            memoRepository: memoRepository
+        )
     }
+    private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore { ComfieZoneSettingStore() }
     private func makeRetrospectionIntent() -> RetrospectionStore { RetrospectionStore(router: router) }
     
     // MARK: - View
@@ -31,7 +36,7 @@ struct DIContainer {
         case .retrospection:
             RetrospectionView(intent: makeRetrospectionIntent())
         case .comfieZoneSetting:
-            Text("comfieZoneSetting")
+            ComfieZoneSettingView(intent: makeComfieZoneSettingIntent())
         }
     }
 }

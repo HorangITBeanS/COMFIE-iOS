@@ -48,6 +48,11 @@
 		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
 		510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341282D79A5C60050C718 /* UserDefaultsError.swift */; };
 		5103412C2D79ABC40050C718 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103412B2D79ABC40050C718 /* DIContainer.swift */; };
+		5149D3BE2D9FF10E00173C30 /* ComfieZoneSettingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */; };
+		5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */; };
+		5149D3C22DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
+		5149D3C32DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
+		5149D3C42DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
 		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
 		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
 		51A7AFED2D802B4F00B50D1E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 51A7AFEC2D802B4F00B50D1E /* Localizable.xcstrings */; };
@@ -69,6 +74,7 @@
 		51F8F5AF2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
 		51F8F5B12D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */; };
+		51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */; };
 		51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
 		51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
 		51F8F5B82D95259300DD2E3D /* CFNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */; };
@@ -170,6 +176,9 @@
 		510341242D79A58B0050C718 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
 		510341282D79A5C60050C718 /* UserDefaultsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsError.swift; sourceTree = "<group>"; };
+		5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingStore.swift; sourceTree = "<group>"; };
+		5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneInfoPopupView.swift; sourceTree = "<group>"; };
+		5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+ComfieZoneSetting.swift"; sourceTree = "<group>"; };
 		5103412B2D79ABC40050C718 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
@@ -180,6 +189,7 @@
 		51A7B0112D81704600B50D1E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithDifferentFont.swift; sourceTree = "<group>"; };
 		51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals_Onboarding.swift; sourceTree = "<group>"; };
+		51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingView.swift; sourceTree = "<group>"; };
 		51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFNavigationBar.swift; sourceTree = "<group>"; };
 		51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfNavigationBar.swift"; sourceTree = "<group>"; };
 		51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
@@ -356,6 +366,7 @@
 				5103410A2D7782830050C718 /* Intent */,
 				510341052D777E030050C718 /* Onboarding */,
 				5103411B2D7996E40050C718 /* Memo */,
+				51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -464,6 +475,16 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+		51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */ = {
+			isa = PBXGroup;
+			children = (
+				51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */,
+				5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */,
+				5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */,
+			);
+			path = ComfieZoneSetting;
+			sourceTree = "<group>";
+		};
 		51F8F5B92D95298000DD2E3D /* CFNavigationBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -522,6 +543,7 @@
 				B9EA530E2D7CA5DA00A32305 /* StringLiterals.swift */,
 				51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */,
 				51A7AFFA2D809E7700B50D1E /* StringLiterals+Popup.swift */,
+				5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */,
 				267F6B2B2D91C2780089BD6D /* StringLiterals+Memo.swift */,
 			);
 			path = StringLiterals;
@@ -707,6 +729,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26D697BE2D7F43F400AC200C /* ComfieZone+fromEntity.swift in Sources */,
+				5149D3BE2D9FF10E00173C30 /* ComfieZoneSettingStore.swift in Sources */,
 				267F6B4D2D969F590089BD6D /* MemoRepository.swift in Sources */,
 				267F6B2D2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
 				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
@@ -718,11 +741,13 @@
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
+				5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */,
 				B96CDB3E2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
+				5149D3C42DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */,
 				51F8F5C42D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
@@ -753,6 +778,7 @@
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,
+				51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */,
 				5103412C2D79ABC40050C718 /* DIContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -776,6 +802,7 @@
 				51F8F5B62D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				510340FC2D777C290050C718 /* COMFIETests.swift in Sources */,
+				5149D3C32DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */,
 				B9EA530C2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				51F8F5C02D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
 			);
@@ -796,6 +823,7 @@
 				51A7AFF92D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */,
 				51A7AFFB2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
+				5149D3C22DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */,
 				B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
