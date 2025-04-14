@@ -11,8 +11,7 @@ import SwiftUI
 enum ComfieZoneSettingBottomSheetState {
     case plusButton
     case comfiezoneSettingTextField
-    case inComfieZone
-    case outComfieZone
+    case comfieZoneName
 }
 
 @Observable
@@ -32,25 +31,35 @@ class ComfieZoneSettingStore: IntentStore {
             longitudinalMeters: 200
         )
         
-        var bottomSheetState: ComfieZoneSettingBottomSheetState = .comfiezoneSettingTextField
+        var bottomSheetState: ComfieZoneSettingBottomSheetState = .comfieZoneName
         var isLocationAuthorized: Bool = true
 //        var isLocationAuthorized: Bool = false
         var newComfiezoneName: String = ""
+        
+        // 컴피존 가져오기
+        var comfieZone: ComfieZone? = {
+            ComfieZone(id: UUID(), longitude: 37.3663000, latitude: 127.1083000, name: "여기는 우리집~")
+        }()
+        var isInComfieZone: Bool = true
     }
     
     enum Intent {
         case infoButtonTapped  // 컴피존 안내 버튼 클릭
         case closeInfoPopup    // 컴피존 안내 팝업 닫기
         
+        // Bottom Sheet
         case plusButtonTapped  // 컴피존 추가 버튼 클릭
         case updateComfieZoneNameTextField(String)
         case checkButtonTapped
+        case xButtonTapped
     }
     
     enum Action {
+        // Bottom Sheet
         case showRequestLocationPermissionPopup
         case activeComfiezoneSettingTextField
         case addComfieZone
+        case showDeleteComfieZonePopup
     }
     
     func handleIntent(_ intent: Intent) {
@@ -73,6 +82,8 @@ class ComfieZoneSettingStore: IntentStore {
             state.newComfiezoneName = text
         case .checkButtonTapped:
             state = handleAction(state, .addComfieZone)
+        case .xButtonTapped:
+            state = handleAction(state, .showDeleteComfieZonePopup)
         }
     }
     
@@ -85,6 +96,8 @@ class ComfieZoneSettingStore: IntentStore {
             print("텍스트 필드 띄워")
         case .addComfieZone:
             print("컴피존 추가하자")
+        case .showDeleteComfieZonePopup:
+            print("컴피존 삭제 팝업")
         }
         return newState
     }
