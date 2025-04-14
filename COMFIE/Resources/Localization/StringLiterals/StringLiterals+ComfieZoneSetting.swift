@@ -16,5 +16,9 @@ extension StringLiterals {
             static let description: LocalizedStringResource = "comfiezone_setting_info_popup_description"
             static let caption: LocalizedStringResource = "comfiezone_setting_info_popup_caption"
         }
+        
+        enum BottomSheet {
+            static let title: LocalizedStringResource = "comfiezone_setting_bottom_sheet_title"
+        }
     }
 }

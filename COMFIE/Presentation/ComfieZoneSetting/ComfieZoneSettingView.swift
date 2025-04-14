@@ -34,37 +34,7 @@ struct ComfieZoneSettingView: View {
             }
             
             // 컴피존 설정 시트
-            VStack(alignment: .leading, spacing: 16) {
-                Text("컴피존")
-                    .comfieFont(.title)
-                    .foregroundStyle(Color.textBlack)
-                    .padding(.top, 24)
-                    .padding(.leading, 28)
-                
-                HStack {
-                    Spacer()
-                    
-                    Image(.icPlus)
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundStyle(Color.white)
-                    
-                    Spacer()
-                }
-                .frame(height: 50)
-                .background(Color.keySecondary)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal, 24)
-                .padding(.bottom, 30)
-            }
-            .background(Color.cfWhite)
-            .clipShape(
-                UnevenRoundedRectangle(
-                    topLeadingRadius: 12,
-                    topTrailingRadius: 12
-                )
-            )
+            ComfieZoneSettingBottomSheet(intent: $intent)
         }
         .background(Color.cfWhite)
         .cfNavigationBar(strings.navigationTitle.localized, trailingButtons: [infoButton])

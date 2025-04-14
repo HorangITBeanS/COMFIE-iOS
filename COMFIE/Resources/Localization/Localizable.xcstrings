@@ -34,6 +34,22 @@
         }
       }
     },
+    "comfiezone_setting_bottom_sheet_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE zone"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존"
+          }
+        }
+      }
+    },
     "comfiezone_setting_info_popup_caption" : {
       "localizations" : {
         "en" : {
@@ -78,6 +94,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "컴피존이란?"
+          }
+        }
+      }
+    },
+    "comfiezone_setting_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Location"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 위치"
           }
         }
       }
@@ -840,9 +872,6 @@
           }
         }
       }
-    },
-    "컴피존" : {
-
     },
     "컴피존이 없어요!" : {
 
