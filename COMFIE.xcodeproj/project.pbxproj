@@ -28,6 +28,9 @@
 		26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697BB2D7F421A00AC200C /* CoreDataError.swift */; };
 		26D697BE2D7F43F400AC200C /* ComfieZone+fromEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697BD2D7F43F400AC200C /* ComfieZone+fromEntity.swift */; };
 		26FB03712DAD63B300129862 /* MemoInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FB03702DAD63B300129862 /* MemoInputTextView.swift */; };
+		26FB03752DAD650C00129862 /* EmogiPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FB03742DAD650C00129862 /* EmogiPool.swift */; };
+		26FB03772DAD651B00129862 /* EmogiCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FB03762DAD651B00129862 /* EmogiCharacter.swift */; };
+		26FB03792DAD654200129862 /* EmogiString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FB03782DAD654200129862 /* EmogiString.swift */; };
 		510340EA2D776F5F0050C718 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 510340E92D776F5F0050C718 /* .gitignore */; };
 		510340EE2D777AA40050C718 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 510340ED2D777AA40050C718 /* .swiftlint.yml */; };
 		510340F62D777C260050C718 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F02D777C260050C718 /* Preview Assets.xcassets */; };
@@ -182,6 +185,9 @@
 		26D697BB2D7F421A00AC200C /* CoreDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataError.swift; sourceTree = "<group>"; };
 		26D697BD2D7F43F400AC200C /* ComfieZone+fromEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComfieZone+fromEntity.swift"; sourceTree = "<group>"; };
 		26FB03702DAD63B300129862 /* MemoInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoInputTextView.swift; sourceTree = "<group>"; };
+		26FB03742DAD650C00129862 /* EmogiPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmogiPool.swift; sourceTree = "<group>"; };
+		26FB03762DAD651B00129862 /* EmogiCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmogiCharacter.swift; sourceTree = "<group>"; };
+		26FB03782DAD654200129862 /* EmogiString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmogiString.swift; sourceTree = "<group>"; };
 		510340AD2D776EE70050C718 /* COMFIE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = COMFIE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340BD2D776EE90050C718 /* COMFIETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		510340C72D776EE90050C718 /* COMFIEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = COMFIEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -322,6 +328,24 @@
 				26D697BD2D7F43F400AC200C /* ComfieZone+fromEntity.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		26FB03722DAD64E700129862 /* TextToEmogi */ = {
+			isa = PBXGroup;
+			children = (
+				26FB03732DAD64FC00129862 /* Model */,
+			);
+			path = TextToEmogi;
+			sourceTree = "<group>";
+		};
+		26FB03732DAD64FC00129862 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				26FB03742DAD650C00129862 /* EmogiPool.swift */,
+				26FB03762DAD651B00129862 /* EmogiCharacter.swift */,
+				26FB03782DAD654200129862 /* EmogiString.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		510340A42D776EE70050C718 = {
@@ -514,6 +538,7 @@
 		517FCAC02D7AB29900A250A3 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				26FB03722DAD64E700129862 /* TextToEmogi */,
 				517FCAC12D7AB2A200A250A3 /* Entity */,
 			);
 			path = Domain;
@@ -863,6 +888,7 @@
 				26D697BA2D7F3D4700AC200C /* Memo+fromEntity.swift in Sources */,
 				5103411F2D7997130050C718 /* MemoStore.swift in Sources */,
 				B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */,
+				26FB03752DAD650C00129862 /* EmogiPool.swift in Sources */,
 				51895ADC2DA69B2C00AFA569 /* MoreView.swift in Sources */,
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
@@ -870,6 +896,7 @@
 				51454C1E2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift in Sources */,
 				51895AED2DA6C44700AFA569 /* MoreStore.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
+				26FB03792DAD654200129862 /* EmogiString.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
 				5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */,
 				B96CDB3E2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
@@ -903,6 +930,7 @@
 				B99A081E2DABAD410094EECB /* RetrospectionRepository.swift in Sources */,
 				B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
+				26FB03772DAD651B00129862 /* EmogiCharacter.swift in Sources */,
 				B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				26FB03712DAD63B300129862 /* MemoInputTextView.swift in Sources */,
