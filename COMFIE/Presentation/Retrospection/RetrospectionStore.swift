@@ -90,7 +90,8 @@ class RetrospectionStore: IntentStore {
         case .contentFieldTapped:
             performSideEffect(for: .ui(.setContentFieldFocus))
             state = handleAction(state, .showCompleteButton)
-        case .updateRetrospection(let content): state = handleAction(state, .updateRetrospection(content))
+        case .updateRetrospection(let content):
+            state = handleAction(state, .updateRetrospection(content))
             
         case .backButtonTapped: state = handleAction(state, .saveRetrospection)
         case .deleteMenuButtonTapped:
@@ -119,8 +120,8 @@ class RetrospectionStore: IntentStore {
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
             
-        case .saveRetrospection: _ = saveRetrospection(newState)
-        case .deleteRetrospection: _ = deleteRetrospection(newState)
+        case .saveRetrospection: saveRetrospection(newState)
+        case .deleteRetrospection: deleteRetrospection(newState)
             
         case .showDeletePopupView: newState.showDeletePopupView = true
         case .hideDeletePopupView: newState.showDeletePopupView = false
