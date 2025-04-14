@@ -14,19 +14,14 @@ struct AddComfieZoneCell: View {
         Button {
             onTap()
         } label: {
-            HStack {
-                Spacer()
-                
-                Image(.icPlus)
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundStyle(Color.white)
-                
-                Spacer()
-            }
-            .frame(height: 50)
-            .background(Color.keySecondary)
+            Image(.icPlus)
+                .renderingMode(.template)
+                .resizable()
+                .frame(width: 24, height: 24)
+                .foregroundStyle(Color.white)
+                .frame(height: 50)
+                .frame(maxWidth: .infinity)
+                .background(Color.keySecondary)
         }
     }
 }

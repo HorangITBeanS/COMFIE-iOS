@@ -31,7 +31,7 @@ class ComfieZoneSettingStore: IntentStore {
             longitudinalMeters: 200
         )
         
-        var bottomSheetState: ComfieZoneSettingBottomSheetState = .comfieZoneName
+        var bottomSheetState: ComfieZoneSettingBottomSheetState = .plusButton
         var isLocationAuthorized: Bool = true
 //        var isLocationAuthorized: Bool = false
         var newComfiezoneName: String = ""
