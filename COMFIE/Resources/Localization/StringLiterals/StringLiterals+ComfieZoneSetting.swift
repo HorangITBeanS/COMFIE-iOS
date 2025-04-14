@@ -19,6 +19,8 @@ extension StringLiterals {
         
         enum BottomSheet {
             static let title: LocalizedStringResource = "comfiezone_setting_bottom_sheet_title"
+            static let textFieldTitleKey: LocalizedStringResource = "comfiezone_setting_bottom_sheet_text_field_title_key"
+            static let textFieldPlaceholder: LocalizedStringResource = "comfiezone_setting_bottom_sheet_text_field_placeholder"
         }
     }
 }

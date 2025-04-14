@@ -21,14 +21,22 @@ struct ComfieZoneSettingBottomSheet: View {
                 .padding(.top, 24)
                 .padding(.leading, 28)
             
-            Group {
+            VStack(spacing: 0) {
                 switch state.bottomSheetState {
                 case .plusButton:
-                    PlusButton(
-                        onTap: { intent(.plusButtonTapped) }
-                    )
+                    // + 버튼
+                    PlusButton(onTap: { intent(.plusButtonTapped) })
+                    
                 case .comfiezoneSettingTextField:
-                    Text("텍스트필드")
+                    // 컴피존 설정 텍스트필드
+                    ComfieZoneSettingTextField(
+                        newComfieZoneName: Binding(
+                            get: { state.newComfiezoneName },
+                            set: { intent(.updateComfieZoneNameTextField($0)) }
+                        ),
+                        onCheckButtonTapped: { intent(.checkButtonTapped) }
+                    )
+                    
                 case .inComfieZone:
                     Text("보라색 컴피존")
                 case .outComfieZone:
@@ -45,6 +53,58 @@ struct ComfieZoneSettingBottomSheet: View {
                 topTrailingRadius: 12
             )
         )
+    }
+}
+
+private struct ComfieZoneSettingTextField: View {
+    @Binding var newComfieZoneName: String
+    var onCheckButtonTapped: () -> Void
+    private let strings = StringLiterals.ComfieZoneSetting.BottomSheet.self
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            ZStack(alignment: .leading) {
+                // 컴피존 이름 설정 TextField
+                TextField(
+                    strings.textFieldTitleKey.localized,
+                    text: $newComfieZoneName,
+                    axis: .vertical
+                )
+                .comfieFont(.body)
+                .foregroundStyle(Color.textWhite)
+                
+                // PlaceHolder
+                if newComfieZoneName.isEmpty {
+                    Text(strings.textFieldPlaceholder)
+                        .comfieFont(.body)
+                        .foregroundStyle(Color.textWhite)
+                        .padding(.leading, 2)
+                }
+            }
+            
+            // Divider 막대
+            Rectangle()
+                .frame(width: 1, height: 32)
+                .foregroundStyle(Color.cfWhite)
+                .padding(.leading, 8)
+                .padding(.trailing, 12)
+            
+            // 체크 버튼 - 컴피존 설정
+            Button {
+                onCheckButtonTapped()
+            } label: {
+                Image(.icCheck)
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(Color.textWhite)
+            }
+            .disabled(newComfieZoneName.isEmpty)
+        }
+        .padding(.vertical, 13)
+        .padding(.horizontal, 16)
+        .background(newComfieZoneName.isEmpty ? Color.keySecondary : Color.keyPrimary)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 

@@ -32,10 +32,10 @@ class ComfieZoneSettingStore: IntentStore {
             longitudinalMeters: 200
         )
         
-        var bottomSheetState: ComfieZoneSettingBottomSheetState = .plusButton
+        var bottomSheetState: ComfieZoneSettingBottomSheetState = .comfiezoneSettingTextField
         var isLocationAuthorized: Bool = true
 //        var isLocationAuthorized: Bool = false
-        var comfizone: ComfieZone?
+        var newComfiezoneName: String = ""
     }
     
     enum Intent {
@@ -43,11 +43,14 @@ class ComfieZoneSettingStore: IntentStore {
         case closeInfoPopup    // 컴피존 안내 팝업 닫기
         
         case plusButtonTapped  // 컴피존 추가 버튼 클릭
+        case updateComfieZoneNameTextField(String)
+        case checkButtonTapped
     }
     
     enum Action {
         case showRequestLocationPermissionPopup
         case activeComfiezoneSettingTextField
+        case addComfieZone
     }
     
     func handleIntent(_ intent: Intent) {
@@ -66,6 +69,10 @@ class ComfieZoneSettingStore: IntentStore {
                 // 권한 설정이 없을 때 - 설정 팝업
                 state = handleAction(state, .showRequestLocationPermissionPopup)
             }
+        case .updateComfieZoneNameTextField(let text):
+            state.newComfiezoneName = text
+        case .checkButtonTapped:
+            state = handleAction(state, .addComfieZone)
         }
     }
     
@@ -76,6 +83,8 @@ class ComfieZoneSettingStore: IntentStore {
             print("위치 설정 팝업 띄워")
         case .activeComfiezoneSettingTextField:
             print("텍스트 필드 띄워")
+        case .addComfieZone:
+            print("컴피존 추가하자")
         }
         return newState
     }
