@@ -54,7 +54,7 @@ struct RetrospectionView: View {
                         VStack(spacing: 0) {
                             TextField(stringLiterals.contentPlaceholder.localized,
                                       text: Binding(
-                                        get: { intent.state.inputContent },
+                                        get: { intent.state.inputContent ?? "" },
                                         set: { intent(.updateRetrospection($0)) }
                                       ),
                                       axis: .vertical)

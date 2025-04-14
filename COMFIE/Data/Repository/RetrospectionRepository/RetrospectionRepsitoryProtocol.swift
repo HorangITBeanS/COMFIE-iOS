@@ -6,6 +6,6 @@
 //
 
 protocol RetrospectionRepsitoryProtocol {
-    func update(memo: Memo) -> Result<Void, Error>
+    func save(memo: Memo) -> Result<Void, Error>
     func delete(memo: Memo) -> Result<Void, Error>
 }

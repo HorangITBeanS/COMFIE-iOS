@@ -27,7 +27,7 @@ class RetrospectionStore: IntentStore {
     
     struct State {
         var originalMemo: String = ""
-        var inputContent: String = ""
+        var inputContent: String?
         var showCompleteButton: Bool = false
         var showDeletePopupView: Bool = false
     }
@@ -130,32 +130,34 @@ class RetrospectionStore: IntentStore {
     }
 }
 
-//MARK: - Helper Methods
+// MARK: - Helper Methods
+
 extension RetrospectionStore {
     private func saveRetrospection(_ state: State) -> State {
         var newState = state
+        if newState.inputContent == "" { newState.inputContent = nil }
         let memo = Memo(id: memo.id,
                         createdAt: memo.createdAt,
                         originalText: memo.originalText,
                         emojiText: memo.emojiText,
                         retrospectionText: newState.inputContent)
-        switch repository.update(memo: memo) {
-        case .success(let success):
-            print("저장 성공!")
-        case .failure(let failure):
-            print("\(memo)저장을 실패했습니다.")
+        switch repository.save(memo: memo) {
+        case .success:
+            print("회고 저장 성공")
+        case .failure(let error):
+            print("회고 저장 실패: \(error)")
         }
         
         return newState
     }
     
     private func deleteRetrospection(_ state: State) -> State {
-        var newState = state
+        let newState = state
         switch repository.delete(memo: memo) {
-        case .success(let success):
-            print("삭제 성공!")
-        case .failure(let failure):
-            print("\(memo)삭제를 실패했습니다.")
+        case .success:
+            print("회고 삭제 성공")
+        case .failure(let error):
+            print("회고 삭제 실패: \(error)")
         }
         
         return newState

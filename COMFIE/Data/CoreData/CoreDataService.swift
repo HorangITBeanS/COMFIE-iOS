@@ -193,7 +193,7 @@ extension CoreDataService {
         }
     }
     
-    func deleteRetrospectionText(for memo: Memo) -> Result<Void, Error> {
+    func deleteRetrospection(for memo: Memo) -> Result<Void, Error> {
         let request = MemoEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", memo.id as CVarArg)
         

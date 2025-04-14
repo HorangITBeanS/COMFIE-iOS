@@ -12,11 +12,11 @@ final class RetrospectionRepository: RetrospectionRepsitoryProtocol {
         self.coreDataService = coreDataService
     }
     
-    func update(memo: Memo) -> Result<Void, any Error> {
+    func save(memo: Memo) -> Result<Void, any Error> {
         coreDataService.saveRetrospection(memo)
     }
     
     func delete(memo: Memo) -> Result<Void, any Error> {
-        coreDataService.deleteRetrospectionText(for: memo)
+        coreDataService.deleteRetrospection(for: memo)
     }
 }
