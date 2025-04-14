@@ -23,10 +23,12 @@ struct DIContainer {
     }
     private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore { ComfieZoneSettingStore() }
     private func makeRetrospectionIntent() -> RetrospectionStore { RetrospectionStore(router: router) }
+    private func makeMoreIntent() -> MoreStore { MoreStore(router: router) }
     
     // MARK: - View
     @ViewBuilder func makeView(_ route: Route) -> some View {
         switch route {
+        // MARK: - 메인 화면
         case .loading:
             LoadingView()
         case .onboarding:
@@ -37,6 +39,20 @@ struct DIContainer {
             RetrospectionView(intent: makeRetrospectionIntent())
         case .comfieZoneSetting:
             ComfieZoneSettingView(intent: makeComfieZoneSettingIntent())
+        case .more:
+            MoreView(intent: makeMoreIntent())
+            
+        // MARK: - 메인 화면 > 더보기(more)
+        case .serviceTerm:
+            TermView(type: .service)
+        case .privacyPolicy:
+            TermView(type: .privacy)
+        case .locationTerm:
+            TermView(type: .location)
+        case .sendFeedback:
+            SendFeedbackView()
+        case .makers:
+            MakersView()
         }
     }
 }
