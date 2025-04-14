@@ -23,11 +23,11 @@ struct ComfieZoneSettingBottomSheet: View {
             
             VStack(spacing: 0) {
                 switch state.bottomSheetState {
-                case .plusButton:
+                case .addComfieZone:
                     // + 버튼
                     AddComfieZoneCell(onTap: { intent(.plusButtonTapped) })
                     
-                case .comfiezoneSettingTextField:
+                case .setComfiezoneTextField:
                     // 컴피존 설정 텍스트필드
                     NewComfieZoneTextFieldCell(
                         newComfieZoneName: Binding(

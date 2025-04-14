@@ -12,6 +12,8 @@ struct NewComfieZoneTextFieldCell: View {
     var onCheckButtonTapped: () -> Void
     private let strings = StringLiterals.ComfieZoneSetting.BottomSheet.self
     
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
         HStack(spacing: 0) {
             ZStack(alignment: .leading) {
@@ -23,6 +25,8 @@ struct NewComfieZoneTextFieldCell: View {
                 )
                 .comfieFont(.body)
                 .foregroundStyle(Color.textWhite)
+                .focused($isFocused)
+                .task { isFocused = true }
                 
                 // PlaceHolder
                 if newComfieZoneName.isEmpty {
@@ -43,6 +47,7 @@ struct NewComfieZoneTextFieldCell: View {
             // 체크 버튼 - 컴피존 설정
             Button {
                 onCheckButtonTapped()
+                isFocused = false
             } label: {
                 Image(.icCheck)
                     .renderingMode(.template)

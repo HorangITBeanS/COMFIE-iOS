@@ -9,8 +9,8 @@ import MapKit
 import SwiftUI
 
 enum ComfieZoneSettingBottomSheetState {
-    case plusButton
-    case comfiezoneSettingTextField
+    case addComfieZone
+    case setComfiezoneTextField
     case comfieZoneName
 }
 
@@ -31,7 +31,7 @@ class ComfieZoneSettingStore: IntentStore {
             longitudinalMeters: 200
         )
         
-        var bottomSheetState: ComfieZoneSettingBottomSheetState = .plusButton
+        var bottomSheetState: ComfieZoneSettingBottomSheetState = .addComfieZone
         var isLocationAuthorized: Bool = true
 //        var isLocationAuthorized: Bool = false
         var newComfiezoneName: String = ""
@@ -93,10 +93,25 @@ class ComfieZoneSettingStore: IntentStore {
         case .showRequestLocationPermissionPopup:
             print("위치 설정 팝업 띄워")
         case .activeComfiezoneSettingTextField:
-            print("텍스트 필드 띄워")
+            newState.bottomSheetState = .setComfiezoneTextField
         case .addComfieZone:
+            // 현재 위치 가져와서 설정하기
+            newState.comfieZone = ComfieZone(
+                id: UUID(),
+                longitude: 37.3663000,
+                latitude: 127.1083000,
+                name: state.newComfiezoneName
+            )
+            
+            // bottom sheet cell -> 컴피존 이름
+            newState.bottomSheetState = .comfieZoneName
+            
             print("컴피존 추가하자")
+            
         case .showDeleteComfieZonePopup:
+            // bottom sheet cell -> add button
+            newState.bottomSheetState = .addComfieZone
+            
             print("컴피존 삭제 팝업")
         }
         return newState
