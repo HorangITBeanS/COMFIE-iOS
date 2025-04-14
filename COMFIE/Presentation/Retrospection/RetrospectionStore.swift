@@ -100,6 +100,7 @@ class RetrospectionStore: IntentStore {
         case .completeButtonTapped:
             performSideEffect(for: .ui(.removeContentFieldFocus))
             state = handleAction(state, .hideCompleteButton)
+            state = handleAction(state, .saveRetrospection)
             
         case .deleteRetrospectionButtonTapped:
             state = handleAction(state, .deleteRetrospection)
