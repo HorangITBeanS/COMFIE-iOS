@@ -10,6 +10,8 @@ struct EmogiCharacter {
     var emogiCharacter: Character?
     
     mutating func setEmogiCharacter() {
+        guard emogiCharacter == nil else { return }
+        
         if originalCharacter == " "
             || originalCharacter == "\n"
             || isEmoji(originalCharacter) {
