@@ -32,7 +32,7 @@ class ComfieZoneSettingStore: IntentStore {
         )
         
         var bottomSheetState: ComfieZoneSettingBottomSheetState = .addComfieZone
-        var isLocationAuthorized: Bool = true
+        var isLocationAuthorized: Bool = false
 //        var isLocationAuthorized: Bool = false
         var newComfiezoneName: String = ""
         
@@ -41,6 +41,9 @@ class ComfieZoneSettingStore: IntentStore {
             ComfieZone(id: UUID(), longitude: 37.3663000, latitude: 127.1083000, name: "여기는 우리집~")
         }()
         var isInComfieZone: Bool = true
+        
+        /// 위치 권한 요청 팝업
+        var showRequestLocationPermissionPopup: Bool = false
     }
     
     enum Intent {
@@ -52,6 +55,11 @@ class ComfieZoneSettingStore: IntentStore {
         case updateComfieZoneNameTextField(String)
         case checkButtonTapped
         case xButtonTapped
+        
+        // Close Popup
+        case closeRequestLocationPermissionPopup
+        
+        case goSettingButtonTapped
     }
     
     enum Action {
@@ -76,7 +84,9 @@ class ComfieZoneSettingStore: IntentStore {
                 state = handleAction(state, .activeComfiezoneSettingTextField)
             } else {
                 // 권한 설정이 없을 때 - 설정 팝업
-                state = handleAction(state, .showRequestLocationPermissionPopup)
+                withAnimation {
+                    state = handleAction(state, .showRequestLocationPermissionPopup)
+                }
             }
         case .updateComfieZoneNameTextField(let text):
             state.newComfiezoneName = text
@@ -84,6 +94,16 @@ class ComfieZoneSettingStore: IntentStore {
             state = handleAction(state, .addComfieZone)
         case .xButtonTapped:
             state = handleAction(state, .showDeleteComfieZonePopup)
+        case .closeRequestLocationPermissionPopup:
+            state.showRequestLocationPermissionPopup = false
+            
+        case .goSettingButtonTapped:
+            // 설정 앱으로 이동
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                if UIApplication.shared.canOpenURL(appSettings) {
+                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+                }
+            }
         }
     }
     
@@ -91,7 +111,7 @@ class ComfieZoneSettingStore: IntentStore {
         var newState = state
         switch action {
         case .showRequestLocationPermissionPopup:
-            print("위치 설정 팝업 띄워")
+            newState.showRequestLocationPermissionPopup = true
         case .activeComfiezoneSettingTextField:
             newState.bottomSheetState = .setComfiezoneTextField
         case .addComfieZone:

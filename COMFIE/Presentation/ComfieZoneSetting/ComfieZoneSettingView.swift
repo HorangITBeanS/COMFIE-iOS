@@ -21,6 +21,7 @@ struct ComfieZoneSettingView: View {
                     .mapStyle(.standard(elevation: .flat))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: -12, trailing: 0))
                     .disabled(true)
+//                    .opacity(0)
                 
                 // 컴피존 안내 문구 - 안, 밖, 없음
                 Text("컴피존이 없어요!")
@@ -42,6 +43,15 @@ struct ComfieZoneSettingView: View {
         .comfieZoneInfoPopupView(
             showPopup: state.showInfoPopup,
             onDismiss: { intent(.closeInfoPopup) }
+        )
+        // 위치 권한 요청 팝업
+        .popup(
+            showPopup: state.showRequestLocationPermissionPopup,
+            type: .requestLocatioinPermission,
+            leftButtonType: .cancel,
+            leftButtonAction: { intent(.closeRequestLocationPermissionPopup) },
+            rightButtonType: .normal,
+            rightButtonAction: { intent(.goSettingButtonTapped) }
         )
         // 기본 네비게이션바 삭제
         .toolbar(.hidden, for: .navigationBar)
