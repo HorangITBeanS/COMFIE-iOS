@@ -6,7 +6,7 @@
 //
 
 struct EmogiString {
-    var characters: [EmogiCharacter] = .init()
+    private var characters: [EmogiCharacter] = .init()
     
     mutating func putOriginalString(at index: Int, _ originalString: String) {
         var newCharacters: [EmogiCharacter] = []
@@ -107,21 +107,14 @@ struct EmogiString {
         }
     }
     
-    mutating func deleteEmogiString(from startIndex: Int, to endIndex: Int) {
-        guard startIndex > 0 && endIndex < characters.count else {
-            print("deleteEmogiString(from:to:) 인덱스 문제: \(startIndex),\(endIndex)")
-            return
-        }
+    mutating func deleteEmogiString(start: Int, end: Int? = nil) {
+        let toIndex = end ?? start
         
-        (startIndex...endIndex).forEach { characters.remove(at: $0) }
-    }
-    
-    mutating func deleteEmogiString(at index: Int) {
-        guard index >= 0 && index < characters.count else {
-            print("deleteEmogiString(at:) 인덱스 문제: \(index)")
+        guard start >= 0, toIndex < characters.count, start <= toIndex else {
+            print("deleteEmogiString(start:end:) 인덱스 문제: \(start), \(String(describing: end))")
             return
         }
-        characters.remove(at: index)
+
+        characters.removeSubrange(start...toIndex)
     }
-    
 }
