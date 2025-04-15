@@ -68,6 +68,7 @@ extension CoreDataService {
     func saveRetrospection(_ memo: Memo) -> Result<Void, Error> {
         let request: NSFetchRequest<MemoEntity> = MemoEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", memo.id as CVarArg)
+        request.fetchLimit = 1
         
         do {
             if let entity = try context.fetch(request).first {
