@@ -84,9 +84,7 @@ class ComfieZoneSettingStore: IntentStore {
                 state = handleAction(state, .activeComfiezoneSettingTextField)
             } else {
                 // 권한 설정이 없을 때 - 설정 팝업
-                withAnimation {
-                    state = handleAction(state, .showRequestLocationPermissionPopup)
-                }
+                state = handleAction(state, .showRequestLocationPermissionPopup)
             }
         case .updateComfieZoneNameTextField(let text):
             state.newComfiezoneName = text
