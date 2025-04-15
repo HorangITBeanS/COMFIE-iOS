@@ -48,6 +48,10 @@
 		510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341262D79A59A0050C718 /* UserDefaultsConstants.swift */; };
 		510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510341282D79A5C60050C718 /* UserDefaultsError.swift */; };
 		5103412C2D79ABC40050C718 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5103412B2D79ABC40050C718 /* DIContainer.swift */; };
+		51454C172DAD03D4008EAEB0 /* ComfieZoneSettingBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51454C162DAD03D4008EAEB0 /* ComfieZoneSettingBottomSheet.swift */; };
+		51454C1A2DAD3A0D008EAEB0 /* AddComfieZoneCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51454C192DAD3A0D008EAEB0 /* AddComfieZoneCell.swift */; };
+		51454C1C2DAD3A25008EAEB0 /* ComfieZoneNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51454C1B2DAD3A25008EAEB0 /* ComfieZoneNameCell.swift */; };
+		51454C1E2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51454C1D2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift */; };
 		5149D3BE2D9FF10E00173C30 /* ComfieZoneSettingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */; };
 		5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */; };
 		5149D3C22DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
@@ -191,10 +195,14 @@
 		510341242D79A58B0050C718 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		510341262D79A59A0050C718 /* UserDefaultsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConstants.swift; sourceTree = "<group>"; };
 		510341282D79A5C60050C718 /* UserDefaultsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsError.swift; sourceTree = "<group>"; };
+		5103412B2D79ABC40050C718 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
+		51454C162DAD03D4008EAEB0 /* ComfieZoneSettingBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingBottomSheet.swift; sourceTree = "<group>"; };
+		51454C192DAD3A0D008EAEB0 /* AddComfieZoneCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddComfieZoneCell.swift; sourceTree = "<group>"; };
+		51454C1B2DAD3A25008EAEB0 /* ComfieZoneNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneNameCell.swift; sourceTree = "<group>"; };
+		51454C1D2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewComfieZoneTextFieldCell.swift; sourceTree = "<group>"; };
 		5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingStore.swift; sourceTree = "<group>"; };
 		5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneInfoPopupView.swift; sourceTree = "<group>"; };
 		5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+ComfieZoneSetting.swift"; sourceTree = "<group>"; };
-		5103412B2D79ABC40050C718 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
 		51895ADB2DA69B2C00AFA569 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
@@ -472,6 +480,17 @@
 			path = DIContainer;
 			sourceTree = "<group>";
 		};
+		51454C182DAD39F8008EAEB0 /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				51454C162DAD03D4008EAEB0 /* ComfieZoneSettingBottomSheet.swift */,
+				51454C192DAD3A0D008EAEB0 /* AddComfieZoneCell.swift */,
+				51454C1D2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift */,
+				51454C1B2DAD3A25008EAEB0 /* ComfieZoneNameCell.swift */,
+			);
+			path = BottomSheet;
+			sourceTree = "<group>";
+		};
 		517FCAC02D7AB29900A250A3 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -533,6 +552,7 @@
 		51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */ = {
 			isa = PBXGroup;
 			children = (
+				51454C182DAD39F8008EAEB0 /* BottomSheet */,
 				51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */,
 				5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */,
 				5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */,
@@ -787,6 +807,7 @@
 			files = (
 				26D697BE2D7F43F400AC200C /* ComfieZone+fromEntity.swift in Sources */,
 				5149D3BE2D9FF10E00173C30 /* ComfieZoneSettingStore.swift in Sources */,
+				51454C172DAD03D4008EAEB0 /* ComfieZoneSettingBottomSheet.swift in Sources */,
 				267F6B4D2D969F590089BD6D /* MemoRepository.swift in Sources */,
 				267F6B2D2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
 				510341142D7993B80050C718 /* COMFIERoutingView.swift in Sources */,
@@ -798,6 +819,7 @@
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
+				51454C1E2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift in Sources */,
 				51895AED2DA6C44700AFA569 /* MoreStore.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
@@ -814,10 +836,12 @@
 				267F6B602D9CFABF0089BD6D /* MemoCell.swift in Sources */,
 				51895AE32DA6AE8F00AFA569 /* CFListRow.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
+				51454C1A2DAD3A0D008EAEB0 /* AddComfieZoneCell.swift in Sources */,
 				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
 				51895AEA2DA6B17700AFA569 /* StringLiterals+More.swift in Sources */,
 				267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */,
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
+				51454C1C2DAD3A25008EAEB0 /* ComfieZoneNameCell.swift in Sources */,
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */,
 				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
