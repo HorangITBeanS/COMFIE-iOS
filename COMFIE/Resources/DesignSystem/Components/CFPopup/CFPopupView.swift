@@ -9,7 +9,9 @@ import SwiftUI
 
 struct CFPopupView: View {
     let type: CFPopupType
+    var leftButtonType: CFPopupType.ButtonType = .destructive
     let leftButtonAction: (() -> Void)
+    var rightButtonType: CFPopupType.ButtonType = .cancel
     let rightButtonAction: (() -> Void)
     
     var body: some View {
@@ -17,7 +19,9 @@ struct CFPopupView: View {
             Color.popupBackdrop.ignoresSafeArea()
             
             CFPopup(type: type,
+                    leftButtonType: leftButtonType,
                     leftButtonAction: leftButtonAction,
+                    rightButtonType: rightButtonType,
                     rightButtonAction: rightButtonAction)
             .padding(.horizontal, 50)
         }
@@ -26,13 +30,17 @@ struct CFPopupView: View {
 
 private struct CFPopup: View {
     let type: CFPopupType
+    var leftButtonType: CFPopupType.ButtonType = .destructive
     let leftButtonAction: (() -> Void)
+    var rightButtonType: CFPopupType.ButtonType = .cancel
     let rightButtonAction: (() -> Void)
     
     var body: some View {
         VStack(spacing: 0) {
             CFPopupContentView(type: type,
+                               leftButtonType: leftButtonType,
                                leftButtonAction: leftButtonAction,
+                               rightButtonType: rightButtonType,
                                rightButtonAction: rightButtonAction)
             .padding(.vertical, 16)
             .padding(.horizontal, 27)
@@ -45,7 +53,9 @@ private struct CFPopup: View {
 
 private struct CFPopupContentView: View {
     let type: CFPopupType
+    var leftButtonType: CFPopupType.ButtonType = .destructive
     let leftButtonAction: (() -> Void)
+    var rightButtonType: CFPopupType.ButtonType = .cancel
     let rightButtonAction: (() -> Void)
     
     var body: some View {
@@ -64,7 +74,7 @@ private struct CFPopupContentView: View {
                 Button {
                     leftButtonAction()
                 } label: {
-                    CFPopupButton(type: .destructive,
+                    CFPopupButton(type: leftButtonType,
                                   description: type.leftButtonDescription)
                     
                 }
@@ -72,7 +82,7 @@ private struct CFPopupContentView: View {
                 Button {
                     rightButtonAction()
                 } label: {
-                    CFPopupButton(type: .cancel,
+                    CFPopupButton(type: rightButtonType,
                                   description: type.rightButtonDescription)
                 }
             }
