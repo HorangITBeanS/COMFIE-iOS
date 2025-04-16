@@ -11,6 +11,7 @@ import SwiftUI
 struct ComfieZoneSettingView: View {
     @State var intent: ComfieZoneSettingStore
     private var state: ComfieZoneSettingStore.State { intent.state }
+    private var popupState: ComfieZoneSettingPopupStore.State { intent.popupIntent.state }
     private let strings = StringLiterals.ComfieZoneSetting.self
     
     var body: some View {
@@ -40,22 +41,22 @@ struct ComfieZoneSettingView: View {
         .background(Color.cfWhite)
         .cfNavigationBar(strings.navigationTitle.localized, trailingButtons: [infoButton])
         .comfieZoneInfoPopupView(  // 컴피존 안내 팝업
-            showPopup: state.showInfoPopup,
-            onDismiss: { intent(.closeInfoPopup) }
+            showPopup: popupState.showInfoPopup,
+            onDismiss: { intent.popupIntent(.closeInfoPopup) }
         )
         .popup(  // 위치 권한 요청 팝업
-            showPopup: state.showRequestLocationPermissionPopup,
+            showPopup: popupState.showRequestLocationPermissionPopup,
             type: .requestLocatioinPermission,
             leftButtonType: .cancel,
-            leftButtonAction: { intent(.closeRequestLocationPermissionPopup) },
+            leftButtonAction: { intent.popupIntent(.closeRequestLocationPermissionPopup) },
             rightButtonType: .normal,
-            rightButtonAction: { intent(.goSettingButtonTapped) }
+            rightButtonAction: { intent.popupIntent(.goSettingButtonTapped) }
         )
         .popup(  // 컴피존 삭제 팝업
-            showPopup: state.showDeleteComfieZonePopup,
+            showPopup: popupState.showDeleteComfieZonePopup,
             type: .deleteComfieZone,
-            leftButtonAction: { intent(.deleteComfieZoneButtonTapped) },
-            rightButtonAction: { intent(.closeDeleteComfieZonePopup) }
+            leftButtonAction: { intent(.deleteComfieZonePopupButtonTapped) },
+            rightButtonAction: { intent.popupIntent(.closeDeleteComfieZonePopup) }
         )
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
     }
@@ -63,7 +64,7 @@ struct ComfieZoneSettingView: View {
     // 네비게이션 바 우측 정보 버튼
     private var infoButton: CFNavigationBarButton {
         CFNavigationBarButton {
-            intent(.infoButtonTapped)
+            intent.popupIntent(.infoButtonTapped)
         } label: {
             Image(.icInfo)
                 .resizable()
