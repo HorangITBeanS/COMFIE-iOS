@@ -21,7 +21,12 @@ struct DIContainer {
             memoRepository: memoRepository
         )
     }
-    private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore { ComfieZoneSettingStore() }
+    
+    private func makeComfieZoneSettingPopupIntent() -> ComfieZoneSettingPopupStore { ComfieZoneSettingPopupStore() }
+    private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore {
+        ComfieZoneSettingStore(popupIntent: makeComfieZoneSettingPopupIntent())
+    }
+    
     private func makeRetrospectionIntent() -> RetrospectionStore { RetrospectionStore(router: router) }
     private func makeMoreIntent() -> MoreStore { MoreStore(router: router) }
     

@@ -18,8 +18,8 @@ enum ComfieZoneSettingBottomSheetState {
 class ComfieZoneSettingStore: IntentStore {
     private(set) var popupIntent: ComfieZoneSettingPopupStore
     
-    init(popupStore: ComfieZoneSettingPopupStore = ComfieZoneSettingPopupStore()) {
-        self.popupIntent = popupStore
+    init(popupIntent: ComfieZoneSettingPopupStore) {
+        self.popupIntent = popupIntent
     }
     
     private(set) var state: State = .init()

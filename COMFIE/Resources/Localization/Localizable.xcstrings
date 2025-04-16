@@ -34,6 +34,38 @@
         }
       }
     },
+    "comfiezone_setting_bottom_sheet_text_field_placeholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set the name as you like"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "원하는 대로 이름을 설정할 수 있어요"
+          }
+        }
+      }
+    },
+    "comfiezone_setting_bottom_sheet_text_field_title_key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
+    },
     "comfiezone_setting_bottom_sheet_title" : {
       "localizations" : {
         "en" : {
@@ -640,6 +672,26 @@
         }
       }
     },
+    "popup_button_do_next" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음에 하기"
+          }
+        }
+      }
+    },
+    "popup_button_go_setting" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정하러 가기"
+          }
+        }
+      }
+    },
     "popup_button_keep_edit" : {
       "localizations" : {
         "ko" : {
@@ -718,6 +770,16 @@
         }
       }
     },
+    "popup_subtitle_request_location_permission" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존을 사용하려면 위치 권한이 필요해요."
+          }
+        }
+      }
+    },
     "popup_title_delete_comfiezone" : {
       "localizations" : {
         "en" : {
@@ -772,6 +834,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "수정사항을 저장하지 않고 나가시겠어요?"
+          }
+        }
+      }
+    },
+    "popup_title_request_location_permission" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한이 허용되지 않았어요."
           }
         }
       }
