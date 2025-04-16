@@ -90,6 +90,7 @@
 		51D882C12DAEAE060072E3C0 /* View+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882C02DAEAE060072E3C0 /* View+popup.swift */; };
 		51D882C22DAEAE060072E3C0 /* View+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882C02DAEAE060072E3C0 /* View+popup.swift */; };
 		51D882C32DAEAE060072E3C0 /* View+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882C02DAEAE060072E3C0 /* View+popup.swift */; };
+		51D882E42DAFF4150072E3C0 /* LocalAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882E32DAFF4150072E3C0 /* LocalAuthenticationService.swift */; };
 		51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */; };
 		51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */; };
 		51F8F5AD2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */; };
@@ -223,6 +224,7 @@
 		51A7AFFA2D809E7700B50D1E /* StringLiterals+Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Popup.swift"; sourceTree = "<group>"; };
 		51A7B0112D81704600B50D1E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51D882C02DAEAE060072E3C0 /* View+popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+popup.swift"; sourceTree = "<group>"; };
+		51D882E32DAFF4150072E3C0 /* LocalAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationService.swift; sourceTree = "<group>"; };
 		51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithDifferentFont.swift; sourceTree = "<group>"; };
 		51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals_Onboarding.swift; sourceTree = "<group>"; };
 		51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingView.swift; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				510341042D777D000050C718 /* Presentation */,
 				517FCAC02D7AB29900A250A3 /* Domain */,
 				510341202D79A5460050C718 /* Data */,
+				51D882E22DAFF3FB0072E3C0 /* Service */,
 				510341032D777C460050C718 /* Resources */,
 			);
 			path = COMFIE;
@@ -561,6 +564,14 @@
 				51D882C02DAEAE060072E3C0 /* View+popup.swift */,
 			);
 			path = CFPopup;
+			sourceTree = "<group>";
+		};
+		51D882E22DAFF3FB0072E3C0 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				51D882E32DAFF4150072E3C0 /* LocalAuthenticationService.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		51F8F5B22D9291D500DD2E3D /* ComfieZoneSetting */ = {
@@ -880,6 +891,7 @@
 				267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */,
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
+				51D882E42DAFF4150072E3C0 /* LocalAuthenticationService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,
 				51F8F5B42D92921900DD2E3D /* ComfieZoneSettingView.swift in Sources */,
 				51895ADF2DA6AE6F00AFA569 /* CFList.swift in Sources */,
@@ -1096,6 +1108,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = COMFIE/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "컴피존 삭제를 활성화합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1130,6 +1143,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = COMFIE/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "컴피존 삭제를 활성화합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

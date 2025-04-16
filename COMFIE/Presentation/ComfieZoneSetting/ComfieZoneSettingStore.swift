@@ -55,6 +55,7 @@ class ComfieZoneSettingStore: IntentStore {
         case closeRequestLocationPermissionPopup
         case goSettingButtonTapped
         case closeDeleteComfieZonePopup
+        case deleteComfieZoneButtonTapped
         
         // Bottom Sheet
         case plusButtonTapped  // 컴피존 추가 버튼 클릭
@@ -69,6 +70,8 @@ class ComfieZoneSettingStore: IntentStore {
         case activeComfiezoneSettingTextField
         case addComfieZone
         case showDeleteComfieZonePopup
+        
+        case requestLocalAuthentication
     }
     
     func handleIntent(_ intent: Intent) {
@@ -105,6 +108,27 @@ class ComfieZoneSettingStore: IntentStore {
             }
         case .closeDeleteComfieZonePopup:
             state.showDeleteComfieZonePopup = false
+        case .deleteComfieZoneButtonTapped:
+            if state.isInComfieZone {
+                // 컴피존 안에 있을 때 - 삭제
+                state.showDeleteComfieZonePopup = false
+                state.bottomSheetState = .addComfieZone
+                // TODO: 컴피존 삭제
+            } else {
+                // 컴피존 밖에 있을 때 - Face ID 인식 후 삭제
+                Task { @MainActor in
+                    let service = LocalAuthenticationService()
+                    let result = await service.request()
+                    switch result {
+                    case .success:
+                        state.showDeleteComfieZonePopup = false
+                        state.bottomSheetState = .addComfieZone
+                        // 컴피존 삭제
+                    case .failure:
+                        state.showDeleteComfieZonePopup = false
+                    }
+                }
+            }
         }
     }
     
@@ -130,11 +154,9 @@ class ComfieZoneSettingStore: IntentStore {
             print("컴피존 추가하자")
             
         case .showDeleteComfieZonePopup:
-//            // bottom sheet cell -> add button
-//            newState.bottomSheetState = .addComfieZone
-            
-            print("컴피존 삭제 팝업")
             newState.showDeleteComfieZonePopup = true
+        case .requestLocalAuthentication:
+            print("")
         }
         return newState
     }

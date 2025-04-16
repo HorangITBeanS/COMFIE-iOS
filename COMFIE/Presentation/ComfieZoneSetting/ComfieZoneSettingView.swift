@@ -54,7 +54,7 @@ struct ComfieZoneSettingView: View {
         .popup(  // 컴피존 삭제 팝업
             showPopup: state.showDeleteComfieZonePopup,
             type: .deleteComfieZone,
-            leftButtonAction: { },
+            leftButtonAction: { intent(.deleteComfieZoneButtonTapped) },
             rightButtonAction: { intent(.closeDeleteComfieZonePopup) }
         )
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
