@@ -91,6 +91,7 @@
 		51D882C22DAEAE060072E3C0 /* View+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882C02DAEAE060072E3C0 /* View+popup.swift */; };
 		51D882C32DAEAE060072E3C0 /* View+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882C02DAEAE060072E3C0 /* View+popup.swift */; };
 		51D882E42DAFF4150072E3C0 /* LocalAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882E32DAFF4150072E3C0 /* LocalAuthenticationService.swift */; };
+		51D882E62DAFFE070072E3C0 /* ComfieZoneSettingPopupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D882E52DAFFE070072E3C0 /* ComfieZoneSettingPopupStore.swift */; };
 		51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */; };
 		51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */; };
 		51F8F5AD2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */; };
@@ -225,6 +226,7 @@
 		51A7B0112D81704600B50D1E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51D882C02DAEAE060072E3C0 /* View+popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+popup.swift"; sourceTree = "<group>"; };
 		51D882E32DAFF4150072E3C0 /* LocalAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationService.swift; sourceTree = "<group>"; };
+		51D882E52DAFFE070072E3C0 /* ComfieZoneSettingPopupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingPopupStore.swift; sourceTree = "<group>"; };
 		51F8F5AA2D91ACA800DD2E3D /* TextWithDifferentFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithDifferentFont.swift; sourceTree = "<group>"; };
 		51F8F5AE2D91ACF000DD2E3D /* StringLiterals_Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiterals_Onboarding.swift; sourceTree = "<group>"; };
 		51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneSettingView.swift; sourceTree = "<group>"; };
@@ -581,6 +583,7 @@
 				51F8F5B32D92921900DD2E3D /* ComfieZoneSettingView.swift */,
 				5149D3BD2D9FF10E00173C30 /* ComfieZoneSettingStore.swift */,
 				5149D3BF2DA163A600173C30 /* ComfieZoneInfoPopupView.swift */,
+				51D882E52DAFFE070072E3C0 /* ComfieZoneSettingPopupStore.swift */,
 			);
 			path = ComfieZoneSetting;
 			sourceTree = "<group>";
@@ -855,6 +858,7 @@
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
 				5149D3C42DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */,
+				51D882E62DAFFE070072E3C0 /* ComfieZoneSettingPopupStore.swift in Sources */,
 				51F8F5C42D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				5103410C2D77828C0050C718 /* IntentStore.swift in Sources */,
 				510341182D7993F20050C718 /* Router.swift in Sources */,
