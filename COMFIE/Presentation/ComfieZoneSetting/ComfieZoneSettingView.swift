@@ -39,13 +39,11 @@ struct ComfieZoneSettingView: View {
         }
         .background(Color.cfWhite)
         .cfNavigationBar(strings.navigationTitle.localized, trailingButtons: [infoButton])
-        // 컴피존 안내 팝업
-        .comfieZoneInfoPopupView(
+        .comfieZoneInfoPopupView(  // 컴피존 안내 팝업
             showPopup: state.showInfoPopup,
             onDismiss: { intent(.closeInfoPopup) }
         )
-        // 위치 권한 요청 팝업
-        .popup(
+        .popup(  // 위치 권한 요청 팝업
             showPopup: state.showRequestLocationPermissionPopup,
             type: .requestLocatioinPermission,
             leftButtonType: .cancel,
@@ -53,8 +51,13 @@ struct ComfieZoneSettingView: View {
             rightButtonType: .normal,
             rightButtonAction: { intent(.goSettingButtonTapped) }
         )
-        // 기본 네비게이션바 삭제
-        .toolbar(.hidden, for: .navigationBar)
+        .popup(  // 컴피존 삭제 팝업
+            showPopup: state.showDeleteComfieZonePopup,
+            type: .deleteComfieZone,
+            leftButtonAction: { },
+            rightButtonAction: { intent(.closeDeleteComfieZonePopup) }
+        )
+        .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
     }
     
     // 네비게이션 바 우측 정보 버튼

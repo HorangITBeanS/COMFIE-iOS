@@ -31,7 +31,7 @@ class ComfieZoneSettingStore: IntentStore {
             longitudinalMeters: 200
         )
         
-        var bottomSheetState: ComfieZoneSettingBottomSheetState = .addComfieZone
+        var bottomSheetState: ComfieZoneSettingBottomSheetState = .comfieZoneName
         var isLocationAuthorized: Bool = false
 //        var isLocationAuthorized: Bool = false
         var newComfiezoneName: String = ""
@@ -44,22 +44,23 @@ class ComfieZoneSettingStore: IntentStore {
         
         /// 위치 권한 요청 팝업
         var showRequestLocationPermissionPopup: Bool = false
+        /// 컴피존 삭제 팝업
+        var showDeleteComfieZonePopup: Bool = false
     }
     
     enum Intent {
+        // Popup
         case infoButtonTapped  // 컴피존 안내 버튼 클릭
         case closeInfoPopup    // 컴피존 안내 팝업 닫기
+        case closeRequestLocationPermissionPopup
+        case goSettingButtonTapped
+        case closeDeleteComfieZonePopup
         
         // Bottom Sheet
         case plusButtonTapped  // 컴피존 추가 버튼 클릭
         case updateComfieZoneNameTextField(String)
         case checkButtonTapped
         case xButtonTapped
-        
-        // Close Popup
-        case closeRequestLocationPermissionPopup
-        
-        case goSettingButtonTapped
     }
     
     enum Action {
@@ -102,6 +103,8 @@ class ComfieZoneSettingStore: IntentStore {
                     UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
                 }
             }
+        case .closeDeleteComfieZonePopup:
+            state.showDeleteComfieZonePopup = false
         }
     }
     
@@ -127,10 +130,11 @@ class ComfieZoneSettingStore: IntentStore {
             print("컴피존 추가하자")
             
         case .showDeleteComfieZonePopup:
-            // bottom sheet cell -> add button
-            newState.bottomSheetState = .addComfieZone
+//            // bottom sheet cell -> add button
+//            newState.bottomSheetState = .addComfieZone
             
             print("컴피존 삭제 팝업")
+            newState.showDeleteComfieZonePopup = true
         }
         return newState
     }
