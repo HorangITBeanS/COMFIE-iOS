@@ -7,20 +7,11 @@
 
 import Foundation
 
-enum LocationPermissionStatus {
-    case notDetermined
-    case denied
-    case authorizedAlways
-    case authorizedWhenInUse
-}
-
 @Observable
 class OnboardingStore: IntentStore {
     // MARK: 화면에 사용되는 상태, 밖에서는 setter에 접근 불가능
     private(set) var state: State = .init()
-    struct State {
-        var locationPermissionStatus: LocationPermissionStatus?
-    }
+    struct State { }
     
     // MARK: 사용자가 화면에서 하고자 하는 '의도'
     enum Intent {
@@ -30,15 +21,16 @@ class OnboardingStore: IntentStore {
     // MARK: Intent를 수행하기 위해 필요한 동작
     enum Action {
         case requestLocationPermission       // 사용자 위치 정보 요청
-        case updateLocationPermissionStatus(LocationPermissionStatus)  // 위치 허용 권한 업데이트
         case navigateToMainScreen            // 메인 스크린으로 이동
     }
     
     // MARK: 화면 전환을 위한 router
     private let router: Router
+    private let locationUseCase: LocationUseCase
 
-    init(router: Router) {
+    init(router: Router, locationUseCase: LocationUseCase) {
         self.router = router
+        self.locationUseCase = locationUseCase
     }
     
     func handleIntent(_ intent: Intent) {
@@ -46,10 +38,6 @@ class OnboardingStore: IntentStore {
         case .nextButtonTapped:
             // 사용자에게 위치 정보 허용 요청
             _ = handleAction(state, .requestLocationPermission)
-            
-            // 사용자의 허용 정보에 따라 State 변경
-            let permissionStatus = LocationPermissionStatus.authorizedAlways
-            state = handleAction(state, .updateLocationPermissionStatus(permissionStatus))
             
             // 다음 화면으로 이동
             _ = handleAction(state, .navigateToMainScreen)
@@ -62,14 +50,9 @@ class OnboardingStore: IntentStore {
         var newState = state
         switch action {
         case .requestLocationPermission:
-            print("요청 요청")
-            
-        case .updateLocationPermissionStatus:
-            print("위치 요청")
-            newState.locationPermissionStatus = .authorizedAlways
+            locationUseCase.requestLocationAuthorization()
             
         case .navigateToMainScreen:
-            print("메인화면으로 이동")
             router.hasEverOnboarded = true
         }
         return newState

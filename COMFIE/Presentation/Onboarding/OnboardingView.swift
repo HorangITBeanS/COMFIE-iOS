@@ -64,5 +64,12 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView(intent: OnboardingStore(router: Router()))
+    OnboardingView(
+        intent: OnboardingStore(
+            router: Router(),
+            locationUseCase: LocationUseCase(
+                locationService: LocationService()
+            )
+        )
+    )
 }
