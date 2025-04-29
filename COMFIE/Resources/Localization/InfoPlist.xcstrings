@@ -30,6 +30,24 @@
           }
         }
       }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location When In Use Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Verifying your location to display your current location and set the diary access area."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "사용자의 위치를 표시하고 일기 열람 구역을 설정하기 위해 현재 위치를 확인합니다."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
