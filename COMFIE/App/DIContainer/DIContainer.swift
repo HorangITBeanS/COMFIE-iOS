@@ -13,8 +13,20 @@ struct DIContainer {
     // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
     
+    // MARK: - Service
+    private func makeLocationService() -> LocationService { LocationService() }
+    
+    // MARK: - UseCase
+    private func makeLocationUseCase() -> LocationUseCase { LocationUseCase(locationService: makeLocationService()) }
+    
     // MARK: - Intent
-    private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }
+    private func makeOnboardingIntent() -> OnboardingStore {
+        OnboardingStore(
+            router: router,
+            locationUseCase: makeLocationUseCase()
+        )
+    }
+    
     private func makeMemoIntent() -> MemoStore {
         MemoStore(
             router: router,
