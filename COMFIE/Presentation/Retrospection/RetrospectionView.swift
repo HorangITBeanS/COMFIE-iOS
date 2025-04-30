@@ -28,8 +28,7 @@ struct RetrospectionView: View {
                     ScrollView {
                         VStack(spacing: 0) {
                             HStack(spacing: 0) {
-                                // memo.createdDate 연결 필요
-                                Text(Date().toFormattedDateTimeString())
+                                Text(intent.state.createdDate)
                                     .comfieFont(.systemBody)
                                     .foregroundStyle(.cfBlack.opacity(0.6))
                                 

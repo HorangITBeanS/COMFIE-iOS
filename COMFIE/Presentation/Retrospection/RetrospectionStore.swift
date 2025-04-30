@@ -26,8 +26,11 @@ class RetrospectionStore: IntentStore {
     }
     
     struct State {
+        // 메모 관련 데이터
         var originalMemo: String = ""
         var inputContent: String?
+        var createdDate: String = ""
+        
         var showCompleteButton: Bool = false
         var showDeletePopupView: Bool = false
     }
@@ -114,9 +117,8 @@ class RetrospectionStore: IntentStore {
         switch action {
         case .fetchMemo:
             newState.originalMemo = memo.originalText
-            if let retrospection = memo.retrospectionText {
-                newState.inputContent = retrospection
-            }
+            if let retrospection = memo.retrospectionText { newState.inputContent = retrospection }
+            newState.createdDate = memo.createdAt.toFormattedDateTimeString()
         case .updateRetrospection(let text): newState.inputContent = text
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
