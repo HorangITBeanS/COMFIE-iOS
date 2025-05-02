@@ -210,5 +210,53 @@ struct MemoInputUITextView: UIViewRepresentable {
             
             parent.dynamicHeight = targetHeight
         }
+        
+        /// 커서 끝 위치를 String.Index로 반환
+        /// - selectedRange는 UTF-16 기준으로, 복합 문자(이모지 등)와 문자 수(count)가 다를 수 있음
+        private func getCursorEndIndex(_ textView: UITextView) -> String.Index? {
+            guard let selectedRange = textView.selectedTextRange,
+                  let text = textView.text else { return nil }
+            
+            let cursor = textView.offset(from: textView.beginningOfDocument, to: selectedRange.end)
+            let nsRange = NSRange(location: 0, length: cursor)
+            return Range(nsRange, in: text)?.upperBound
+        }
+        
+        /// 커서 시작 위치를 String.Index로 반환
+        /// - selectedRange의 UTF-16 offset을 정확한 String.Index로 변환
+        private func getCursorStartIndex(_ textView: UITextView) -> String.Index? {
+            guard let selectedRange = textView.selectedTextRange,
+                  let text = textView.text else { return nil }
+            
+            let cursor = textView.offset(from: textView.beginningOfDocument, to: selectedRange.start)
+            let nsRange = NSRange(location: 0, length: cursor)
+            return Range(nsRange, in: text)?.upperBound
+        }
+        
+        /// 커서 끝 위치까지 문자의 개수를 Int 인덱스로 반환
+        /// - getCursorEndIndex로 구한 String.Index 기준으로 계산
+        private func findEndCursorIndexInString(_ textView: UITextView) -> Int {
+            guard let cursorIndex = getCursorEndIndex(textView),
+                  let text = textView.text else {
+                print("findEndCursorIndexInString Error")
+                return 0
+            }
+            let leftText = String(text[..<cursorIndex])
+            
+            return max(0, leftText.count - 1)
+        }
+        
+        /// 커서 시작 위치까지 문자의 개수를 Int 인덱스로 반환
+        /// - getCursorStartIndex로 구한 String.Index 기준으로 계산
+        private func findStartCursorIndexInString(_ textView: UITextView) -> Int {
+            guard let cursorIndex = getCursorStartIndex(textView),
+                  let text = textView.text else {
+                print("findStartCursorIndexInString Error")
+                return 0
+            }
+            let leftText = String(text[..<cursorIndex])
+            
+            return max(0, leftText.count - 1)
+        }
     }
 }
