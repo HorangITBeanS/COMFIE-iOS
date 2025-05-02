@@ -6,115 +6,105 @@
 //
 
 struct EmogiString {
-    private var characters: [EmogiCharacter] = .init()
+    private var emogiCharacters: [EmogiCharacter] = []
     
-    mutating func putOriginalString(at index: Int, _ originalString: String) {
-        var newCharacters: [EmogiCharacter] = []
-        
-        let originalCharacters = Array(originalString)
-        
-        // MARK: characters.count는 originalString.count보다 무조건 작다.
+    /// index 위치까지 이모지를 적용한 문자열을 설정합니다.
+    mutating func applyEmogiString(at index: Int, _ newString: String) {
+        syncWithNewString(newString)
+        changeEmogi(upTo: index)
+    }
+    
+    /// 변경된 문자열과 emogiCharacters를 동기화합니다.
+    /// - Note: newString에 문자가 **추가된 경우**에만 실행됩니다.
+    mutating func syncWithNewString(_ newString: String) {
+        let originalCharacters = Array(newString)
         var originalIndex = 0
         
-        for i in 0..<characters.count {
-            var emogiCharacter = characters[i]
+        guard newString.count > emogiCharacters.count else { return}
+        
+        var newCharacters: [EmogiCharacter] = []
 
-            /// 원본과 다른게 추가되면 들어가는 반복문
-            while originalIndex < originalCharacters.count &&
-                    originalCharacters[originalIndex] != emogiCharacter.emogiCharacter ?? emogiCharacter.originalCharacter {
-                
-                let originalCharacter = originalCharacters[originalIndex]
-                
-                var newEmogiCharacter = EmogiCharacter(originalCharacter: originalCharacter)
-                
-                // 트리거 이하 인덱스만 이모지 추가
-                if originalIndex <= index {
-                    newEmogiCharacter.setEmogiCharacter()
+        for i in 0..<emogiCharacters.count {
+            let emogiCharacter = emogiCharacters[i]
+            let currentChar = emogiCharacter.emogiCharacter ?? emogiCharacter.originalCharacter
+            let updatedChar = originalCharacters[originalIndex]
+            
+            if updatedChar != currentChar {
+                while originalCharacters[originalIndex] != currentChar {
+                    newCharacters.append(
+                        EmogiCharacter(originalCharacter: originalCharacters[originalIndex])
+                    )
+                    originalIndex += 1
                 }
-
-                newCharacters.append(newEmogiCharacter)
-                originalIndex += 1
-            }
-            
-            /// 원본과 같은 경우
-            guard originalCharacters[originalIndex] == emogiCharacter.emogiCharacter ?? emogiCharacter.originalCharacter else {
-                print("putOriginalString Problem")
-                return
-            }
-            
-            // 트리거 이하 인덱스만 이모지 추가
-            if originalIndex <= index && emogiCharacter.emogiCharacter == nil {
-                emogiCharacter.setEmogiCharacter()
             }
             
             newCharacters.append(emogiCharacter)
-
             originalIndex += 1
         }
         
+        // 나머지 추가된 문자 반영
         if originalIndex < originalCharacters.count {
-            for i in originalIndex..<originalCharacters.count {
-                let originalCharacter = originalCharacters[i]
-                var newEmogiCharacter = EmogiCharacter(originalCharacter: originalCharacter)
-                
-                if i <= index {
-                    newEmogiCharacter.setEmogiCharacter()
+            originalCharacters[originalIndex...].forEach {
+                    newCharacters.append(EmogiCharacter(originalCharacter: $0))
                 }
-
-                newCharacters.append(newEmogiCharacter)
-            }
         }
 
-        characters = newCharacters
+        emogiCharacters = newCharacters
     }
     
-    // EmogiCharacter에서 이모지가 추가되어 있는 것은 이모지로, 아니면 텍스트로 합쳐서 리턴
-    // 이모지만을 보여줘야 하는 상황도 이거 쓰면 될 듯?
-        // 이모지만 보여야 하는 상황인데 이모지가 없는 경우도 이상함
+    /// index 위치까지 모든 character에 이모지를 적용합니다.
+    mutating private func changeEmogi(upTo index: Int) {
+        guard emogiCharacters.count > index && index > 0 else { return }
+        (0...index).forEach { emogiCharacters[$0].setEmogiCharacter() }
+    }
+    
+    /// 현재 이모지 적용 상태의 문자열을 반환합니다.
     func getEmogiString() -> String {
-        characters
+        emogiCharacters
             .map { String($0.emogiCharacter ?? $0.originalCharacter) }
             .joined()
     }
     
+    /// index 위치까지의 이모지 적용 문자열을 반환합니다.
     func getEmogiString(to index: Int) -> String {
         var string = ""
-        guard index >= 0 && index < characters.count else {
+        guard index >= 0 && index < emogiCharacters.count else {
             print("getEmogiString(to:) index out of range.: \(index)")
             return string
         }
         
         for i in 0...index {
-            let chracter = characters[i]
+            let chracter = emogiCharacters[i]
             
             string += String(chracter.emogiCharacter ?? chracter.originalCharacter)
         }
         return string
     }
     
-    // 원본 리턴
+    /// 원본 문자열을 반환합니다.
     func getOriginalString() -> String {
-        characters
+        emogiCharacters
             .map { String($0.originalCharacter) }
             .joined()
     }
     
-    // 비워진 이모지 채우기
+    /// 비워진 이모지를 전체 적용합니다.
     mutating func setEmogiString() {
         // 전체 채우기
-        for i in 0..<characters.count {
-            self.characters[i].setEmogiCharacter()
+        for i in emogiCharacters.indices {
+            emogiCharacters[i].setEmogiCharacter()
         }
     }
     
-    mutating func deleteEmogiString(start: Int, end: Int? = nil) {
+    /// 지정된 범위의 이모지 문자열을 삭제합니다.
+    mutating func deleteEmogiString(from start: Int, to end: Int? = nil) {
         let toIndex = end ?? start
         
-        guard start >= 0, toIndex < characters.count, start <= toIndex else {
+        guard start >= 0, toIndex < emogiCharacters.count, start <= toIndex else {
             print("deleteEmogiString(start:end:) 인덱스 문제: \(start), \(String(describing: end))")
             return
         }
 
-        characters.removeSubrange(start...toIndex)
+        emogiCharacters.removeSubrange(start...toIndex)
     }
 }
