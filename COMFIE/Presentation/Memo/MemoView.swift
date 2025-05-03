@@ -12,8 +12,6 @@ struct MemoView: View {
     
     @State var intent: MemoStore
     
-    @State private var isMemoInputFieldFocused: Bool = false
-    
     // 컴피존 관련 모델에서 주입 받아야 한다.
     @State private var isUserInComfieZone: Bool = false
     
@@ -62,9 +60,9 @@ struct MemoView: View {
         .onReceive(intent.sideEffectPublisher) { effect in
             switch effect {
             case .ui(.setMemoInputFocus):
-                isMemoInputFieldFocused = true
+                // TODO: 텍스트뷰 포커싱 로직 추가
             case .ui(.removeMemoInputFocus):
-                isMemoInputFieldFocused = false
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }
         }
     }
@@ -106,11 +104,7 @@ struct MemoView: View {
         HStack(alignment: .top, spacing: 12) {
             MemoInputTextView(
                 strings.textfieldPlaceholder.localized,
-                text: Binding(
-                    get: { intent.state.inputMemoText },
-                    set: { intent(.memoInput(.updateNewMemo($0))) }
-                ),
-                isTextViewFocused: $isMemoInputFieldFocused
+                memoStore: $intent
             )
             
             Button {

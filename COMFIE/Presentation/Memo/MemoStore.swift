@@ -22,6 +22,8 @@ class MemoStore: IntentStore {
                 .map { (key, value) in (date: key, memos: value) }
         }
         
+        var emogiString: EmogiString = .init()
+        
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
         var editingMemo: Memo?
@@ -51,6 +53,9 @@ class MemoStore: IntentStore {
         enum MemoInputIntent {
             case updateNewMemo(String)
             case memoInputButtonTapped
+            
+            case transformTriggerDetected(index: Int, newMemoText: String)
+            case deleteTriggerDetected(start: Int, end: Int?)
         }
         
         enum MemoCellIntent {
@@ -79,6 +84,9 @@ class MemoStore: IntentStore {
             case updateText(String)
             case startEditing(Memo)
             case cancelEditing
+            
+            case updateEmogiString(index: Int, newMemoText: String)
+            case deleteEmogiString(start: Int, end: Int?)
         }
         
         enum PopupAction {
@@ -172,17 +180,27 @@ extension MemoStore {
     private func handleMemoInputIntent(_ intent: Intent.MemoInputIntent) -> State {
         switch intent {
         case .memoInputButtonTapped:
-            let newState: State
-            if let editingMemo = state.editingMemo {
-                newState = handleAction(state, .memo(.update(editingMemo)))
-            } else {
-                newState = handleAction(state, .memo(.save))
-            }
-            
             performSideEffect(for: .ui(.removeMemoInputFocus))
-            return newState
+            
+            // ⚠️ 텍스트뷰에 보이는 값과 상태가 불일치하는 문제 방지를 위해, 입력 종료 시 델리게이트 메서드에서 동기화 메서드를 추가로 실행함.
+            // resignFirstResponder 호출과 그 후 동작들이 모두 메인 스레드(MainActor)에서 실행되어 순서가 보장됨.
+            Task { @MainActor in
+                if let editingMemo = state.editingMemo {
+                    // 메모 수정 중
+                    self.state = handleAction(state, .memo(.update(editingMemo)))
+                } else {
+                    // 새로운 메모 작성 중
+                    self.state = handleAction(state, .memo(.save))
+                }
+            }
+            // 🥲 여기 리턴 값은 사실상 의미 없는 값
+            return state
         case .updateNewMemo(let text):
             return handleAction(state, .input(.updateText(text)))
+        case .transformTriggerDetected(index: let index, newMemoText: let newMemoText):
+            return handleAction(state, .input(.updateEmogiString(index: index, newMemoText: newMemoText)))
+        case .deleteTriggerDetected(start: let start, end: let end):
+            return handleAction(state, .input(.deleteEmogiString(start: start, end: end)))
         }
     }
     
@@ -199,11 +217,16 @@ extension MemoStore {
 // MARK: - Handle Action Methods
 extension MemoStore {
     private func handleMemoAction(_ state: State, _ action: Action.MemoAction) -> State {
-        let newState = state
+        var newState = state
+        
         switch action {
         case .fetchAll:
             return fetchMemos(newState)
         case .save:
+            // 동기화
+            newState.emogiString.syncWithNewString(newState.inputMemoText)
+            // 이모지 채우기
+            newState.emogiString.setEmogiString()
             return saveMemo(newState)
         case .update(let updatedMemo):
             return updateMemo(newState, updatedMemo)
@@ -224,7 +247,14 @@ extension MemoStore {
             return startEditingMemo(newState, memo)
         case .cancelEditing:
             return clearEditingState(newState)
+        case .updateEmogiString(index: let index, newMemoText: let newMemoText):
+            newState.emogiString.applyEmogiString(at: index, newMemoText)
+        case .deleteEmogiString(start: let start, end: let end):
+            // 삭제 전, 지금까지 입력된 문자로 동기화를 먼저 진행
+            newState.emogiString.syncWithNewString(newState.inputMemoText)
+            newState.emogiString.deleteEmogiString(from: start, to: end)
         }
+        
         return newState
     }
     
@@ -278,15 +308,17 @@ extension MemoStore {
         let newMemo = Memo(
             id: UUID(),
             createdAt: .now,
-            originalText: newState.inputMemoText,
-            emojiText: "🐯🐯🐯🐯"
-            // TODO: 이모지 변경
+            originalText:
+                newState.emogiString.getOriginalString(),
+            emojiText:
+                newState.emogiString.getEmogiString()
         )
         
         switch memoRepository.save(memo: newMemo) {
         case .success:
             newState.memos.append(newMemo)
             newState.inputMemoText = ""
+            newState.emogiString = EmogiString()
         case .failure(let error):
             print("메모 저장 실패: \(error)")
         }
