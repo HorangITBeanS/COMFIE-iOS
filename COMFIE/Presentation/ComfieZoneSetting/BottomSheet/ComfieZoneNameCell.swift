@@ -19,6 +19,7 @@ struct ComfieZoneNameCell: View {
                 Text(name)
                     .comfieFont(.body)
                     .foregroundStyle(Color.textWhite)
+                    .lineLimit(1)
                 
                 Spacer(minLength: 0)
             }

@@ -12,6 +12,24 @@
           }
         }
       }
+    },
+    "NSFaceIDUsageDescription" : {
+      "comment" : "Privacy - Face ID Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE wants to use Face ID to delete COMFIE zone"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "컴피존 삭제를 활성화합니다."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

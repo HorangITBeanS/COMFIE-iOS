@@ -12,6 +12,7 @@ enum CFPopupType {
     case deleteMemo
     case deleteRetrospection
     case exitWithoutSaving
+    case requestLocatioinPermission
     
     var title: LocalizedStringResource {
         switch self {
@@ -19,6 +20,7 @@ enum CFPopupType {
         case .deleteMemo: return StringLiterals.Popup.Title.deleteMemo
         case .deleteRetrospection: return StringLiterals.Popup.Title.deleteRetrospection
         case .exitWithoutSaving: return StringLiterals.Popup.Title.exitWithoutSaving
+        case .requestLocatioinPermission: return StringLiterals.Popup.Title.requestLocationPermission
         }
     }
     
@@ -28,6 +30,7 @@ enum CFPopupType {
         case .deleteMemo: return StringLiterals.Popup.SubTitle.deleteMemo
         case .deleteRetrospection: return StringLiterals.Popup.SubTitle.deleteRetrospection
         case .exitWithoutSaving: return StringLiterals.Popup.SubTitle.exitWithoutSaving
+        case .requestLocatioinPermission: return StringLiterals.Popup.SubTitle.requestLocationPermission
         }
     }
     
@@ -35,6 +38,7 @@ enum CFPopupType {
         switch self {
         case .deleteComfieZone, .deleteMemo, .deleteRetrospection: return StringLiterals.Popup.ButtonDescription.delete
         case .exitWithoutSaving: return StringLiterals.Popup.ButtonDescription.noSave
+        case .requestLocatioinPermission: return StringLiterals.Popup.ButtonDescription.doNext
         }
     }
     
@@ -42,15 +46,18 @@ enum CFPopupType {
         switch self {
         case .deleteComfieZone, .deleteMemo, .deleteRetrospection: return StringLiterals.Popup.ButtonDescription.cancel
         case .exitWithoutSaving: return StringLiterals.Popup.ButtonDescription.keepEdit
+        case .requestLocatioinPermission: return StringLiterals.Popup.ButtonDescription.goSetting
         }
     }
     
     enum ButtonType {
+        case normal
         case destructive
         case cancel
         
         var backgroundColor: Color {
             switch self {
+            case .normal: return Color.keyPrimary
             case .destructive: return Color.destructiveRed
             case .cancel: return Color.cfLightgray
             }
@@ -58,7 +65,7 @@ enum CFPopupType {
         
         var textColor: Color {
             switch self {
-            case .destructive: return Color.textWhite
+            case .normal, .destructive: return Color.textWhite
             case .cancel: return Color.textBlack
             }
         }

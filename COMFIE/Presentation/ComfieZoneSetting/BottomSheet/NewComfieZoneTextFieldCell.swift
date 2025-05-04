@@ -12,6 +12,7 @@ struct NewComfieZoneTextFieldCell: View {
     var onCheckButtonTapped: () -> Void
     private let strings = StringLiterals.ComfieZoneSetting.BottomSheet.self
     
+    @State private var text: String = ""
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -20,13 +21,17 @@ struct NewComfieZoneTextFieldCell: View {
                 // 컴피존 이름 설정 TextField
                 TextField(
                     strings.textFieldTitleKey.localized,
-                    text: $newComfieZoneName,
-                    axis: .vertical
+                    text: $text
                 )
                 .comfieFont(.body)
                 .foregroundStyle(Color.textWhite)
                 .focused($isFocused)
                 .task { isFocused = true }
+                .onChange(of: text) { _, newValue in
+                    let limit = 20  // 글자 수 제한: 20
+                    if text.count > limit { text = String(newValue.prefix(limit)) }
+                    newComfieZoneName = text
+                }
                 
                 // PlaceHolder
                 if newComfieZoneName.isEmpty {

@@ -39,10 +39,9 @@ struct ComfieZoneInfoPopupView: View {
                     .comfieFont(.title)
                     .foregroundStyle(Color.textBlack)
                 
-                // FIXME: 추후 이미지 디자인 완료 후 변경 필요
-                Circle()
-                    .frame(width: 120, height: 120)
-                    .foregroundStyle(Color.textGray)
+                Image(.icComfieZoneInfo)
+                    .resizable()
+                    .frame(width: 132, height: 132)
                 
                 VStack(spacing: 8) {
                     // 컴피존 설명
