@@ -100,6 +100,7 @@ struct EmogiString {
     mutating func deleteEmogiString(from start: Int, to end: Int? = nil) {
         let toIndex = end ?? start
         
+        // 삭제 범위가 유효한지 확인합니다.
         guard start >= 0, toIndex < emogiCharacters.count, start <= toIndex else {
             print("deleteEmogiString(start:end:) 인덱스 문제: \(start), \(String(describing: end))")
             return

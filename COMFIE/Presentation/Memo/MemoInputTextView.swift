@@ -210,31 +210,30 @@ struct MemoInputUITextView: UIViewRepresentable {
                 updateHeight()
                 return true
             } else { // 텍스트가 삭제되는 경우
+                
+                // 한글 입력 시 뷰에 보이는 텍스트와 내부 데이터가 다를 수 있어
+                // 편집 종료 시 최종 동기화 수행.
+                intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
+                
                 let endIndex = findEndCursorIndexInString(textView)
                 let startIndex = findStartCursorIndexInString(textView)
-                
+
                 if startIndex == endIndex { // 한글자 삭제
                     intent.handleIntent(.memoInput(.deleteTriggerDetected(start: startIndex, end: nil)))
-                    
-                    updateText(textView)
-                    
-                    // 커서 위치 고정
-                    let leftText = emogiString.getEmogiString(to: startIndex == 0 ? 0 : startIndex - 1)
-                    if let position = textView.position(from: textView.beginningOfDocument, offset: leftText.utf16.count) {
-                        print("leftText.utf16.count: \(leftText.utf16.count)")
-                        textView.selectedTextRange = textView.textRange(from: position, to: position)
-                    }
                 } else { // 범위를 잡아서 삭제
                     intent.handleIntent(.memoInput(.deleteTriggerDetected(start: startIndex + 1, end: endIndex)))
-                    
-                    updateText(textView)
-                    
-                    // 커서 위치 고정
-                    let leftText = emogiString.getEmogiString(to: startIndex - 1)
-                    if let position = textView.position(from: textView.beginningOfDocument, offset: leftText.utf16.count) {
-                        textView.selectedTextRange = textView.textRange(from: position, to: position)
-                    }
                 }
+                
+                updateText(textView)
+                
+                // 커서 위치 고정
+                let leftText = emogiString.getEmogiString(to: startIndex - 1)
+                if let position = textView.position(
+                    from: textView.beginningOfDocument,
+                    offset: leftText.utf16.count) {
+                    textView.selectedTextRange = textView.textRange(from: position, to: position)
+                }
+                
                 return false
             }
         }
@@ -298,6 +297,8 @@ struct MemoInputUITextView: UIViewRepresentable {
         
         /// 커서 끝 위치까지 문자의 개수를 Int 인덱스로 반환
         /// - getCursorEndIndex로 구한 String.Index 기준으로 계산
+        /// - 커서가 문자열의 맨 앞(시작) 위치에 있으면 -1을 반환합니다.
+        /// - 참고: 이 값은 삭제 로직에서 특별한 의미(삭제 안 함)로 사용됩니다.
         private func findEndCursorIndexInString(_ textView: UITextView) -> Int {
             guard let cursorIndex = getCursorEndIndex(textView),
                   let text = textView.text else {
@@ -306,11 +307,13 @@ struct MemoInputUITextView: UIViewRepresentable {
             }
             let leftText = String(text[..<cursorIndex])
             
-            return max(0, leftText.count - 1)
+            return leftText.count - 1
         }
         
         /// 커서 시작 위치까지 문자의 개수를 Int 인덱스로 반환
         /// - getCursorStartIndex로 구한 String.Index 기준으로 계산
+        /// - 커서가 문자열의 맨 앞(시작) 위치에 있으면 -1을 반환합니다.
+        /// - 참고: 이 값은 삭제 로직에서 특별한 의미(삭제 안 함)로 사용됩니다.
         private func findStartCursorIndexInString(_ textView: UITextView) -> Int {
             guard let cursorIndex = getCursorStartIndex(textView),
                   let text = textView.text else {
@@ -319,7 +322,7 @@ struct MemoInputUITextView: UIViewRepresentable {
             }
             let leftText = String(text[..<cursorIndex])
             
-            return max(0, leftText.count - 1)
+            return leftText.count - 1
         }
     }
 }
