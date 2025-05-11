@@ -6,7 +6,23 @@
 //
 
 struct EmogiString {
-    private var emogiCharacters: [EmogiCharacter] = []
+    private var emogiCharacters: [EmogiCharacter]
+    
+    init() {
+        self.emogiCharacters = []
+    }
+    
+    init(memo: Memo) {
+        let originalText = memo.originalText
+        let emojiText = memo.emojiText
+        
+        precondition(originalText.count == emojiText.count, "originalText와 emojiText의 길이가 같아야 합니다.")
+        
+        self.emogiCharacters = zip(originalText, emojiText)
+            .map {
+                EmogiCharacter(originalCharacter: $0.0, emogiCharacter: $0.1)
+            }
+    }
     
     /// index 위치까지 이모지를 적용한 문자열을 설정합니다.
     mutating func applyEmogiString(at index: Int, _ newString: String) {
