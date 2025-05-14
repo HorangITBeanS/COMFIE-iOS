@@ -19,10 +19,15 @@ class RetrospectionStore: IntentStore {
     
     let memo: Memo
     
+    private var cancellables = Set<AnyCancellable>()
+    private let inputContentSubject = CurrentValueSubject<String, Never>("")
+    
     init(router: Router, repository: RetrospectionRepsitoryProtocol, memo: Memo) {
         self.router = router
         self.repository = repository
         self.memo = memo
+        
+        setUpBindingContent()
     }
     
     struct State {
@@ -95,7 +100,7 @@ class RetrospectionStore: IntentStore {
             state = handleAction(state, .showCompleteButton)
         case .updateRetrospection(let content):
             state = handleAction(state, .updateRetrospection(content))
-            
+            inputContentSubject.send(content)
         case .backButtonTapped: state = handleAction(state, .saveRetrospection)
         case .deleteMenuButtonTapped:
             withAnimation { state = handleAction(state, .showDeletePopupView) }
@@ -164,5 +169,19 @@ extension RetrospectionStore {
 extension RetrospectionStore {
     private func performSideEffect(for action: SideEffect) {
         sideEffectPublisher.send(action)
+    }
+    
+    // 입력 데이터를 실시간으로 저장해주는 함수 - 0.5초 후 저장
+    private func setUpBindingContent() {
+        inputContentSubject
+            .removeDuplicates()
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] content in
+                guard let self = self else { return }
+                var updatedState = self.state
+                updatedState.inputContent = content
+                self.saveRetrospection(updatedState)
+            }
+            .store(in: &cancellables)
     }
 }
