@@ -5,7 +5,7 @@
 //  Created by Seoyeon Choi on 4/13/25.
 //
 
-final class RetrospectionRepository: RetrospectionRepsitoryProtocol {
+final class RetrospectionRepository: RetrospectionRepositoryProtocol {
     private let coreDataService: CoreDataService
     
     init(coreDataService: CoreDataService = CoreDataService()) {

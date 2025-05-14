@@ -12,7 +12,7 @@ struct DIContainer {
     
     // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
-    let retrospectionRepository: RetrospectionRepsitoryProtocol = RetrospectionRepository()
+    let retrospectionRepository: RetrospectionRepositoryProtocol = RetrospectionRepository()
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore { OnboardingStore(router: router) }

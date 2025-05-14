@@ -120,7 +120,7 @@
 		B96CDB3F2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */; };
-		B99A081C2DABABA80094EECB /* RetrospectionRepsitoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081B2DABAB9E0094EECB /* RetrospectionRepsitoryProtocol.swift */; };
+		B99A081C2DABABA80094EECB /* RetrospectionRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */; };
 		B99A081E2DABAD410094EECB /* RetrospectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
@@ -242,7 +242,7 @@
 		B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdgeInsets+.swift"; sourceTree = "<group>"; };
 		B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Retrospection.swift"; sourceTree = "<group>"; };
 		B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionStore.swift; sourceTree = "<group>"; };
-		B99A081B2DABAB9E0094EECB /* RetrospectionRepsitoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepsitoryProtocol.swift; sourceTree = "<group>"; };
+		B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepositoryProtocol.swift; sourceTree = "<group>"; };
 		B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepository.swift; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
@@ -618,7 +618,7 @@
 			isa = PBXGroup;
 			children = (
 				B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */,
-				B99A081B2DABAB9E0094EECB /* RetrospectionRepsitoryProtocol.swift */,
+				B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */,
 			);
 			path = RetrospectionRepository;
 			sourceTree = "<group>";
@@ -904,7 +904,7 @@
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				267F6B3F2D94F11A0089BD6D /* Date+.swift in Sources */,
-				B99A081C2DABABA80094EECB /* RetrospectionRepsitoryProtocol.swift in Sources */,
+				B99A081C2DABABA80094EECB /* RetrospectionRepositoryProtocol.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				51895AF62DA8FBF500AFA569 /* MakersView.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,

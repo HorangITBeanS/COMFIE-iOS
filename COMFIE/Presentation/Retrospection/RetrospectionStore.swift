@@ -15,14 +15,14 @@ class RetrospectionStore: IntentStore {
     let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
     
     private let router: Router
-    private let repository: RetrospectionRepsitoryProtocol
+    private let repository: RetrospectionRepositoryProtocol
     
     let memo: Memo
     
     private var cancellables = Set<AnyCancellable>()
     private let inputContentSubject = CurrentValueSubject<String, Never>("")
     
-    init(router: Router, repository: RetrospectionRepsitoryProtocol, memo: Memo) {
+    init(router: Router, repository: RetrospectionRepositoryProtocol, memo: Memo) {
         self.router = router
         self.repository = repository
         self.memo = memo
