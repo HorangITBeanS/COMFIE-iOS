@@ -15,14 +15,27 @@ class RetrospectionStore: IntentStore {
     let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
     
     private let router: Router
+    private let repository: RetrospectionRepositoryProtocol
     
-    init(router: Router) {
+    let memo: Memo
+    
+    private var cancellables = Set<AnyCancellable>()
+    private let inputContentSubject = CurrentValueSubject<String, Never>("")
+    
+    init(router: Router, repository: RetrospectionRepositoryProtocol, memo: Memo) {
         self.router = router
+        self.repository = repository
+        self.memo = memo
+        
+        setUpBindingContent()
     }
     
     struct State {
+        // 메모 관련 데이터
         var originalMemo: String = ""
-        var inputContent: String = ""
+        var inputContent: String?
+        var createdDate: String = ""
+        
         var showCompleteButton: Bool = false
         var showDeletePopupView: Bool = false
     }
@@ -46,17 +59,21 @@ class RetrospectionStore: IntentStore {
     // MARK: - Action
     
     enum Action {
+        // retrospection CRUD
         case fetchMemo
         case updateRetrospection(String)
-        
-        case showCompleteButton
-        case hideCompleteButton
-        
         case saveRetrospection
         case deleteRetrospection
         
+        // complete Button
+        case showCompleteButton
+        case hideCompleteButton
+        
+        // delete-Popup view
         case showDeletePopupView
         case hideDeletePopupView
+        
+        case popToLast
     }
     
     // MARK: - Side Effect
@@ -81,8 +98,9 @@ class RetrospectionStore: IntentStore {
         case .contentFieldTapped:
             performSideEffect(for: .ui(.setContentFieldFocus))
             state = handleAction(state, .showCompleteButton)
-        case .updateRetrospection(let content): state = handleAction(state, .updateRetrospection(content))
-            
+        case .updateRetrospection(let content):
+            state = handleAction(state, .updateRetrospection(content))
+            inputContentSubject.send(content)
         case .backButtonTapped: state = handleAction(state, .saveRetrospection)
         case .deleteMenuButtonTapped:
             withAnimation { state = handleAction(state, .showDeletePopupView) }
@@ -90,8 +108,11 @@ class RetrospectionStore: IntentStore {
         case .completeButtonTapped:
             performSideEffect(for: .ui(.removeContentFieldFocus))
             state = handleAction(state, .hideCompleteButton)
+            state = handleAction(state, .saveRetrospection)
             
-        case .deleteRetrospectionButtonTapped: state = handleAction(state, .deleteRetrospection)
+        case .deleteRetrospectionButtonTapped:
+            state = handleAction(state, .deleteRetrospection)
+            _ = handleAction(state, .popToLast)
         case .cancelDeleteRetrospectionButtonTapped: state = handleAction(state, .hideDeletePopupView)
         }
     }
@@ -99,18 +120,47 @@ class RetrospectionStore: IntentStore {
     private func handleAction(_ state: State, _ action: Action) -> State {
         var newState = state
         switch action {
-        case .fetchMemo: print("fetchMemo")
+        case .fetchMemo:
+            newState.originalMemo = memo.originalText
+            if let retrospection = memo.retrospectionText { newState.inputContent = retrospection }
+            newState.createdDate = memo.createdAt.toFormattedDateTimeString()
         case .updateRetrospection(let text): newState.inputContent = text
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
             
-        case .saveRetrospection: print("saveRetrospection")
-        case .deleteRetrospection: print("deleteRetrospection")
+        case .saveRetrospection: saveRetrospection(newState)
+        case .deleteRetrospection: deleteRetrospection(newState)
             
         case .showDeletePopupView: newState.showDeletePopupView = true
         case .hideDeletePopupView: newState.showDeletePopupView = false
+        case .popToLast: router.pop()
         }
         return newState
+    }
+}
+
+// MARK: - Helper Methods
+
+extension RetrospectionStore {
+    private func saveRetrospection(_ state: State) {
+        let content = state.inputContent?.isEmpty == true ? nil : state.inputContent
+        let updatedmemo = memo.with(retrospectionText: content)
+        
+        switch repository.save(memo: updatedmemo) {
+        case .success:
+            print("회고 저장 성공")
+        case .failure(let error):
+            print("회고 저장 실패: \(error)")
+        }
+    }
+    
+    private func deleteRetrospection(_ state: State) {
+        switch repository.delete(memo: memo) {
+        case .success:
+            print("회고 삭제 성공")
+        case .failure(let error):
+            print("회고 삭제 실패: \(error)")
+        }
     }
 }
 
@@ -119,5 +169,19 @@ class RetrospectionStore: IntentStore {
 extension RetrospectionStore {
     private func performSideEffect(for action: SideEffect) {
         sideEffectPublisher.send(action)
+    }
+    
+    // 입력 데이터를 실시간으로 저장해주는 함수 - 0.5초 후 저장
+    private func setUpBindingContent() {
+        inputContentSubject
+            .removeDuplicates()
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] content in
+                guard let self = self else { return }
+                var updatedState = self.state
+                updatedState.inputContent = content
+                self.saveRetrospection(updatedState)
+            }
+            .store(in: &cancellables)
     }
 }

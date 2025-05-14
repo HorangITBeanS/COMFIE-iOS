@@ -108,6 +108,7 @@
 		51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
 		51F8F5C42D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
 		51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */; };
+		B95C98C12DAC9FEB0057C868 /* Memo+with.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95C98C02DAC9FE70057C868 /* Memo+with.swift */; };
 		B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */; };
 		B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
 		B96CDB332DA236B1004EA2E9 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB312DA236B0004EA2E9 /* Date+.swift */; };
@@ -119,6 +120,8 @@
 		B96CDB3F2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */; };
+		B99A081C2DABABA80094EECB /* RetrospectionRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */; };
+		B99A081E2DABAD410094EECB /* RetrospectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
 		B9EA52F62D7C8F8A00A32305 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */; };
 		B9EA52F72D7C8F8A00A32305 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */; };
@@ -233,11 +236,14 @@
 		51F8F5B52D95259300DD2E3D /* CFNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFNavigationBar.swift; sourceTree = "<group>"; };
 		51F8F5BE2D9529B600DD2E3D /* View+cfNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfNavigationBar.swift"; sourceTree = "<group>"; };
 		51F8F5C22D952B4B00DD2E3D /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
+		B95C98C02DAC9FE70057C868 /* Memo+with.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+with.swift"; sourceTree = "<group>"; };
 		B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionView.swift; sourceTree = "<group>"; };
 		B96CDB312DA236B0004EA2E9 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdgeInsets+.swift"; sourceTree = "<group>"; };
 		B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Retrospection.swift"; sourceTree = "<group>"; };
 		B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionStore.swift; sourceTree = "<group>"; };
+		B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepositoryProtocol.swift; sourceTree = "<group>"; };
+		B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepository.swift; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		B9EA52F32D7C8F8A00A32305 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
@@ -276,6 +282,7 @@
 		267F6B4B2D969F4B0089BD6D /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				B99A081A2DABAB910094EECB /* RetrospectionRepository */,
 				267F6B5C2D9CEF7C0089BD6D /* MemoRepository */,
 			);
 			path = Repository;
@@ -306,6 +313,7 @@
 		26D697B42D7F2DCE00AC200C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B95C98C02DAC9FE70057C868 /* Memo+with.swift */,
 				26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */,
 				26D697B72D7F2DEF00AC200C /* ComfieZone+toEntity.swift */,
 				26D697B92D7F3D4700AC200C /* Memo+fromEntity.swift */,
@@ -606,6 +614,15 @@
 			path = Retrospection;
 			sourceTree = "<group>";
 		};
+		B99A081A2DABAB910094EECB /* RetrospectionRepository */ = {
+			isa = PBXGroup;
+			children = (
+				B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */,
+				B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */,
+			);
+			path = RetrospectionRepository;
+			sourceTree = "<group>";
+		};
 		B9EA52F12D7C8F4F00A32305 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -880,12 +897,14 @@
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
 				51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
+				B99A081E2DABAD410094EECB /* RetrospectionRepository.swift in Sources */,
 				B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */,
 				51A7AFF72D809DD600B50D1E /* LocalizedStringResource+localized.swift in Sources */,
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				267F6B3F2D94F11A0089BD6D /* Date+.swift in Sources */,
+				B99A081C2DABABA80094EECB /* RetrospectionRepositoryProtocol.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
 				51895AF62DA8FBF500AFA569 /* MakersView.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
@@ -894,6 +913,7 @@
 				510341112D7989B00050C718 /* LoadingView.swift in Sources */,
 				267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */,
 				B9EA53002D7C907E00A32305 /* View+ComfieFonts.swift in Sources */,
+				B95C98C12DAC9FEB0057C868 /* Memo+with.swift in Sources */,
 				510341252D79A58B0050C718 /* UserDefaultsService.swift in Sources */,
 				51D882E42DAFF4150072E3C0 /* LocalAuthenticationService.swift in Sources */,
 				517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */,

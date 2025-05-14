@@ -28,8 +28,7 @@ struct RetrospectionView: View {
                     ScrollView {
                         VStack(spacing: 0) {
                             HStack(spacing: 0) {
-                                // memo.createdDate 연결 필요
-                                Text(Date().toFormattedDateTimeString())
+                                Text(intent.state.createdDate)
                                     .comfieFont(.systemBody)
                                     .foregroundStyle(.cfBlack.opacity(0.6))
                                 
@@ -54,7 +53,7 @@ struct RetrospectionView: View {
                         VStack(spacing: 0) {
                             TextField(stringLiterals.contentPlaceholder.localized,
                                       text: Binding(
-                                        get: { intent.state.inputContent },
+                                        get: { intent.state.inputContent ?? "" },
                                         set: { intent(.updateRetrospection($0)) }
                                       ),
                                       axis: .vertical)
@@ -146,5 +145,7 @@ struct RetrospectionView: View {
 }
 
 #Preview {
-    RetrospectionView(intent: .init(router: .init()))
+    RetrospectionView(intent: .init(router: .init(),
+                                    repository: RetrospectionRepository(coreDataService: .init()),
+                                    memo: Memo(id: .init(), createdAt: .distantFuture, originalText: "", emojiText: "")))
 }

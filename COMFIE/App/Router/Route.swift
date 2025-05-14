@@ -8,12 +8,12 @@
 import SwiftUI
 
 // Navigation으로 이동하는 경로
-enum Route {
+enum Route: Hashable {
     // MARK: - 메인 화면
     case loading
     case onboarding
     case memo
-    case retrospection
+    case retrospection(memo: Memo)
     case comfieZoneSetting
     case more
     
