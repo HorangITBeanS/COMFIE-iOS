@@ -126,8 +126,9 @@ class MemoStore: IntentStore {
         case ui(UI)
         
         enum UI {
-            case removeMemoInputFocus
+            case resignInputFocusWithSyncInput
             case setMemoInputFocus
+            case updateInputViewWithState
         }
     }
     
@@ -155,7 +156,7 @@ class MemoStore: IntentStore {
         case .onAppear:
             state = handleAction(state, .memo(.fetchAll))
         case .backgroundTapped:
-            performSideEffect(for: .ui(.removeMemoInputFocus))
+            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigation(.toComfieZoneSetting))
         case .moreButtonTapped:
@@ -185,11 +186,13 @@ extension MemoStore {
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
             let newState = handleAction(state, .input(.startEditing(memo)))
+            performSideEffect(for: .ui(.updateInputViewWithState))
             performSideEffect(for: .ui(.setMemoInputFocus))
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
-            performSideEffect(for: .ui(.removeMemoInputFocus))
+            performSideEffect(for: .ui(.updateInputViewWithState))
+            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
             return newState
         case .retrospectionButtonTapped(let memo):
             let newState = handleNavigationAction(state, .toRetrospection(memo))
@@ -201,7 +204,8 @@ extension MemoStore {
         switch intent {
         case .memoInputButtonTapped:
             // ⚠️ 텍스트뷰에 보이는 값과 상태가 불일치하는 문제 방지를 위해, 입력 종료 시 델리게이트 메서드에서 동기화 메서드를 추가로 실행함.
-            performSideEffect(for: .ui(.removeMemoInputFocus))
+            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
+            
             // resignFirstResponder 호출과 그 후 동작들이 모두 메인 스레드(MainActor)에서 실행되어 순서가 보장됨.
             Task { @MainActor in
                 if let editingMemo = state.editingMemo {
@@ -212,6 +216,8 @@ extension MemoStore {
                     self.state = handleAction(state, .memo(.save))
                 }
             }
+            
+            performSideEffect(for: .ui(.updateInputViewWithState))
             // 🥲 여기 리턴 값은 사실상 의미 없는 값
             return state
         case .updateNewMemo(let text):
@@ -248,6 +254,10 @@ extension MemoStore {
             newState.emogiString.setEmogiString()
             return saveMemo(newState)
         case .update(let updatedMemo):
+            // 동기화
+            newState.emogiString.syncWithNewString(newState.inputMemoText)
+            // 이모지 채우기
+            newState.emogiString.setEmogiString()
             return updateMemo(newState, updatedMemo)
         case .delete:
             if let memo = newState.deletingMemo {
@@ -263,6 +273,8 @@ extension MemoStore {
         case .updateText(let text):
             newState.inputMemoText = text
         case .startEditing(let memo):
+            // 작성되고 있던 메모 reset
+            newState.resetEditingMemo()
             newState.setEditingMemo(memo)
         case .cancelEditing:
             newState.resetEditingMemo()

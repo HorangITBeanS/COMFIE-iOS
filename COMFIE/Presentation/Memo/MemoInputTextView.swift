@@ -114,19 +114,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         return container
     }
     
-    func updateUIView(_ uiView: UIView, context: Context) {
-        guard let textView = context.coordinator.textView else { return }
-        
-        // 메모가 저장되어 비어지면 뷰 업데이트
-        if intent.state.inputMemoText == "" {
-            textView.text = intent.state.inputMemoText
-            updatePlaceholderVisibility(textView: textView)
-            
-            Task { @MainActor in
-                context.coordinator.updateHeight()
-            }
-        }
-    }
+    func updateUIView(_ uiView: UIView, context: Context) { }
     
     private func createTextView() -> UITextView {
         let textView = UITextView()
@@ -151,7 +139,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         return placeholderLabel
     }
     
-    private func updatePlaceholderVisibility(textView: UITextView) {
+    func updatePlaceholderVisibility(textView: UITextView) {
         guard let coordinator = textView.delegate as? Coordinator else { return }
         coordinator.placeholderLabel.isHidden = !textView.text.isEmpty
     }
@@ -177,15 +165,22 @@ struct MemoInputUITextView: UIViewRepresentable {
             self._intent = intent
         }
         
-        /// MemoStore의 포커스 관련 sideEffect를 감지해 포커스를 설정하거나 해제합니다.
+        /// MemoStore에서 전달된 sideEffect를 감지하여 포커스를 제어하거나, 상태 기반으로 입력 뷰를 갱신합니다.
         func bindFocusControl() {
             intent.sideEffectPublisher
+                .receive(on: DispatchQueue.main)
                 .sink { [weak self] sideEffect in
+                    guard let self = self else { return }
                     switch sideEffect {
-                    case .ui(.removeMemoInputFocus):
-                        self?.unfocusTextView()
+                    case .ui(.resignInputFocusWithSyncInput):
+                        self.unfocusTextView()
                     case .ui(.setMemoInputFocus):
-                        self?.focusTextView()
+                        self.focusTextView()
+                    case .ui(.updateInputViewWithState):
+                        self.textView.text = intent.state.inputMemoText
+                        
+                        parent.updatePlaceholderVisibility(textView: textView)
+                        updateHeight()
                     }
                 }
                 .store(in: &cancellables)
@@ -195,6 +190,7 @@ struct MemoInputUITextView: UIViewRepresentable {
             parent.updatePlaceholderVisibility(textView: textView)
         }
         
+        /// 해담 메서드에서 최졷 동기화를 해야지 한글이 완전히 완성된 상태에서 동기화가 가능
         func textViewDidEndEditing(_ textView: UITextView) {
             // 한글 입력 시 뷰에 보이는 텍스트와 내부 데이터가 다를 수 있어
             // 편집 종료 시 최종 동기화 수행.
