@@ -57,14 +57,6 @@ struct MemoView: View {
             }
         }
         .onAppear { intent(.onAppear) }
-        .onReceive(intent.sideEffectPublisher) { effect in
-            switch effect {
-            case .ui(.setMemoInputFocus):
-                // TODO: 텍스트뷰 포커싱 로직 추가
-            case .ui(.removeMemoInputFocus):
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            }
-        }
     }
     
     // MARK: - View Property

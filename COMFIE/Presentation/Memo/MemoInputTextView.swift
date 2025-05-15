@@ -5,6 +5,7 @@
 //  Created by zaehorang on 4/14/25.
 //
 
+import Combine
 import SwiftUI
 
 struct MemoInputTextView: View {
@@ -76,6 +77,8 @@ struct MemoInputUITextView: UIViewRepresentable {
         textView.delegate = context.coordinator
         context.coordinator.textView = textView
         context.coordinator.placeholderLabel = placeholderLabel
+        
+        context.coordinator.bindFocusControl()
         
         container.addSubview(textView)
         container.addSubview(placeholderLabel)
@@ -167,9 +170,25 @@ struct MemoInputUITextView: UIViewRepresentable {
         
         var heightConstraint: NSLayoutConstraint?
         
+        private var cancellables = Set<AnyCancellable>()
+        
         init(parent: MemoInputUITextView, intent: Binding<MemoStore>) {
             self.parent = parent
             self._intent = intent
+        }
+        
+        /// MemoStore의 포커스 관련 sideEffect를 감지해 포커스를 설정하거나 해제합니다.
+        func bindFocusControl() {
+            intent.sideEffectPublisher
+                .sink { [weak self] sideEffect in
+                    switch sideEffect {
+                    case .ui(.removeMemoInputFocus):
+                        self?.unfocusTextView()
+                    case .ui(.setMemoInputFocus):
+                        self?.focusTextView()
+                    }
+                }
+                .store(in: &cancellables)
         }
         
         func textViewDidChange(_ textView: UITextView) {
@@ -271,6 +290,16 @@ struct MemoInputUITextView: UIViewRepresentable {
             textView.isScrollEnabled = estimatedSize.height >= maxHeight
             
             parent.dynamicHeight = targetHeight
+        }
+        
+        // MARK: - Helper Methods
+        
+        private func focusTextView() {
+            textView?.becomeFirstResponder()
+        }
+        
+        private func unfocusTextView() {
+            textView?.resignFirstResponder()
         }
         
         /// 커서 끝 위치를 String.Index로 반환

@@ -134,7 +134,7 @@ class MemoStore: IntentStore {
     private let router: Router
     private let memoRepository: MemoRepositoryProtocol
     
-    let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    private(set) var sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol) {
