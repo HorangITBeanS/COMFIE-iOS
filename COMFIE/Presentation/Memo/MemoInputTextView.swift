@@ -107,8 +107,9 @@ struct MemoInputUITextView: UIViewRepresentable {
             
             placeholderLabel.topAnchor
                 .constraint(equalTo: textView.topAnchor, constant: 9),
+            
             placeholderLabel.leadingAnchor
-                .constraint(equalTo: textView.leadingAnchor, constant: 12)
+                .constraint(equalTo: textView.leadingAnchor, constant: 17) // textView의 커서 위치와 플레이스홀더의 정렬을 맞추기 위해 오른쪽으로 5pt 추가
         ])
         
         return container
