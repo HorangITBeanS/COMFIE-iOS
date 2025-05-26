@@ -17,9 +17,13 @@ enum ComfieZoneSettingBottomSheetState {
 @Observable
 class ComfieZoneSettingStore: IntentStore {
     private(set) var popupIntent: ComfieZoneSettingPopupStore
+    private let locationUseCase: LocationUseCase
     
-    init(popupIntent: ComfieZoneSettingPopupStore) {
+    init(popupIntent: ComfieZoneSettingPopupStore, locationUseCase: LocationUseCase) {
         self.popupIntent = popupIntent
+        self.locationUseCase = locationUseCase
+        
+        self.state = State(isLocationAuthorized: self.getLocationAuthStatus())
     }
     
     private(set) var state: State = .init()
@@ -64,6 +68,7 @@ class ComfieZoneSettingStore: IntentStore {
     
     enum Action {
         // Bottom Sheet
+        case getLocationAuthStatus
         case activeComfiezoneSettingTextField
         case addComfieZone
     }
@@ -71,11 +76,12 @@ class ComfieZoneSettingStore: IntentStore {
     func handleIntent(_ intent: Intent) {
         switch intent {
         case .plusButtonTapped:
+            state = handleAction(state, .getLocationAuthStatus)
             if state.isLocationAuthorized {
-                // 권한 설정 있을 때 - 텍스트필드 활성화
+                // 위치 권한 설정 있을 때 - 텍스트필드 활성화
                 state = handleAction(state, .activeComfiezoneSettingTextField)
             } else {
-                // 권한 설정이 없을 때 - 설정 팝업
+                // 위치 권한 설정이 없을 때 - 설정 팝업
                 popupIntent(.openRequestLocationPermissionPopup)
             }
         case .updateComfieZoneNameTextField(let text):
@@ -111,6 +117,8 @@ class ComfieZoneSettingStore: IntentStore {
     private func handleAction(_ state: State, _ action: Action) -> State {
         var newState = state
         switch action {
+        case .getLocationAuthStatus:
+            newState.isLocationAuthorized = getLocationAuthStatus()
         case .activeComfiezoneSettingTextField:
             newState.bottomSheetState = .setComfiezoneTextField
         case .addComfieZone:
@@ -129,5 +137,11 @@ class ComfieZoneSettingStore: IntentStore {
             print("컴피존 추가하자")
         }
         return newState
+    }
+    
+    // 사용자 위치 권한 여부
+    private func getLocationAuthStatus() -> Bool {
+        let status = locationUseCase.getUserLocationAuthorizationStatus()
+        return status == .authorizedWhenInUse || status == .authorizedAlways
     }
 }

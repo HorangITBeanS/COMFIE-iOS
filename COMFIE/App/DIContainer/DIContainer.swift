@@ -37,7 +37,10 @@ struct DIContainer {
     
     private func makeComfieZoneSettingPopupIntent() -> ComfieZoneSettingPopupStore { ComfieZoneSettingPopupStore() }
     private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore {
-        ComfieZoneSettingStore(popupIntent: makeComfieZoneSettingPopupIntent())
+        ComfieZoneSettingStore(
+            popupIntent: makeComfieZoneSettingPopupIntent(),
+            locationUseCase: makeLocationUseCase()
+        )
     }
     
     private func makeRetrospectionIntent(memo: Memo) -> RetrospectionStore {

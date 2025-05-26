@@ -5,6 +5,7 @@
 //  Created by Anjin on 4/29/25.
 //
 
+import CoreLocation
 import Foundation
 
 class LocationUseCase {
@@ -16,5 +17,9 @@ class LocationUseCase {
     
     func requestLocationAuthorization() {
         locationService.requestAurhorization()
+    }
+    
+    func getUserLocationAuthorizationStatus() -> CLAuthorizationStatus {
+        return locationService.authorizationStatus
     }
 }

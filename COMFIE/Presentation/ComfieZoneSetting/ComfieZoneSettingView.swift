@@ -76,7 +76,8 @@ struct ComfieZoneSettingView: View {
 #Preview {
     ComfieZoneSettingView(
         intent: ComfieZoneSettingStore(
-            popupIntent: ComfieZoneSettingPopupStore()
+            popupIntent: ComfieZoneSettingPopupStore(),
+            locationUseCase: LocationUseCase(locationService: .init())
         )
     )
 }
