@@ -242,8 +242,8 @@ extension MemoStore {
     private func handleNavigationAction(_ state: State, _ action: Action.NavigationAction) -> State {
         switch action {
         case .toRetrospection(let memo):
-            // TODO: 이후에 회고 뷰에 메모를 전달해줘야 한다.
-            router.push(.retrospection)
+            router.push(.retrospection(memo: memo))
+            return state
         case .toComfieZoneSetting:
             router.push(.comfieZoneSetting)
         case .toMore:
