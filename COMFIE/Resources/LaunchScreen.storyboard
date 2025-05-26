@@ -23,19 +23,11 @@
                                     <constraint firstAttribute="height" constant="100" id="rRC-xN-lu1"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="launch scrren" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ukc-lU-KHj">
-                                <rect key="frame" x="150" y="209" width="104" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" name="cfWhite"/>
                         <constraints>
-                            <constraint firstItem="Ukc-lU-KHj" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="150" id="7B5-jb-ikC"/>
                             <constraint firstItem="B92-hq-W9k" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="Kon-it-QLs"/>
-                            <constraint firstItem="Ukc-lU-KHj" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="150" id="RcL-Il-FUS"/>
                             <constraint firstItem="B92-hq-W9k" firstAttribute="centerY" secondItem="Bcu-3y-fUS" secondAttribute="centerY" id="o8c-7c-KZP"/>
                         </constraints>
                     </view>
