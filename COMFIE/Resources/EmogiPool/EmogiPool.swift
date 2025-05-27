@@ -6,7 +6,7 @@
 //
 
 struct EmogiPool {
-    static let emojiPool: [Character] = [
+    static private let emojiPool: [Character] = [
         "🍕", "🐶", "🌈", "🎉", "✨", "🧡", "🌟", "🚀", "😎", "🦄",
         "🍓", "💡", "📚", "🧸", "🎨", "🍀", "🐱", "🌼", "🎁", "🔥"
     ]

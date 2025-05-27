@@ -306,6 +306,14 @@
 			path = MemoRepository;
 			sourceTree = "<group>";
 		};
+		26A9EC7F2DE586580059257F /* EmogiPool */ = {
+			isa = PBXGroup;
+			children = (
+				26FB03742DAD650C00129862 /* EmogiPool.swift */,
+			);
+			path = EmogiPool;
+			sourceTree = "<group>";
+		};
 		26D697AE2D7EC88800AC200C /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,7 +349,6 @@
 		26FB03732DAD64FC00129862 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				26FB03742DAD650C00129862 /* EmogiPool.swift */,
 				26FB03762DAD651B00129862 /* EmogiCharacter.swift */,
 				26FB03782DAD654200129862 /* EmogiString.swift */,
 			);
@@ -424,6 +431,7 @@
 		510341032D777C460050C718 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				26A9EC7F2DE586580059257F /* EmogiPool */,
 				51A7AFEB2D802AFF00B50D1E /* Localization */,
 				B9EA52FE2D7C906D00A32305 /* Extensions */,
 				5103410D2D7782C00050C718 /* DesignSystem */,
