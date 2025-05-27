@@ -1,11 +1,11 @@
 //
-//  EmogiPool.swift
+//  EmojiPool.swift
 //  COMFIE
 //
 //  Created by zaehorang on 4/15/25.
 //
 
-struct EmogiPool {
+struct EmojiPool {
     static private let emojiPool: [Character] = [
         "🍕", "🐶", "🌈", "🎉", "✨", "🧡", "🌟", "🚀", "😎", "🦄",
         "🍓", "💡", "📚", "🧸", "🎨", "🍀", "🐱", "🌼", "🎁", "🔥"

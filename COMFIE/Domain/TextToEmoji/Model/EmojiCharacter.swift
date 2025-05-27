@@ -1,5 +1,5 @@
 //
-//  EmogiCharacter.swift
+//  EmojiCharacter.swift
 //  COMFIE
 //
 //  Created by zaehorang on 4/15/25.
@@ -7,19 +7,19 @@
 
 /// 각 문자를 하나의 이모지와 매칭하는 구조입니다.
 /// 예: 'a' → 🐯, '한' → 🐯
-struct EmogiCharacter {
+struct EmojiCharacter {
     var originalCharacter: Character
-    var emogiCharacter: Character?
+    var emojiCharacter: Character?
     
-    mutating func setEmogiCharacter() {
-        guard emogiCharacter == nil else { return }
+    mutating func setEmojiCharacter() {
+        guard emojiCharacter == nil else { return }
         
         if originalCharacter == " "
             || originalCharacter == "\n"
             || isEmoji(originalCharacter) {
-            emogiCharacter = originalCharacter
+            emojiCharacter = originalCharacter
         } else {
-            emogiCharacter = EmogiPool.getRandomEmoji()
+            emojiCharacter = EmojiPool.getRandomEmoji()
         }
     }
     

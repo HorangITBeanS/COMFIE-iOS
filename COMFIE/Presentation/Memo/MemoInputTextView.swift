@@ -150,8 +150,8 @@ struct MemoInputUITextView: UIViewRepresentable {
         
         @Binding private var intent: MemoStore
         
-        private var emogiString: EmogiString {
-            intent.state.emogiString
+        private var emojiString: EmojiString {
+            intent.state.emojiString
         }
         
         weak var textView: UITextView!
@@ -215,7 +215,7 @@ struct MemoInputUITextView: UIViewRepresentable {
                     updateText(textView)
                     
                     // 커서 위치 고정
-                    let leftText = emogiString.getEmogiString(to: index)
+                    let leftText = emojiString.getEmojiString(to: index)
                     if let position = textView.position(from: textView.beginningOfDocument, offset: leftText.utf16.count) {
                         textView.selectedTextRange = textView.textRange(from: position, to: position)
                     }
@@ -243,7 +243,7 @@ struct MemoInputUITextView: UIViewRepresentable {
                 updateText(textView)
                 
                 // 커서 위치 고정
-                let leftText = emogiString.getEmogiString(to: startIndex - 1)
+                let leftText = emojiString.getEmojiString(to: startIndex - 1)
                 if let position = textView.position(
                     from: textView.beginningOfDocument,
                     offset: leftText.utf16.count) {
@@ -255,7 +255,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         }
         
         private func updateText(_ textView: UITextView) {
-            textView.text = emogiString.getEmogiString()
+            textView.text = emojiString.getEmojiString()
             intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
             updateHeight()
         }

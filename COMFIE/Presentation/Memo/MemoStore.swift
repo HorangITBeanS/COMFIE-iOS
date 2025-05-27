@@ -22,7 +22,7 @@ class MemoStore: IntentStore {
                 .map { (key, value) in (date: key, memos: value) }
         }
         
-        var emogiString: EmogiString = .init()
+        var emojiString: EmojiString = .init()
         
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
@@ -36,11 +36,11 @@ class MemoStore: IntentStore {
         mutating func setEditingMemo(_ memo: Memo) {
             editingMemo = memo
             inputMemoText = memo.emojiText
-            emogiString = EmogiString(memo: memo)
+            emojiString = EmojiString(memo: memo)
         }
         
         mutating func resetEditingMemo() {
-            emogiString = .init()
+            emojiString = .init()
             inputMemoText = ""
             editingMemo = nil
         }
@@ -105,8 +105,8 @@ class MemoStore: IntentStore {
             case startEditing(Memo)
             case cancelEditing
             
-            case updateEmogiString(index: Int, newMemoText: String)
-            case deleteEmogiString(start: Int, end: Int?)
+            case updateEmojiString(index: Int, newMemoText: String)
+            case deleteEmojiString(start: Int, end: Int?)
         }
         
         enum PopupAction {
@@ -223,9 +223,9 @@ extension MemoStore {
         case .updateNewMemo(let text):
             return handleAction(state, .input(.updateText(text)))
         case .transformTriggerDetected(index: let index, newMemoText: let newMemoText):
-            return handleAction(state, .input(.updateEmogiString(index: index, newMemoText: newMemoText)))
+            return handleAction(state, .input(.updateEmojiString(index: index, newMemoText: newMemoText)))
         case .deleteTriggerDetected(start: let start, end: let end):
-            return handleAction(state, .input(.deleteEmogiString(start: start, end: end)))
+            return handleAction(state, .input(.deleteEmojiString(start: start, end: end)))
         }
     }
     
@@ -249,15 +249,15 @@ extension MemoStore {
             return fetchMemos(newState)
         case .save:
             // 동기화
-            newState.emogiString.syncWithNewString(newState.inputMemoText)
+            newState.emojiString.syncWithNewString(newState.inputMemoText)
             // 이모지 채우기
-            newState.emogiString.setEmogiString()
+            newState.emojiString.setEmojiString()
             return saveMemo(newState)
         case .update(let updatedMemo):
             // 동기화
-            newState.emogiString.syncWithNewString(newState.inputMemoText)
+            newState.emojiString.syncWithNewString(newState.inputMemoText)
             // 이모지 채우기
-            newState.emogiString.setEmogiString()
+            newState.emojiString.setEmojiString()
             return updateMemo(newState, updatedMemo)
         case .delete:
             if let memo = newState.deletingMemo {
@@ -278,12 +278,12 @@ extension MemoStore {
             newState.setEditingMemo(memo)
         case .cancelEditing:
             newState.resetEditingMemo()
-        case .updateEmogiString(index: let index, newMemoText: let newMemoText):
-            newState.emogiString.applyEmogiString(at: index, newMemoText)
-        case .deleteEmogiString(start: let start, end: let end):
+        case .updateEmojiString(index: let index, newMemoText: let newMemoText):
+            newState.emojiString.applyEmojiString(at: index, newMemoText)
+        case .deleteEmojiString(start: let start, end: let end):
             // 삭제 전, 지금까지 입력된 문자로 동기화를 먼저 진행
-            newState.emogiString.syncWithNewString(newState.inputMemoText)
-            newState.emogiString.deleteEmogiString(from: start, to: end)
+            newState.emojiString.syncWithNewString(newState.inputMemoText)
+            newState.emojiString.deleteEmojiString(from: start, to: end)
         }
         
         return newState
@@ -340,16 +340,16 @@ extension MemoStore {
             id: UUID(),
             createdAt: .now,
             originalText:
-                newState.emogiString.getOriginalString(),
+                newState.emojiString.getOriginalString(),
             emojiText:
-                newState.emogiString.getEmogiString()
+                newState.emojiString.getEmojiString()
         )
         
         switch memoRepository.save(memo: newMemo) {
         case .success:
             newState.memos.append(newMemo)
             newState.inputMemoText = ""
-            newState.emogiString = EmogiString()
+            newState.emojiString = EmojiString()
         case .failure(let error):
             print("메모 저장 실패: \(error)")
         }
@@ -360,8 +360,8 @@ extension MemoStore {
         var newState = state
         var updatedMemo = memo
         
-        updatedMemo.originalText = newState.emogiString.getOriginalString()
-        updatedMemo.emojiText = newState.emogiString.getEmogiString()
+        updatedMemo.originalText = newState.emojiString.getOriginalString()
+        updatedMemo.emojiText = newState.emojiString.getEmojiString()
         
         switch memoRepository.update(memo: updatedMemo) {
         case .success:
