@@ -181,7 +181,7 @@ struct MemoInputUITextView: UIViewRepresentable {
                         self.textView.text = intent.state.inputMemoText
                         
                         parent.updatePlaceholderVisibility(textView: textView)
-                        updateHeight()
+                        updateTextViewHeight()
                     }
                 }
                 .store(in: &cancellables)
@@ -205,63 +205,76 @@ struct MemoInputUITextView: UIViewRepresentable {
             }
             
             let updatedText = currentText.replacingCharacters(in: textRange, with: text)
-            print("🔍 변경 후 텍스트 예상: \(updatedText)")
             
             if !text.isEmpty { // 텍스트가 추가되는 경우
                 if text == "\n" || text == " " {
-                    let index = findEndCursorIndexInString(textView) + 1
-                    intent.handleIntent(.memoInput(.transformTriggerDetected(index: index, newMemoText: updatedText)))
-                    
-                    updateText(textView)
-                    
-                    // 커서 위치 고정
-                    let leftText = emojiString.getEmojiString(to: index)
-                    if let position = textView.position(from: textView.beginningOfDocument, offset: leftText.utf16.count) {
-                        textView.selectedTextRange = textView.textRange(from: position, to: position)
-                    }
+                    handleEmojiTransformTrigger(
+                        updatedText: updatedText,
+                        textView: textView
+                    )
                     return false
                 }
                 
                 intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
-                updateHeight()
+                updateTextViewHeight()
                 return true
             } else { // 텍스트가 삭제되는 경우
-                
                 // 한글 입력 시 뷰에 보이는 텍스트와 내부 데이터가 다를 수 있어
                 // 편집 종료 시 최종 동기화 수행.
                 intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
                 
-                let endIndex = findEndCursorIndexInString(textView)
-                let startIndex = findStartCursorIndexInString(textView)
-
-                if startIndex == endIndex { // 한글자 삭제
-                    intent.handleIntent(.memoInput(.deleteTriggerDetected(start: startIndex, end: nil)))
-                } else { // 범위를 잡아서 삭제
-                    intent.handleIntent(.memoInput(.deleteTriggerDetected(start: startIndex + 1, end: endIndex)))
-                }
-                
-                updateText(textView)
-                
-                // 커서 위치 고정
-                let leftText = emojiString.getEmojiString(to: startIndex - 1)
-                if let position = textView.position(
-                    from: textView.beginningOfDocument,
-                    offset: leftText.utf16.count) {
-                    textView.selectedTextRange = textView.textRange(from: position, to: position)
-                }
+                handleTextDeletion(textView: textView)
                 
                 return false
             }
         }
         
-        private func updateText(_ textView: UITextView) {
-            textView.text = emojiString.getEmojiString()
-            intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
-            updateHeight()
+        private func handleEmojiTransformTrigger(updatedText: String, textView: UITextView) {
+            let index = findEndCursorIndexInString(textView) + 1
+            
+            intent.handleIntent(.memoInput(.transformTriggerDetected(index: index, newMemoText: updatedText)))
+            updateText(textView)
+            
+            // 커서 위치 고정
+            let leftText = emojiString.getEmojiString(to: index)
+            moveCursor(toLeftText: leftText)
         }
         
-        // 텍스트 내용에 따라 높이를 계산하고 제한된 높이까지 설정
-        func updateHeight() {
+        /// 삭제 로직을 처리하는  메서드
+        private func handleTextDeletion(textView: UITextView) {
+            intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
+            
+            let endIndex = findEndCursorIndexInString(textView)
+            let startIndex = findStartCursorIndexInString(textView)
+            
+            if startIndex == endIndex { // 한 글자 삭제
+                intent.handleIntent(.memoInput(.deleteTriggerDetected(start: startIndex, end: nil)))
+            } else { // 범위 잡아서 삭제
+                intent.handleIntent(.memoInput(
+                    .deleteTriggerDetected(
+                        start: startIndex + 1, end: endIndex
+                    )
+                ))
+            }
+            updateText(textView)
+            
+            // 커서 위치 변경
+            let leftText = emojiString.getEmojiString(to: startIndex - 1)
+            moveCursor(toLeftText: leftText)
+        }
+        
+        private func updateText(_ textView: UITextView) {
+            let updatedText = emojiString.getEmojiString()
+            
+            textView.text = updatedText
+            intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
+            updateTextViewHeight()
+        }
+        
+        // MARK: - Helper Methods
+        
+        /// 텍스트 내용에 따라 높이를 계산하고 제한된 높이까지 설정
+        private func updateTextViewHeight() {
             guard let textView = textView else { return }
             
             let width = textView.bounds.width
@@ -289,14 +302,19 @@ struct MemoInputUITextView: UIViewRepresentable {
             parent.dynamicHeight = targetHeight
         }
         
-        // MARK: - Helper Methods
-        
         private func focusTextView() {
             textView?.becomeFirstResponder()
         }
         
         private func unfocusTextView() {
             textView?.resignFirstResponder()
+        }
+        
+        /// 커서를 leftText의 끝(UTF-16 기준 오프셋)으로 이동
+        private func moveCursor(toLeftText leftText: String) {
+            guard let textView = textView,
+                  let position = textView.position(from: textView.beginningOfDocument, offset: leftText.utf16.count) else { return }
+            textView.selectedTextRange = textView.textRange(from: position, to: position)
         }
         
         /// 커서 끝 위치를 String.Index로 반환
