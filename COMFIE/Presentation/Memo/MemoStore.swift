@@ -251,13 +251,13 @@ extension MemoStore {
             // 동기화
             newState.emojiString.syncWithNewString(newState.inputMemoText)
             // 이모지 채우기
-            newState.emojiString.setEmojiString()
+            newState.emojiString.setUnassignedEmojis()
             return saveMemo(newState)
         case .update(let updatedMemo):
             // 동기화
             newState.emojiString.syncWithNewString(newState.inputMemoText)
             // 이모지 채우기
-            newState.emojiString.setEmojiString()
+            newState.emojiString.setUnassignedEmojis()
             return updateMemo(newState, updatedMemo)
         case .delete:
             if let memo = newState.deletingMemo {

@@ -105,7 +105,7 @@ struct EmojiString {
     }
     
     /// 비워진 이모지를 전체 적용합니다.
-    mutating func setEmojiString() {
+    mutating func setUnassignedEmojis() {
         // 전체 채우기
         for i in emojiCharacters.indices {
             emojiCharacters[i].setEmojiCharacter()
