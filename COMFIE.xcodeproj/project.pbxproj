@@ -20,6 +20,7 @@
 		267F6B5B2D9CEBEB0089BD6D /* MockMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5A2D9CEBEB0089BD6D /* MockMemoRepository.swift */; };
 		267F6B602D9CFABF0089BD6D /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267F6B5F2D9CFABF0089BD6D /* MemoCell.swift */; };
 		269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */; };
+		26A9EC842DE802DD0059257F /* MemoInputUITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A9EC832DE802DD0059257F /* MemoInputUITextView.swift */; };
 		26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D697AF2D7ECA6200AC200C /* UserRecordModel.xcdatamodeld */; };
 		26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B22D7EE39E00AC200C /* CoreDataService.swift */; };
 		26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */; };
@@ -177,6 +178,7 @@
 		267F6B5F2D9CFABF0089BD6D /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		269420C72D81B3FF00CB0837 /* COMFIE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = COMFIE.entitlements; sourceTree = "<group>"; };
 		269420F02D8A7D3600CB0837 /* CoreDataTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestView.swift; sourceTree = "<group>"; };
+		26A9EC832DE802DD0059257F /* MemoInputUITextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoInputUITextView.swift; sourceTree = "<group>"; };
 		26D697B02D7ECA6200AC200C /* UserRecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserRecordModel.xcdatamodel; sourceTree = "<group>"; };
 		26D697B22D7EE39E00AC200C /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		26D697B52D7F2DDF00AC200C /* Memo+toEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+toEntity.swift"; sourceTree = "<group>"; };
@@ -312,6 +314,15 @@
 				26FB03742DAD650C00129862 /* EmojiPool.swift */,
 			);
 			path = EmojiPool;
+			sourceTree = "<group>";
+		};
+		26A9EC822DE802B80059257F /* MemoInput */ = {
+			isa = PBXGroup;
+			children = (
+				26FB03702DAD63B300129862 /* MemoInputTextView.swift */,
+				26A9EC832DE802DD0059257F /* MemoInputUITextView.swift */,
+			);
+			path = MemoInput;
 			sourceTree = "<group>";
 		};
 		26D697AE2D7EC88800AC200C /* CoreData */ = {
@@ -495,11 +506,11 @@
 		5103411B2D7996E40050C718 /* Memo */ = {
 			isa = PBXGroup;
 			children = (
+				26A9EC822DE802B80059257F /* MemoInput */,
 				5103411E2D7997130050C718 /* MemoStore.swift */,
 				267F6B292D91B7DD0089BD6D /* MemoView.swift */,
 				267F6B5F2D9CFABF0089BD6D /* MemoCell.swift */,
 				267F6B3B2D94E5FA0089BD6D /* MemoListView.swift */,
-				26FB03702DAD63B300129862 /* MemoInputTextView.swift */,
 			);
 			path = Memo;
 			sourceTree = "<group>";
@@ -921,6 +932,7 @@
 				51895AE32DA6AE8F00AFA569 /* CFListRow.swift in Sources */,
 				26D697BC2D7F421A00AC200C /* CoreDataError.swift in Sources */,
 				51454C1A2DAD3A0D008EAEB0 /* AddComfieZoneCell.swift in Sources */,
+				26A9EC842DE802DD0059257F /* MemoInputUITextView.swift in Sources */,
 				26D697B12D7ECA6200AC200C /* UserRecordModel.xcdatamodeld in Sources */,
 				51895AEA2DA6B17700AFA569 /* StringLiterals+More.swift in Sources */,
 				267F6B3C2D94E5FA0089BD6D /* MemoListView.swift in Sources */,

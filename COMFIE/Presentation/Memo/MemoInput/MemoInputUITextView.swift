@@ -1,45 +1,12 @@
 //
-//  MemoInputTextView.swift
+//  MemoInputUITextView.swift
 //  COMFIE
 //
-//  Created by zaehorang on 4/14/25.
+//  Created by zaehorang on 5/29/25.
 //
 
 import Combine
 import SwiftUI
-
-struct MemoInputTextView: View {
-    let placeholder: String
-    @Binding private var intent: MemoStore
-    
-    @State private var dynamicHeight: CGFloat = UIFont(name: ComfieFontType.body.fontName.rawValue, size: ComfieFontType.body.fontSize)!.lineHeight + 18
-    
-    init(_ placeholder: String = "",
-         memoStore: Binding<MemoStore>
-    ) {
-        self.placeholder = placeholder
-        self._intent = memoStore
-    }
-    
-    var body: some View {
-        MemoInputUITextView(
-            placeholder,
-            dynamicHeight: $dynamicHeight,
-            intent: $intent)
-        .frame(height: dynamicHeight)
-    }
-}
-
-#Preview {
-    MemoInputTextView(
-        memoStore: .constant(
-            MemoStore(
-                router: Router(),
-                memoRepository: MockMemoRepository()
-            )
-        )
-    )
-}
 
 struct MemoInputUITextView: UIViewRepresentable {
     let placeholder: String
@@ -74,26 +41,18 @@ struct MemoInputUITextView: UIViewRepresentable {
         let textView = createTextView()
         let placeholderLabel = createPlaceholderLabel()
         
+        let heightConstraint = createMaxHeightConstraint(for: textView)
+        
         textView.delegate = context.coordinator
         context.coordinator.textView = textView
         context.coordinator.placeholderLabel = placeholderLabel
+        
+        context.coordinator.textViewHeightConstraint = heightConstraint
         
         context.coordinator.bindFocusControl()
         
         container.addSubview(textView)
         container.addSubview(placeholderLabel)
-        
-        // 최대 4줄 높이 제한
-        let maxHeight = comfieUIBodyFont.lineHeight
-        * maxLineCount
-        + textView.textContainerInset.top
-        + textView.textContainerInset.bottom
-        
-        let heightConstraint = textView.heightAnchor.constraint(lessThanOrEqualToConstant: maxHeight)
-        
-        heightConstraint.priority = .defaultHigh
-        heightConstraint.isActive = true
-        context.coordinator.heightConstraint = heightConstraint
         
         NSLayoutConstraint.activate([
             textView.topAnchor
@@ -108,8 +67,9 @@ struct MemoInputUITextView: UIViewRepresentable {
             placeholderLabel.topAnchor
                 .constraint(equalTo: textView.topAnchor, constant: 9),
             
+            // textView의 커서 위치와 플레이스홀더의 정렬을 맞추기 위해 오른쪽으로 5pt 추가
             placeholderLabel.leadingAnchor
-                .constraint(equalTo: textView.leadingAnchor, constant: 17) // textView의 커서 위치와 플레이스홀더의 정렬을 맞추기 위해 오른쪽으로 5pt 추가
+                .constraint(equalTo: textView.leadingAnchor, constant: 17)
         ])
         
         return container
@@ -133,16 +93,27 @@ struct MemoInputUITextView: UIViewRepresentable {
     
     private func createPlaceholderLabel() -> UILabel {
         let placeholderLabel = UILabel()
+        
         placeholderLabel.text = placeholder
         placeholderLabel.font = comfieUIBodyFont
         placeholderLabel.textColor = UIColor.textGray
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         return placeholderLabel
     }
     
-    func updatePlaceholderVisibility(textView: UITextView) {
-        guard let coordinator = textView.delegate as? Coordinator else { return }
-        coordinator.placeholderLabel.isHidden = !textView.text.isEmpty
+    /// 텍스트뷰의 최대 줄 수에 따른 높이 제한 제약 생성
+    private func createMaxHeightConstraint(for textView: UITextView) -> NSLayoutConstraint {
+        let maxHeight = comfieUIBodyFont.lineHeight
+            * maxLineCount
+            + textView.textContainerInset.top
+            + textView.textContainerInset.bottom
+
+        let heightConstraint = textView.heightAnchor.constraint(lessThanOrEqualToConstant: maxHeight)
+        heightConstraint.priority = .defaultHigh
+        heightConstraint.isActive = true
+        
+        return heightConstraint
     }
     
     final class Coordinator: NSObject, UITextViewDelegate {
@@ -157,7 +128,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         weak var textView: UITextView!
         weak var placeholderLabel: UILabel!
         
-        var heightConstraint: NSLayoutConstraint?
+        var textViewHeightConstraint: NSLayoutConstraint?
         
         private var cancellables = Set<AnyCancellable>()
         
@@ -174,21 +145,23 @@ struct MemoInputUITextView: UIViewRepresentable {
                     guard let self = self else { return }
                     switch sideEffect {
                     case .ui(.resignInputFocusWithSyncInput):
-                        self.unfocusTextView()
+                        self.unfocusTextView(textView)
                     case .ui(.setMemoInputFocus):
-                        self.focusTextView()
+                        self.focusTextView(textView)
                     case .ui(.updateInputViewWithState):
                         self.textView.text = intent.state.inputMemoText
                         
-                        parent.updatePlaceholderVisibility(textView: textView)
-                        updateTextViewHeight()
+                        updatePlaceholderVisibility(textView)
+                        updateTextViewHeight(textView)
                     }
                 }
                 .store(in: &cancellables)
         }
         
+        // MARK: - UITextViewDelegate
+        
         func textViewDidChange(_ textView: UITextView) {
-            parent.updatePlaceholderVisibility(textView: textView)
+            updatePlaceholderVisibility(textView)
         }
         
         /// 해담 메서드에서 최졷 동기화를 해야지 한글이 완전히 완성된 상태에서 동기화가 가능
@@ -208,32 +181,33 @@ struct MemoInputUITextView: UIViewRepresentable {
             
             if !text.isEmpty { // 텍스트가 추가되는 경우
                 if text == "\n" || text == " " {
-                    handleEmojiTransformTrigger(
-                        updatedText: updatedText,
-                        textView: textView
-                    )
+                    handleEmojiTransformTrigger(textView, updatedText: updatedText)
+                    
                     return false
                 }
                 
                 intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
-                updateTextViewHeight()
+                updateTextViewHeight(textView)
+                
                 return true
             } else { // 텍스트가 삭제되는 경우
                 // 한글 입력 시 뷰에 보이는 텍스트와 내부 데이터가 다를 수 있어
                 // 편집 종료 시 최종 동기화 수행.
                 intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
-                
-                handleTextDeletion(textView: textView)
+                handleTextDeletion(textView)
                 
                 return false
             }
         }
         
-        private func handleEmojiTransformTrigger(updatedText: String, textView: UITextView) {
+        // MARK: - TextView Handling
+        
+        private func handleEmojiTransformTrigger(_ textView: UITextView, updatedText: String) {
             let index = findEndCursorIndexInString(textView) + 1
             
             intent.handleIntent(.memoInput(.transformTriggerDetected(index: index, newMemoText: updatedText)))
             updateText(textView)
+            updateTextViewHeight(textView)
             
             // 커서 위치 고정
             let leftText = emojiString.getEmojiString(to: index)
@@ -241,7 +215,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         }
         
         /// 삭제 로직을 처리하는  메서드
-        private func handleTextDeletion(textView: UITextView) {
+        private func handleTextDeletion(_ textView: UITextView) {
             intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
             
             let endIndex = findEndCursorIndexInString(textView)
@@ -257,6 +231,7 @@ struct MemoInputUITextView: UIViewRepresentable {
                 ))
             }
             updateText(textView)
+            updateTextViewHeight(textView)
             
             // 커서 위치 변경
             let leftText = emojiString.getEmojiString(to: startIndex - 1)
@@ -268,19 +243,18 @@ struct MemoInputUITextView: UIViewRepresentable {
             
             textView.text = updatedText
             intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
-            updateTextViewHeight()
         }
         
-        // MARK: - Helper Methods
+        private func updatePlaceholderVisibility(_ textView: UITextView) {
+            placeholderLabel.isHidden = !textView.text.isEmpty
+        }
         
         /// 텍스트 내용에 따라 높이를 계산하고 제한된 높이까지 설정
-        private func updateTextViewHeight() {
-            guard let textView = textView else { return }
-            
+        private func updateTextViewHeight(_ textView: UITextView) {
             let width = textView.bounds.width
             guard width > 0 else { return }
             
-            parent.updatePlaceholderVisibility(textView: textView)
+            updatePlaceholderVisibility(textView)
             
             let fittingSize = CGSize(
                 width: width,
@@ -295,20 +269,22 @@ struct MemoInputUITextView: UIViewRepresentable {
             
             let targetHeight = min(estimatedSize.height, maxHeight)
             
-            heightConstraint?.constant = targetHeight
+            textViewHeightConstraint?.constant = targetHeight
             
             textView.isScrollEnabled = estimatedSize.height >= maxHeight
             
             parent.dynamicHeight = targetHeight
         }
         
-        private func focusTextView() {
-            textView?.becomeFirstResponder()
+        private func focusTextView(_ textView: UITextView) {
+            textView.becomeFirstResponder()
         }
         
-        private func unfocusTextView() {
-            textView?.resignFirstResponder()
+        private func unfocusTextView(_ textView: UITextView) {
+            textView.resignFirstResponder()
         }
+        
+        // MARK: - Cursor Handling
         
         /// 커서를 leftText의 끝(UTF-16 기준 오프셋)으로 이동
         private func moveCursor(toLeftText leftText: String) {
