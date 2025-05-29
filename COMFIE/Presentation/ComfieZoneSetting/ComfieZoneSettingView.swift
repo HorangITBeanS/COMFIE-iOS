@@ -75,6 +75,8 @@ struct ComfieZoneSettingView: View {
 
 #Preview {
     ComfieZoneSettingView(
-        intent: ComfieZoneSettingStore(popupIntent: .init())
+        intent: ComfieZoneSettingStore(
+            popupIntent: ComfieZoneSettingPopupStore()
+        )
     )
 }

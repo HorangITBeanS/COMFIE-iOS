@@ -64,6 +64,8 @@
 		5149D3C42DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
 		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
 		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
+		518666F02DC0B3F40078C6B4 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518666EF2DC0B3F40078C6B4 /* LocationService.swift */; };
+		518666F32DC0C3900078C6B4 /* LocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518666F22DC0C3900078C6B4 /* LocationUseCase.swift */; };
 		51895ADC2DA69B2C00AFA569 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895ADB2DA69B2C00AFA569 /* MoreView.swift */; };
 		51895ADF2DA6AE6F00AFA569 /* CFList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895ADE2DA6AE6F00AFA569 /* CFList.swift */; };
 		51895AE02DA6AE6F00AFA569 /* CFList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895ADE2DA6AE6F00AFA569 /* CFList.swift */; };
@@ -223,6 +225,8 @@
 		5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+ComfieZoneSetting.swift"; sourceTree = "<group>"; };
 		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
+		518666EF2DC0B3F40078C6B4 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		518666F22DC0C3900078C6B4 /* LocationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUseCase.swift; sourceTree = "<group>"; };
 		51895ADB2DA69B2C00AFA569 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		51895ADE2DA6AE6F00AFA569 /* CFList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFList.swift; sourceTree = "<group>"; };
 		51895AE22DA6AE8F00AFA569 /* CFListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFListRow.swift; sourceTree = "<group>"; };
@@ -558,6 +562,7 @@
 			isa = PBXGroup;
 			children = (
 				26FB03722DAD64E700129862 /* TextToEmoji */,
+				518666F12DC0C3830078C6B4 /* UseCase */,
 				517FCAC12D7AB2A200A250A3 /* Entity */,
 			);
 			path = Domain;
@@ -570,6 +575,14 @@
 				517FCAC42D7AB31100A250A3 /* ComfieZone.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		518666F12DC0C3830078C6B4 /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				518666F22DC0C3900078C6B4 /* LocationUseCase.swift */,
+			);
+			path = UseCase;
 			sourceTree = "<group>";
 		};
 		51895ADA2DA69B0100AFA569 /* More */ = {
@@ -627,6 +640,7 @@
 			isa = PBXGroup;
 			children = (
 				51D882E32DAFF4150072E3C0 /* LocalAuthenticationService.swift */,
+				518666EF2DC0B3F40078C6B4 /* LocationService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -945,10 +959,12 @@
 				B96CDB3C2DA238EA004EA2E9 /* EdgeInsets+.swift in Sources */,
 				51895AF02DA6C65100AFA569 /* TermView.swift in Sources */,
 				517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */,
+				518666F32DC0C3900078C6B4 /* LocationUseCase.swift in Sources */,
 				51F8F5B72D95259300DD2E3D /* CFNavigationBar.swift in Sources */,
 				26D697B32D7EE39E00AC200C /* CoreDataService.swift in Sources */,
 				B99A081E2DABAD410094EECB /* RetrospectionRepository.swift in Sources */,
 				B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */,
+				518666F02DC0B3F40078C6B4 /* LocationService.swift in Sources */,
 				510341162D7993D60050C718 /* Route.swift in Sources */,
 				26FB03772DAD651B00129862 /* EmojiCharacter.swift in Sources */,
 				B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */,
@@ -1185,6 +1201,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = COMFIE/Info.plist;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "컴피존 삭제를 활성화합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 표시하고 일기 열람 구역을 설정하기 위해 현재 위치를 확인합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1220,6 +1237,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = COMFIE/Info.plist;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "컴피존 삭제를 활성화합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 표시하고 일기 열람 구역을 설정하기 위해 현재 위치를 확인합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

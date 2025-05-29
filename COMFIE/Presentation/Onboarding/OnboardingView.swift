@@ -16,10 +16,9 @@ struct OnboardingView: View {
             Color.cfWhite.ignoresSafeArea()
             
             VStack(spacing: 28) {
-                // 임시 이미지
-                RoundedRectangle(cornerRadius: 20)
-                    .foregroundStyle(Color.cfGray)
-                    .frame(width: 200, height: 200)
+                Image(.icComfieZoneInfo)
+                    .resizable()
+                    .frame(width: 280, height: 280)
                 
                 VStack(spacing: 12) {
                     TextWithDifferentFont(
@@ -64,5 +63,12 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView(intent: OnboardingStore(router: Router()))
+    OnboardingView(
+        intent: OnboardingStore(
+            router: Router(),
+            locationUseCase: LocationUseCase(
+                locationService: LocationService()
+            )
+        )
+    )
 }
