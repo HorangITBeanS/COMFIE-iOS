@@ -16,7 +16,7 @@ class MemoStore: IntentStore {
         var memos: [Memo] = []
         // createdAt 날짜 문자열(dotYMDFormat 기준)로 메모들을 그룹화하고 정렬한 결과
         var groupedMemos: [(date: String, memos: [Memo])] {
-            let grouped = Dictionary(grouping: memos) { $0.createdAt.dateOnlyString }
+            let grouped = Dictionary(grouping: memos) { $0.createdAt.yyyyMMddString }
             
             return grouped
                 .sorted {
