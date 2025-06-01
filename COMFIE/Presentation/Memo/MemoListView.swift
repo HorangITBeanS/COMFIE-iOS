@@ -25,27 +25,39 @@ struct MemoListView: View {
                     .foregroundStyle(.textDarkgray)
             }
         } else {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    ForEach(intent.state.groupedMemos, id: \.date) { group in
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text(group.date)
-                                .comfieFont(.systemBody)
-                                .foregroundStyle(.textDarkgray)
-                            
-                            ForEach(group.memos) { memo in
-                                MemoCell(
-                                    memo: memo,
-                                    intent: $intent,
-                                    isUserInComfieZone: isUserInComfieZone
-                                )
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ForEach(intent.state.groupedMemos, id: \.date) { group in
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text(group.date)
+                                    .comfieFont(.systemBody)
+                                    .foregroundStyle(.textDarkgray)
+                                
+                                ForEach(group.memos) { memo in
+                                    MemoCell(
+                                        memo: memo,
+                                        intent: $intent,
+                                        isUserInComfieZone: isUserInComfieZone
+                                    )
+                                    .id(memo.id)
+                                }
                             }
                         }
                     }
+                    .padding(24)
                 }
-                .padding(24)
+                .scrollIndicators(.hidden)
+                .onChange(of: intent.state.editingMemo) {
+                    guard let editingMemo = intent.state.editingMemo else { return }
+                    
+                    Task { @MainActor in
+                        withAnimation {
+                            proxy.scrollTo(editingMemo.id, anchor: UnitPoint(x: 0.5, y: 0.8))
+                        }
+                    }
+                }
             }
-            .scrollIndicators(.hidden)
         }
     }
 }
