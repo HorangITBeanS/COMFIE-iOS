@@ -48,6 +48,7 @@ struct MemoListView: View {
                     .padding(24)
                 }
                 .scrollIndicators(.hidden)
+                .defaultScrollAnchor(.bottom)
                 .onChange(of: intent.state.editingMemo) {
                     guard let editingMemo = intent.state.editingMemo else { return }
                     
