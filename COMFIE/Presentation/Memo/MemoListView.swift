@@ -52,7 +52,7 @@ struct MemoListView: View {
                 }
                 .scrollIndicators(.hidden)
                 .defaultScrollAnchor(.bottom)
-                .onReceive(intent.scrollEffectPublisher) { effect in
+                .onReceive(intent.scrollSideEffectPublisher) { effect in
                     switch effect {
                     case .toMemo(let id):
                         Task { @MainActor in
