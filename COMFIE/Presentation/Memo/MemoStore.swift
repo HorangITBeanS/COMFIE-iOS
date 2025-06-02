@@ -135,10 +135,17 @@ class MemoStore: IntentStore {
         }
     }
     
+    // MARK: ScrollEffect
+    enum ScrollEffect {
+        case toMemo(id: UUID)
+        case toBottom
+    }
+    
     private let router: Router
     private let memoRepository: MemoRepositoryProtocol
     
     private(set) var sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    private(set) var scrollEffectPublisher = PassthroughSubject<ScrollEffect, Never>()
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol) {
@@ -191,6 +198,9 @@ extension MemoStore {
             let newState = handleAction(state, .input(.startEditing(memo)))
             performSideEffect(for: .ui(.updateInputViewWithState))
             performSideEffect(for: .ui(.setMemoInputFocus))
+            
+            // 메모 수정 시, 해당 메모 위치로 스크롤 이동
+            performSCrollEffect(for: .toMemo(id: memo.id))
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
@@ -217,6 +227,9 @@ extension MemoStore {
                 } else {
                     // 새로운 메모 작성 중
                     self.state = handleAction(state, .memo(.save))
+                    
+                    // 메모가 추가 시, 해당 메모 위치(bottom)으로 스크롤 이동
+                    performSCrollEffect(for: .toBottom)
                 }
             }
             
@@ -321,6 +334,10 @@ extension MemoStore {
 extension MemoStore {
     private func performSideEffect(for action: SideEffect) {
         sideEffectPublisher.send(action)
+    }
+    
+    private func performSCrollEffect(for action: ScrollEffect) {
+        scrollEffectPublisher.send(action)
     }
 }
 

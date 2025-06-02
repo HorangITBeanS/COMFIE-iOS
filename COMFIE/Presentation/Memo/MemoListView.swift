@@ -14,6 +14,8 @@ struct MemoListView: View {
     // TODO: isUserInComfieZone 변경 필요
     @Binding var isUserInComfieZone: Bool
     
+    @Namespace private var scrollViewBottomId
+    
     var body: some View {
         if intent.state.memos.isEmpty {
             ZStack(alignment: .center) {
@@ -46,15 +48,23 @@ struct MemoListView: View {
                         }
                     }
                     .padding(24)
+                    .id(scrollViewBottomId)
                 }
                 .scrollIndicators(.hidden)
                 .defaultScrollAnchor(.bottom)
-                .onChange(of: intent.state.editingMemo) {
-                    guard let editingMemo = intent.state.editingMemo else { return }
-                    
-                    Task { @MainActor in
-                        withAnimation {
-                            proxy.scrollTo(editingMemo.id, anchor: UnitPoint(x: 0.5, y: 0.8))
+                .onReceive(intent.scrollEffectPublisher) { effect in
+                    switch effect {
+                    case .toMemo(let id):
+                        Task { @MainActor in
+                            withAnimation {
+                                proxy.scrollTo(id, anchor: UnitPoint(x: 0.5, y: 0.8))
+                            }
+                        }
+                    case .toBottom:
+                        Task { @MainActor in
+                            withAnimation {
+                                proxy.scrollTo(scrollViewBottomId, anchor: .bottom)
+                            }
                         }
                     }
                 }
