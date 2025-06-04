@@ -54,10 +54,10 @@ struct MemoListView: View {
                 .defaultScrollAnchor(.bottom)
                 .onReceive(intent.scrollSideEffectPublisher) { effect in
                     switch effect {
-                    case .toMemo(let id):
+                    case .toMemo(let memo):
                         Task { @MainActor in
                             withAnimation {
-                                proxy.scrollTo(id, anchor: UnitPoint(x: 0.5, y: 0.8))
+                                proxy.scrollTo(memo.id, anchor: UnitPoint(x: 0.5, y: 0.8))
                             }
                         }
                     case .toBottom:

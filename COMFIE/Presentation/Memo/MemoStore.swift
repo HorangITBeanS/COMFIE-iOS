@@ -136,7 +136,7 @@ class MemoStore: IntentStore {
         }
         
         enum Scroll {
-            case toMemo(id: UUID)
+            case toMemo(memo: Memo)
             case toBottom
         }
     }
@@ -200,7 +200,7 @@ extension MemoStore {
             performUISideEffect(for: .setMemoInputFocus)
             
             // 메모 수정 시, 해당 메모 위치로 스크롤 이동
-            performScrollEffect(for: .toMemo(id: memo.id))
+            performScrollEffect(for: .toMemo(memo: memo))
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
