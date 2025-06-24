@@ -710,6 +710,12 @@
     },
     "popup_button_do_next" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Now"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -720,6 +726,12 @@
     },
     "popup_button_go_setting" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to Settings"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -808,6 +820,12 @@
     },
     "popup_subtitle_request_location_permission" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable location access in Settings to use the COMFIE zone."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -876,6 +894,12 @@
     },
     "popup_title_request_location_permission" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location access is not allowed."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
