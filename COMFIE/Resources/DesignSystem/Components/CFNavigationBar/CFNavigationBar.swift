@@ -102,3 +102,45 @@ struct CFNavigationBar: View {
         ]
     )
 }
+
+struct CFNavigationBarWithImageTitle: View {
+    let titleImage: Image
+    let isBackButtonHidden: Bool
+    let backButtonAction: () -> Void
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        ZStack {
+            // 네비게이션바 타이틀
+            titleImage
+                .renderingMode(.original)
+                .foregroundStyle(.textBlack)
+            
+            HStack(spacing: 0) {
+                HStack(spacing: 8) {
+                    if isBackButtonHidden == false {
+                        backButton()  // 뒤로가기 버튼
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+        }
+        .frame(height: 56)
+        .background(Color.cfWhite)
+    }
+    
+    @ViewBuilder
+    private func backButton() -> some View {
+        Button {
+            backButtonAction()
+            dismiss()
+        } label: {
+            Image(.icBack)
+                .resizable()
+                .frame(width: 24, height: 24)
+        }
+    }
+}
