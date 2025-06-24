@@ -95,6 +95,7 @@ class MoreStore: IntentStore {
         case .checkMailAppActivate:
             newState.isMailAppActivate = MFMailComposeViewController.canSendMail()
         case .copyMail:
+            copyEmail()
             newState.showMailUnavailablePopupView = false
         case .hideMailUnavailablePopupView:
             newState.showMailUnavailablePopupView = false
@@ -102,5 +103,13 @@ class MoreStore: IntentStore {
             router.push(.makers)
         }
         return newState
+    }
+    
+    func copyEmail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
+        if UIPasteboard.general.hasStrings {
+            UIPasteboard.general.string = text
+        } else {
+            // 접근 권한 없어 복사 실패
+        }
     }
 }
