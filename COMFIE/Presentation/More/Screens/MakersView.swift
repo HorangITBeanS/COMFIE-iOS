@@ -11,34 +11,17 @@ struct MakersView: View {
     private let strings = StringLiterals.More.Makers.self
     
     var body: some View {
-        VStack(spacing: 50) {
-            // TODO: 만든 사람들 그래픽 추후에 추가
-            LazyVGrid(
-                columns: [GridItem(.adaptive(minimum: 120), spacing: 0)],
-                alignment: .leading
-            ) {
-                ForEach(0 ..< 5, id: \.self) { _ in
-                    Circle()
-                        .foregroundStyle(Color.keyDeactivated)
-                        .frame(width: 120, height: 120)
-                }
-            }
-            .padding(.horizontal, 30)
-            .padding(.top, 30)
+        VStack(spacing: 6) {
+            Image(.imgMakers)
             
             // 연락
             CFList(sectionTitle: strings.contactSectiontitle.localized) {
                 CFListRow(
                     title: strings.instagram.localized,
+                    isLast: true,
                     trailingView: trailingTextView(strings.instagramContent)
                 )
                 .disabled(true)
-                
-                CFListRow(
-                    title: strings.email.localized,
-                    isLast: true,
-                    trailingView: trailingTextView(strings.emailContent)
-                )
             }
             .padding(.horizontal, 24)
             
