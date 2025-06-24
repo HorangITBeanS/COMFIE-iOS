@@ -23,6 +23,8 @@ class MoreStore: IntentStore {
         // 메일앱 활성화 여부
         var isMailAppActivate: Bool = false
         var showMailSheet: Bool = false
+        
+        var showMailUnavailablePopupView: Bool = false
     }
     
     enum Intent {
@@ -33,6 +35,10 @@ class MoreStore: IntentStore {
         case sendFeedbackRowTapped
         case dismissMailSheet
         
+        // 메일 비활성화 알럿 내 버튼
+        case copyMailButtonTapped
+        case closePopupButtonTapped
+        
         case makersRowTapped
     }
     
@@ -41,7 +47,8 @@ class MoreStore: IntentStore {
         case navigateToPrivacyPolicy
         
         case checkMailAppActivate
-        case navigateToSendFeedback
+        case copyMail
+        case hideMailUnavailablePopupView
         case navigateToMakers
     }
     
@@ -65,12 +72,16 @@ class MoreStore: IntentStore {
                 state.showMailSheet = true
             } else {
                 // 활성화 X > 기본 화면
-                _ = handleAction(state, .navigateToSendFeedback)
+                state.showMailUnavailablePopupView = true
             }
-        case .makersRowTapped:
-            _ = handleAction(state, .navigateToMakers)
+        case .copyMailButtonTapped:
+            state = handleAction(state, .copyMail)
+        case .closePopupButtonTapped:
+            state = handleAction(state, .hideMailUnavailablePopupView)
         case .dismissMailSheet:
             state.showMailSheet = false
+        case .makersRowTapped:
+            _ = handleAction(state, .navigateToMakers)
         }
     }
     
@@ -83,8 +94,10 @@ class MoreStore: IntentStore {
             router.push(.privacyPolicy)
         case .checkMailAppActivate:
             newState.isMailAppActivate = MFMailComposeViewController.canSendMail()
-        case .navigateToSendFeedback:
-            router.push(.sendFeedback)
+        case .copyMail:
+            newState.showMailUnavailablePopupView = false
+        case .hideMailUnavailablePopupView:
+            newState.showMailUnavailablePopupView = false
         case .navigateToMakers:
             router.push(.makers)
         }
