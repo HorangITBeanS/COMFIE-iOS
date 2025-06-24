@@ -28,7 +28,6 @@ class MoreStore: IntentStore {
     enum Intent {
         case serviceTermRowTapped
         case privacyPolicyRowTapped
-        case locationTermRowTapped
         
         // 의견 보내기 - 메일앱 활성화 체크 후 화면 전환
         case sendFeedbackRowTapped
@@ -40,7 +39,6 @@ class MoreStore: IntentStore {
     enum Action {
         case navigateToServiceTerm
         case navigateToPrivacyPolicy
-        case navigateToLocationTerm
         
         case checkMailAppActivate
         case navigateToSendFeedback
@@ -59,8 +57,6 @@ class MoreStore: IntentStore {
             _ = handleAction(state, .navigateToServiceTerm)
         case .privacyPolicyRowTapped:
             _ = handleAction(state, .navigateToPrivacyPolicy)
-        case .locationTermRowTapped:
-            _ = handleAction(state, .navigateToLocationTerm)
         case .sendFeedbackRowTapped:
             // 메일앱 활성화 여부 확인
             state = handleAction(state, .checkMailAppActivate)
@@ -85,8 +81,6 @@ class MoreStore: IntentStore {
             router.push(.serviceTerm)
         case .navigateToPrivacyPolicy:
             router.push(.privacyPolicy)
-        case .navigateToLocationTerm:
-            router.push(.locationTerm)
         case .checkMailAppActivate:
             newState.isMailAppActivate = MFMailComposeViewController.canSendMail()
         case .navigateToSendFeedback:

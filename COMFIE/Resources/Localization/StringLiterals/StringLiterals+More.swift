@@ -15,8 +15,7 @@ extension StringLiterals {
         static let termsSectionTitle: LocalizedStringResource = "more_terms_section_title"
         static let serviceTerm: LocalizedStringResource = "more_service_term"
         static let privacyPolicy: LocalizedStringResource = "more_privacy_policy"
-        static let locationTerm: LocalizedStringResource = "more_location_term"
-        
+
         // 고객 지원
         static let customerSupportSectionTitle: LocalizedStringResource = "more_customer_support_section_title"
         static let sendFeedback: LocalizedStringResource = "more_send_feedback"

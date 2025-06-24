@@ -28,14 +28,8 @@ struct MoreView: View {
                     
                     CFListRow(
                         title: strings.privacyPolicy.localized,
-                        action: { intent(.privacyPolicyRowTapped) },
-                        trailingView: forwardImage
-                    )
-                    
-                    CFListRow(
-                        title: strings.locationTerm.localized,
                         isLast: true,
-                        action: { intent(.locationTermRowTapped) },
+                        action: { intent(.privacyPolicyRowTapped) },
                         trailingView: forwardImage
                     )
                 }

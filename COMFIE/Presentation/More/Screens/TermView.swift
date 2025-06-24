@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TermView: View {
-    enum Term { case service, privacy, location }
+    enum Term { case service, privacy }
     let type: Term
     private let strings = StringLiterals.More.Term.self
     
@@ -28,7 +28,6 @@ struct TermView: View {
         switch type {
         case .service: strings.Content.service.localized
         case .privacy: strings.Content.privacy.localized
-        case .location: strings.Content.location.localized
         }
     }
     
@@ -36,7 +35,6 @@ struct TermView: View {
         switch type {
         case .service: strings.NavigationTitle.service.localized
         case .privacy: strings.NavigationTitle.privacy.localized
-        case .location: strings.NavigationTitle.location.localized
         }
     }
 }

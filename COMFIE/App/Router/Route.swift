@@ -20,7 +20,6 @@ enum Route: Hashable {
     // MARK: - 메인 화면 > 더보기(more)
     case serviceTerm
     case privacyPolicy
-    case locationTerm
     case sendFeedback
     case makers
     
