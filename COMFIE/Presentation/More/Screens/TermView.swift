@@ -14,27 +14,20 @@ struct TermView: View {
     
     var body: some View {
         ScrollView {
-            Text(content())
+            Text(contentURL())
                 .comfieFont(.body)
                 .foregroundStyle(Color.textBlack)
                 .padding(24)
         }
         .frame(maxWidth: .infinity)
         .background(Color.keyBackground)
-        .cfNavigationBar(navigationTitle())
+        .cfNavigationBarWithImageTitle()
     }
     
-    private func content() -> String {
+    private func contentURL() -> String {
         switch type {
-        case .service: strings.Content.service.localized
-        case .privacy: strings.Content.privacy.localized
-        }
-    }
-    
-    private func navigationTitle() -> String {
-        switch type {
-        case .service: strings.NavigationTitle.service.localized
-        case .privacy: strings.NavigationTitle.privacy.localized
+        case .service: strings.ContentURL.service
+        case .privacy: strings.ContentURL.privacy
         }
     }
 }
