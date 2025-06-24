@@ -69,6 +69,7 @@ private struct CFPopupContentView: View {
                 .comfieFont(.systemBody)
                 .foregroundStyle(.popupGray)
                 .padding(.bottom, 16)
+                .multilineTextAlignment(.center)
             
             HStack(spacing: 8) {
                 Button {
