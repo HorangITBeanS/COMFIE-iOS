@@ -76,7 +76,8 @@ struct MoreView: View {
                 CFPopupView(type: .mailUnavailable,
                             leftButtonType: .normal,
                             leftButtonAction: { intent(.copyMailButtonTapped) },
-                            rightButtonAction: { intent(.closePopupButtonTapped) })
+                            rightButtonAction: { intent(.closePopupButtonTapped) }
+                )
             }
         }
     }

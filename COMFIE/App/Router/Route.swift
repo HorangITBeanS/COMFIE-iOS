@@ -20,7 +20,6 @@ enum Route: Hashable {
     // MARK: - 메인 화면 > 더보기(more)
     case serviceTerm
     case privacyPolicy
-    case sendFeedback
     case makers
     
     @ViewBuilder func view(_ router: Router) -> some View {
