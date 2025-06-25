@@ -13,15 +13,10 @@ struct TermView: View {
     private let strings = StringLiterals.More.Term.self
     
     var body: some View {
-        ScrollView {
-            Text(contentURL())
-                .comfieFont(.body)
-                .foregroundStyle(Color.textBlack)
-                .padding(24)
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.keyBackground)
-        .cfNavigationBarWithImageTitle()
+        CFWebView(urlString: contentURL())
+            .edgesIgnoringSafeArea(.bottom)
+            .background(Color.keyBackground)
+            .cfNavigationBarWithImageTitle()
     }
     
     private func contentURL() -> String {
