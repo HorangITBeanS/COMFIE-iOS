@@ -550,6 +550,12 @@
     },
     "popup_button_close" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -560,6 +566,12 @@
     },
     "popup_button_copy_mail" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy email"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -696,6 +708,12 @@
     },
     "popup_subtitle_mail_unavailable" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud may be off or not connected.\nPlease contact us at comfie.team@gmail.com."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -780,6 +798,12 @@
     },
     "popup_title_mail_unavailable" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feedback couldn’t be sent"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
