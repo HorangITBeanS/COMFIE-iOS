@@ -222,6 +222,12 @@
     },
     "memo_delete_button_title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -232,6 +238,12 @@
     },
     "memo_edit_button_title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -242,6 +254,12 @@
     },
     "memo_editing_cancel_button_title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -252,6 +270,12 @@
     },
     "memo_empty_memo" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No diary yet."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -262,6 +286,12 @@
     },
     "memo_retrospection_button_title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reflect"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -272,6 +302,12 @@
     },
     "memo_textfield_placeholder" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Write Anything"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",

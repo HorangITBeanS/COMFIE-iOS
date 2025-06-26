@@ -75,6 +75,7 @@ struct MemoCell: View {
             if let retrospectionText = memo.retrospectionText {
                 HStack {
                     Text(isUserInComfieZone ? retrospectionText : memo.emojiText)
+                        .lineLimit(3)
                     Spacer()
                 }
                 .comfieFont(.body)

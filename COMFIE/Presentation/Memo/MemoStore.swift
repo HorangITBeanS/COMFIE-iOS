@@ -18,11 +18,16 @@ class MemoStore: IntentStore {
         
         // createdAt 날짜 문자열(dotYMDFormat 기준)로 메모들을 그룹화하고 정렬한 결과
         var groupedMemos: [(date: String, memos: [Memo])] {
-            let grouped = Dictionary(grouping: memos) { $0.createdAt.dotYMDFormat }
+            let grouped = Dictionary(grouping: memos) { $0.createdAt.yyyyMMddString }
+            
             return grouped
-                .sorted { $0.key < $1.key }
+                .sorted {
+                    $0.value.first!.createdAt < $1.value.first!.createdAt
+                }
                 .map { (key, value) in (date: key, memos: value) }
         }
+        
+        var emojiString: EmojiString = .init()
         
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
@@ -31,6 +36,26 @@ class MemoStore: IntentStore {
         
         func isEditingMemo(_ memo: Memo) -> Bool {
             editingMemo?.id == memo.id
+        }
+        
+        mutating func setEditingMemo(_ memo: Memo) {
+            editingMemo = memo
+            inputMemoText = memo.emojiText
+            emojiString = EmojiString(memo: memo)
+        }
+        
+        mutating func resetEditingMemo() {
+            emojiString = .init()
+            inputMemoText = ""
+            editingMemo = nil
+        }
+        
+        mutating func setDeletingMemo(_ memo: Memo) {
+            deletingMemo = memo
+        }
+        
+        mutating func resetDeletingMemo() {
+            deletingMemo = nil
         }
     }
     
@@ -53,6 +78,9 @@ class MemoStore: IntentStore {
         enum MemoInputIntent {
             case updateNewMemo(String)
             case memoInputButtonTapped
+            
+            case transformTriggerDetected(index: Int, newMemoText: String)
+            case deleteTriggerDetected(start: Int, end: Int?)
         }
         
         enum MemoCellIntent {
@@ -81,6 +109,9 @@ class MemoStore: IntentStore {
             case updateText(String)
             case startEditing(Memo)
             case cancelEditing
+            
+            case updateEmojiString(index: Int, newMemoText: String)
+            case deleteEmojiString(start: Int, end: Int?)
         }
         
         enum PopupAction {
@@ -100,8 +131,9 @@ class MemoStore: IntentStore {
         case ui(UI)
         
         enum UI {
-            case removeMemoInputFocus
+            case resignInputFocusWithSyncInput
             case setMemoInputFocus
+            case updateInputViewWithState
         }
     }
     
@@ -109,7 +141,7 @@ class MemoStore: IntentStore {
     private let memoRepository: MemoRepositoryProtocol
     private let locationUseCase: LocationUseCase
     
-    let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    private(set) var sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol, locationUseCase: LocationUseCase) {
@@ -133,7 +165,7 @@ class MemoStore: IntentStore {
         case .onAppear:
             state = handleAction(state, .memo(.fetchAll))
         case .backgroundTapped:
-            performSideEffect(for: .ui(.removeMemoInputFocus))
+            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigation(.toComfieZoneSetting))
         case .moreButtonTapped:
@@ -163,11 +195,13 @@ extension MemoStore {
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
             let newState = handleAction(state, .input(.startEditing(memo)))
+            performSideEffect(for: .ui(.updateInputViewWithState))
             performSideEffect(for: .ui(.setMemoInputFocus))
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
-            performSideEffect(for: .ui(.removeMemoInputFocus))
+            performSideEffect(for: .ui(.updateInputViewWithState))
+            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
             return newState
         case .retrospectionButtonTapped(let memo):
             let newState = handleNavigationAction(state, .toRetrospection(memo))
@@ -178,17 +212,29 @@ extension MemoStore {
     private func handleMemoInputIntent(_ intent: Intent.MemoInputIntent) -> State {
         switch intent {
         case .memoInputButtonTapped:
-            let newState: State
-            if let editingMemo = state.editingMemo {
-                newState = handleAction(state, .memo(.update(editingMemo)))
-            } else {
-                newState = handleAction(state, .memo(.save))
+            // ⚠️ 텍스트뷰에 보이는 값과 상태가 불일치하는 문제 방지를 위해, 입력 종료 시 델리게이트 메서드에서 동기화 메서드를 추가로 실행함.
+            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
+            
+            // resignFirstResponder 호출과 그 후 동작들이 모두 메인 스레드(MainActor)에서 실행되어 순서가 보장됨.
+            Task { @MainActor in
+                if let editingMemo = state.editingMemo {
+                    // 메모 수정 중
+                    self.state = handleAction(state, .memo(.update(editingMemo)))
+                } else {
+                    // 새로운 메모 작성 중
+                    self.state = handleAction(state, .memo(.save))
+                }
             }
             
-            performSideEffect(for: .ui(.removeMemoInputFocus))
-            return newState
+            performSideEffect(for: .ui(.updateInputViewWithState))
+            // 🥲 여기 리턴 값은 사실상 의미 없는 값
+            return state
         case .updateNewMemo(let text):
             return handleAction(state, .input(.updateText(text)))
+        case .transformTriggerDetected(index: let index, newMemoText: let newMemoText):
+            return handleAction(state, .input(.updateEmojiString(index: index, newMemoText: newMemoText)))
+        case .deleteTriggerDetected(start: let start, end: let end):
+            return handleAction(state, .input(.deleteEmojiString(start: start, end: end)))
         }
     }
     
@@ -205,13 +251,22 @@ extension MemoStore {
 // MARK: - Handle Action Methods
 extension MemoStore {
     private func handleMemoAction(_ state: State, _ action: Action.MemoAction) -> State {
-        let newState = state
+        var newState = state
+        
         switch action {
         case .fetchAll:
             return fetchMemos(newState)
         case .save:
+            // 동기화
+            newState.emojiString.syncWithNewString(newState.inputMemoText)
+            // 이모지 채우기
+            newState.emojiString.setUnassignedEmojis()
             return saveMemo(newState)
         case .update(let updatedMemo):
+            // 동기화
+            newState.emojiString.syncWithNewString(newState.inputMemoText)
+            // 이모지 채우기
+            newState.emojiString.setUnassignedEmojis()
             return updateMemo(newState, updatedMemo)
         case .delete:
             if let memo = newState.deletingMemo {
@@ -227,10 +282,19 @@ extension MemoStore {
         case .updateText(let text):
             newState.inputMemoText = text
         case .startEditing(let memo):
-            return startEditingMemo(newState, memo)
+            // 작성되고 있던 메모 reset
+            newState.resetEditingMemo()
+            newState.setEditingMemo(memo)
         case .cancelEditing:
-            return clearEditingState(newState)
+            newState.resetEditingMemo()
+        case .updateEmojiString(index: let index, newMemoText: let newMemoText):
+            newState.emojiString.applyEmojiString(at: index, newMemoText)
+        case .deleteEmojiString(start: let start, end: let end):
+            // 삭제 전, 지금까지 입력된 문자로 동기화를 먼저 진행
+            newState.emojiString.syncWithNewString(newState.inputMemoText)
+            newState.emojiString.deleteEmojiString(from: start, to: end)
         }
+        
         return newState
     }
     
@@ -238,9 +302,9 @@ extension MemoStore {
         var newState = state
         switch action {
         case .showDeletePopup(let memo):
-            newState.deletingMemo = memo
+            newState.setDeletingMemo(memo)
         case .cancelDelete:
-            newState.deletingMemo = nil
+            newState.resetDeletingMemo()
         }
         return newState
     }
@@ -284,40 +348,37 @@ extension MemoStore {
         let newMemo = Memo(
             id: UUID(),
             createdAt: .now,
-            originalText: newState.inputMemoText,
-            emojiText: "🐯🐯🐯🐯"
-            // TODO: 이모지 변경
+            originalText:
+                newState.emojiString.getOriginalString(),
+            emojiText:
+                newState.emojiString.getEmojiString()
         )
         
         switch memoRepository.save(memo: newMemo) {
         case .success:
             newState.memos.append(newMemo)
             newState.inputMemoText = ""
+            newState.emojiString = EmojiString()
         case .failure(let error):
             print("메모 저장 실패: \(error)")
         }
         return newState
     }
     
-    private func startEditingMemo(_ state: State, _ memo: Memo) -> State {
-        var newState = state
-        newState.editingMemo = memo
-        newState.inputMemoText = memo.originalText
-        return newState
-    }
-    
     private func updateMemo(_ state: State, _ memo: Memo) -> State {
         var newState = state
         var updatedMemo = memo
-        updatedMemo.originalText = newState.inputMemoText
+        
+        updatedMemo.originalText = newState.emojiString.getOriginalString()
+        updatedMemo.emojiText = newState.emojiString.getEmojiString()
         
         switch memoRepository.update(memo: updatedMemo) {
         case .success:
             if let index = newState.memos.firstIndex(where: { $0.id == memo.id }) {
                 newState.memos[index] = updatedMemo
             }
-            newState.editingMemo = nil
-            newState.inputMemoText = ""
+            
+            newState.resetEditingMemo()
         case .failure(let error):
             print("메모 업데이트 실패: \(error)")
         }
@@ -331,17 +392,11 @@ extension MemoStore {
             if let index = newState.memos.firstIndex(where: { $0.id == memo.id }) {
                 newState.memos.remove(at: index)
             }
-            newState.deletingMemo = nil
+            
+            newState.resetDeletingMemo()
         case .failure(let error):
             print("메모 삭제 실패: \(error)")
         }
-        return newState
-    }
-    
-    private func clearEditingState(_ state: State) -> State {
-        var newState = state
-        newState.editingMemo = nil
-        newState.inputMemoText = ""
         return newState
     }
 }
