@@ -19,9 +19,9 @@ struct MakersView: View {
                 CFListRow(
                     title: strings.instagram.localized,
                     isLast: true,
+                    action: { linkComfieInstagram() },
                     trailingView: trailingTextView(strings.instagramContent)
                 )
-                .disabled(true)
             }
             .padding(.horizontal, 24)
             
@@ -36,6 +36,11 @@ struct MakersView: View {
         Text(text)
             .comfieFont(.body)
             .foregroundStyle(Color.textBlack)
+    }
+    
+    private func linkComfieInstagram() {
+        guard let url = URL(string: StringLiterals.More.Instagram.url) else { return }
+        UIApplication.shared.open(url)
     }
 }
 

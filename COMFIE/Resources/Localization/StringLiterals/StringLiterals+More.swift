@@ -55,4 +55,8 @@ extension StringLiterals.More {
         static let instagram: LocalizedStringResource = "more_makers_instagram"
         static let instagramContent: LocalizedStringResource = "more_makers_instagram_content"
     }
+    
+    enum Instagram {
+        static let url = "https://www.instagram.com/comfie.diary"
+    }
 }
