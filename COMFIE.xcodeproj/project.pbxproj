@@ -129,6 +129,12 @@
 		B96CDB3F2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB402DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */; };
 		B96CDB422DA240B2004EA2E9 /* RetrospectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */; };
+		B97D40302E0D152E00B87108 /* CFToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D402F2E0D152C00B87108 /* CFToast.swift */; };
+		B97D40312E0D152E00B87108 /* CFToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D402F2E0D152C00B87108 /* CFToast.swift */; };
+		B97D40322E0D152E00B87108 /* CFToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D402F2E0D152C00B87108 /* CFToast.swift */; };
+		B97D40342E0D15F800B87108 /* View+cfToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D40332E0D15E700B87108 /* View+cfToast.swift */; };
+		B97D40352E0D15F800B87108 /* View+cfToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D40332E0D15E700B87108 /* View+cfToast.swift */; };
+		B97D40362E0D15F800B87108 /* View+cfToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D40332E0D15E700B87108 /* View+cfToast.swift */; };
 		B99A081C2DABABA80094EECB /* RetrospectionRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */; };
 		B99A081E2DABAD410094EECB /* RetrospectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */; };
 		B9EA52F52D7C8F8A00A32305 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9EA52F42D7C8F8A00A32305 /* Pretendard-Regular.otf */; };
@@ -258,6 +264,8 @@
 		B96CDB392DA238E7004EA2E9 /* EdgeInsets+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdgeInsets+.swift"; sourceTree = "<group>"; };
 		B96CDB3D2DA23D36004EA2E9 /* StringLiterals+Retrospection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+Retrospection.swift"; sourceTree = "<group>"; };
 		B96CDB412DA240AC004EA2E9 /* RetrospectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionStore.swift; sourceTree = "<group>"; };
+		B97D402F2E0D152C00B87108 /* CFToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFToast.swift; sourceTree = "<group>"; };
+		B97D40332E0D15E700B87108 /* View+cfToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+cfToast.swift"; sourceTree = "<group>"; };
 		B99A081B2DABAB9E0094EECB /* RetrospectionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepositoryProtocol.swift; sourceTree = "<group>"; };
 		B99A081D2DABAD390094EECB /* RetrospectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionRepository.swift; sourceTree = "<group>"; };
 		B9EA52F22D7C8F8A00A32305 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
@@ -684,6 +692,15 @@
 			path = Retrospection;
 			sourceTree = "<group>";
 		};
+		B97D402E2E0D152300B87108 /* CFToast */ = {
+			isa = PBXGroup;
+			children = (
+				B97D40332E0D15E700B87108 /* View+cfToast.swift */,
+				B97D402F2E0D152C00B87108 /* CFToast.swift */,
+			);
+			path = CFToast;
+			sourceTree = "<group>";
+		};
 		B99A081A2DABAB910094EECB /* RetrospectionRepository */ = {
 			isa = PBXGroup;
 			children = (
@@ -718,6 +735,7 @@
 		B9EA53042D7CA2B900A32305 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B97D402E2E0D152300B87108 /* CFToast */,
 				B9134CAA2E0BDD5C001CE11A /* CFWebView */,
 				51D882BF2DAEADF00072E3C0 /* CFPopup */,
 				51F8F5B92D95298000DD2E3D /* CFNavigationBar */,
@@ -932,6 +950,7 @@
 				B9EA530A2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				26FB03752DAD650C00129862 /* EmojiPool.swift in Sources */,
 				51895ADC2DA69B2C00AFA569 /* MoreView.swift in Sources */,
+				B97D40352E0D15F800B87108 /* View+cfToast.swift in Sources */,
 				51A7AFFD2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				510341292D79A5C60050C718 /* UserDefaultsError.swift in Sources */,
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
@@ -944,6 +963,7 @@
 				5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */,
 				B96CDB3E2DA23D3F004EA2E9 /* StringLiterals+Retrospection.swift in Sources */,
 				5103411A2D7994130050C718 /* Router + navigate.swift in Sources */,
+				B97D40322E0D152E00B87108 /* CFToast.swift in Sources */,
 				510341072D777E140050C718 /* OnboardingView.swift in Sources */,
 				269420F12D8A7D3600CB0837 /* CoreDataTestView.swift in Sources */,
 				51F8F5C12D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
@@ -1017,6 +1037,7 @@
 				51A7AFFC2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				B9EA530F2D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				51F8F5C32D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
+				B97D40362E0D15F800B87108 /* View+cfToast.swift in Sources */,
 				267F6B2E2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
 				267F6B3E2D94F11A0089BD6D /* Date+.swift in Sources */,
 				51895AE42DA6AE8F00AFA569 /* CFListRow.swift in Sources */,
@@ -1025,6 +1046,7 @@
 				51F8F5AC2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				510340FC2D777C290050C718 /* COMFIETests.swift in Sources */,
 				5149D3C32DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */,
+				B97D40312E0D152E00B87108 /* CFToast.swift in Sources */,
 				51895AE82DA6B17700AFA569 /* StringLiterals+More.swift in Sources */,
 				B9EA530C2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				51F8F5C02D9529B600DD2E3D /* View+cfNavigationBar.swift in Sources */,
@@ -1049,10 +1071,12 @@
 				B96CDB322DA236B1004EA2E9 /* Date+.swift in Sources */,
 				51A7AFFB2D809E7700B50D1E /* StringLiterals+Popup.swift in Sources */,
 				5149D3C22DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */,
+				B97D40342E0D15F800B87108 /* View+cfToast.swift in Sources */,
 				51895AE92DA6B17700AFA569 /* StringLiterals+More.swift in Sources */,
 				B9EA53082D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
 				51F8F5C52D952B4B00DD2E3D /* UINavigationController+.swift in Sources */,
 				510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */,
+				B97D40302E0D152E00B87108 /* CFToast.swift in Sources */,
 				B9EA530B2D7CA51100A32305 /* CFPopupType.swift in Sources */,
 				267F6B2C2D91C2780089BD6D /* StringLiterals+Memo.swift in Sources */,
 				267F6B402D94F11A0089BD6D /* Date+.swift in Sources */,
