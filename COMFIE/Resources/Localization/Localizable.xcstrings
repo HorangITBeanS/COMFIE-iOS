@@ -412,6 +412,22 @@
         }
       }
     },
+    "more_send_feedback_mail_copy_toast" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email Copied"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일이 복사되었어요"
+          }
+        }
+      }
+    },
     "more_send_feedback_mail_recipient" : {
       "localizations" : {
         "en" : {

@@ -25,6 +25,7 @@ class MoreStore: IntentStore {
         var showMailSheet: Bool = false
         
         var showMailUnavailablePopupView: Bool = false
+        var showMailCopyToast: Bool = false
     }
     
     enum Intent {
@@ -38,6 +39,8 @@ class MoreStore: IntentStore {
         // 메일 비활성화 알럿 내 버튼
         case copyMailButtonTapped
         case closePopupButtonTapped
+        
+        case hideMailCopyToast
         
         case makersRowTapped
     }
@@ -53,7 +56,7 @@ class MoreStore: IntentStore {
     }
     
     private let router: Router
-
+    
     init(router: Router) {
         self.router = router
     }
@@ -76,10 +79,15 @@ class MoreStore: IntentStore {
             }
         case .copyMailButtonTapped:
             state = handleAction(state, .copyMail)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                self?.handleIntent(.hideMailCopyToast)
+            }
         case .closePopupButtonTapped:
             state = handleAction(state, .hideMailUnavailablePopupView)
         case .dismissMailSheet:
             state.showMailSheet = false
+        case .hideMailCopyToast:
+            state.showMailCopyToast = false
         case .makersRowTapped:
             _ = handleAction(state, .navigateToMakers)
         }
@@ -97,6 +105,7 @@ class MoreStore: IntentStore {
         case .copyMail:
             copyEmail()
             newState.showMailUnavailablePopupView = false
+            newState.showMailCopyToast = true
         case .hideMailUnavailablePopupView:
             newState.showMailUnavailablePopupView = false
         case .navigateToMakers:
@@ -108,8 +117,6 @@ class MoreStore: IntentStore {
     func copyEmail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
         if UIPasteboard.general.hasStrings {
             UIPasteboard.general.string = text
-        } else {
-            // 접근 권한 없어 복사 실패
         }
     }
 }

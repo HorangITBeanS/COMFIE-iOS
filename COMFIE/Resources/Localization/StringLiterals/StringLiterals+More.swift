@@ -43,6 +43,7 @@ extension StringLiterals.More {
         static let mailTitle: LocalizedStringResource = "more_send_feedback_mail_title"
         static let mailRecipient: LocalizedStringResource = "more_send_feedback_mail_recipient"
         static let emailAddress = "comfie.team@gmail.com"
+        static let mailCopyToast: LocalizedStringResource = "more_send_feedback_mail_copy_toast"
     }
 }
 

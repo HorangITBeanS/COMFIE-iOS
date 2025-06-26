@@ -80,6 +80,13 @@ struct MoreView: View {
                 )
             }
         }
+        .cfToast(showToast: Binding(
+            get: { intent.state.showMailCopyToast },
+            set: { _ in }
+        ),
+                 backgroundColor: .keyPrimary,
+                 textColor: .cfWhite,
+                 content: strings.SendFeedback.mailCopyToast.localized)
     }
     
     // > 이미지
