@@ -18,17 +18,33 @@ enum ComfieZoneSettingBottomSheetState {
 class ComfieZoneSettingStore: IntentStore {
     private(set) var popupIntent: ComfieZoneSettingPopupStore
     private let locationUseCase: LocationUseCase
+    private let comfieZoneRepository: ComfieZoneRepositoryProtocol
     
-    init(popupIntent: ComfieZoneSettingPopupStore, locationUseCase: LocationUseCase) {
+    init(
+        popupIntent: ComfieZoneSettingPopupStore,
+        locationUseCase: LocationUseCase,
+        comfieZoneRepository: ComfieZoneRepositoryProtocol
+    ) {
         self.popupIntent = popupIntent
         self.locationUseCase = locationUseCase
+        self.comfieZoneRepository = comfieZoneRepository
         
-        self.state = State(isLocationAuthorized: self.getLocationAuthStatus())
+        let isLocationAuthorized = self.getLocationAuthStatus()  // 위치 권한 여부
+        let comfieZone = comfieZoneRepository.fetchComfieZone()  // 컴피존
+        
+        if let comfieZone {
+            // 컴피존 있음 > 나의 위치로 지도 고정, 위치 권한 사라지면 컴피존 위치로 고정
+            self.state = createStateWithComfieZone(comfieZone, isLocationAuthorized: isLocationAuthorized)
+        } else {
+            // 컴피존 없음 > 초기 위치 설정
+            self.state = createInitialStateWithoutComfieZone(isLocationAuthorized: isLocationAuthorized)
+        }
     }
     
     private(set) var state: State = .init()
     struct State {
         // 지도 초기 위치
+        var currentLocation: CLLocationCoordinate2D?
         var initialPosition = MKCoordinateRegion(
             center: CLLocationCoordinate2D(  // 정자역
                 latitude: 37.3663000,
@@ -45,14 +61,7 @@ class ComfieZoneSettingStore: IntentStore {
         var newComfiezoneName: String = ""      // 새로운 컴피존 이름
         
         // 컴피존
-        var comfieZone: ComfieZone? = {
-            ComfieZone(
-                id: UUID(),
-                longitude: 37.3663000,
-                latitude: 127.1083000,
-                name: "여기는 우리집~"
-            )
-        }()
+        var comfieZone: ComfieZone?
     }
     
     enum Intent {
@@ -71,6 +80,7 @@ class ComfieZoneSettingStore: IntentStore {
         case getLocationAuthStatus
         case activeComfiezoneSettingTextField
         case addComfieZone
+        case deleteComfieZone
     }
     
     func handleIntent(_ intent: Intent) {
@@ -87,15 +97,16 @@ class ComfieZoneSettingStore: IntentStore {
         case .updateComfieZoneNameTextField(let text):
             state.newComfiezoneName = text
         case .checkButtonTapped:
-            state = handleAction(state, .addComfieZone)
+            withAnimation {
+                state = handleAction(state, .addComfieZone)
+            }
         case .xButtonTapped:
             popupIntent(.openDeleteComfieZonePopup)
-        case .deleteComfieZonePopupButtonTapped:
-            // TODO: 컴피존 삭제
+        case .deleteComfieZonePopupButtonTapped:  // 컴피존 삭제
             if state.isInComfieZone {
-                // 컴피존 안에 있을 때 - 삭제
-                popupIntent(.closeDeleteComfieZonePopup)
-                state.bottomSheetState = .addComfieZone
+                withAnimation {
+                    state = handleAction(state, .deleteComfieZone)
+                }
             } else {
                 // 컴피존 밖에 있을 때 - Face ID 인식 후 삭제
                 Task { @MainActor in
@@ -103,9 +114,9 @@ class ComfieZoneSettingStore: IntentStore {
                     let result = await service.request()
                     switch result {
                     case .success:
-                        popupIntent(.closeDeleteComfieZonePopup)
-                        state.bottomSheetState = .addComfieZone
-                        // 컴피존 삭제
+                        withAnimation {
+                            state = handleAction(state, .deleteComfieZone)
+                        }
                     case .failure:
                         popupIntent(.closeDeleteComfieZonePopup)
                     }
@@ -122,19 +133,30 @@ class ComfieZoneSettingStore: IntentStore {
         case .activeComfiezoneSettingTextField:
             newState.bottomSheetState = .setComfiezoneTextField
         case .addComfieZone:
-            // TODO: 컴피존 추가
-            // 현재 위치 가져와서 설정하기
-            newState.comfieZone = ComfieZone(
+            // 현재 위치 가져오기
+            let userLocation = locationUseCase.getCurrentLocation()?.coordinate
+            print("3 userLocation \(userLocation?.latitude ?? 33) \(userLocation?.longitude ?? 33)")
+            let comfieZone = ComfieZone(
                 id: UUID(),
-                longitude: 37.3663000,
-                latitude: 127.1083000,
+                longitude: userLocation?.longitude ?? 50.3663000,
+                latitude: userLocation?.latitude ?? 150.1083000,
                 name: state.newComfiezoneName
             )
             
+            // 컴피존 추가하기
+            newState.comfieZone = comfieZone
+            comfieZoneRepository.saveComfieZone(comfieZone)
+            
             // bottom sheet cell -> 컴피존 이름
+            newState.isInComfieZone = true
             newState.bottomSheetState = .comfieZoneName
             
-            print("컴피존 추가하자")
+        case .deleteComfieZone:
+            popupIntent(.closeDeleteComfieZonePopup)
+            newState.comfieZone = nil
+            newState.isInComfieZone = false
+            newState.bottomSheetState = .addComfieZone
+            comfieZoneRepository.deleteComfieZone()
         }
         return newState
     }
@@ -143,5 +165,69 @@ class ComfieZoneSettingStore: IntentStore {
     private func getLocationAuthStatus() -> Bool {
         let status = locationUseCase.getUserLocationAuthorizationStatus()
         return status == .authorizedWhenInUse || status == .authorizedAlways
+    }
+    
+    // 컴피존 없을 때 > 초기값 설정
+    private func createInitialStateWithoutComfieZone(isLocationAuthorized: Bool) -> State {
+        let defaultPosition = CLLocationCoordinate2D(  // 정자역
+            latitude: 37.3663000,
+            longitude: 127.1083000
+        )
+        
+        let position: CLLocationCoordinate2D
+        if isLocationAuthorized,
+           let userLocation = locationUseCase.getCurrentLocation()?.coordinate {
+            position = userLocation
+        } else {
+            position = defaultPosition
+        }
+        
+        return State(
+            initialPosition: makeCoordinateRegion(center: position),
+            bottomSheetState: .addComfieZone,
+            isLocationAuthorized: isLocationAuthorized
+        )
+    }
+    
+    // 컴피존 있을 때 > 초기 값 설정
+    private func createStateWithComfieZone(
+        _ comfieZone: ComfieZone,
+        isLocationAuthorized: Bool
+    ) -> State {
+        var position = CLLocationCoordinate2D(
+            latitude: comfieZone.latitude,
+            longitude: comfieZone.longitude
+        )
+        var userLocationCoordinate: CLLocationCoordinate2D? = nil
+        var isInComfieZone = false
+        
+        if isLocationAuthorized,
+           let userLocation = locationUseCase.getCurrentLocation() {
+            userLocationCoordinate = userLocation.coordinate
+            position = userLocation.coordinate
+            
+            let comfieZoneLocation = CLLocation(latitude: comfieZone.latitude, longitude: comfieZone.longitude)
+            let userComfieZoneDistance = userLocation.distance(from: comfieZoneLocation)
+            
+            isInComfieZone = userComfieZoneDistance <= 50.0  // 컴피존 반경
+        }
+        
+        return State(
+            currentLocation: userLocationCoordinate,
+            initialPosition: makeCoordinateRegion(center: position),
+            bottomSheetState: .comfieZoneName,
+            isLocationAuthorized: isLocationAuthorized,
+            isInComfieZone: isInComfieZone,
+            comfieZone: comfieZone
+        )
+    }
+    
+    // 반경 생성
+    private func makeCoordinateRegion(center: CLLocationCoordinate2D) -> MKCoordinateRegion {
+        return MKCoordinateRegion(
+            center: center,
+            latitudinalMeters: 200,  // 지도 반경
+            longitudinalMeters: 200
+        )
     }
 }

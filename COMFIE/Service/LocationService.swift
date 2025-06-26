@@ -26,6 +26,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         let isAuthorized = authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways
         if isAuthorized {
             manager.startUpdatingLocation()
+            currentLocation = manager.location
         }
     }
     

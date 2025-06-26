@@ -64,7 +64,8 @@ struct ComfieZoneSettingBottomSheet: View {
     ComfieZoneSettingView(
         intent: ComfieZoneSettingStore(
             popupIntent: ComfieZoneSettingPopupStore(),
-            locationUseCase: LocationUseCase(locationService: .init())
+            locationUseCase: LocationUseCase(locationService: .init(), comfiZoneRepository: ComfieZoneRepository()),
+            comfieZoneRepository: ComfieZoneRepository()
         )
     )
 }

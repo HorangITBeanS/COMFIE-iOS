@@ -18,14 +18,36 @@ struct ComfieZoneSettingView: View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 // 지도 화면
-                Map(position: .constant(MapCameraPosition.region(state.initialPosition)))
-                    .mapStyle(.standard(elevation: .flat))
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: -12, trailing: 0))
-                    .disabled(true)
-//                    .opacity(0)
+                Map(position: .constant(MapCameraPosition.region(state.initialPosition))) {
+                    // 컴피존 원
+                    MapCircle(
+                        center: CLLocationCoordinate2D(
+                            latitude: state.comfieZone?.latitude ?? 30,
+                            longitude: state.comfieZone?.longitude ?? 30
+                        ),
+                        radius: CLLocationDistance(50)
+                    )
+                    .foregroundStyle(.keyPrimary.opacity(0.2))
+                    .mapOverlayLevel(level: .aboveLabels)
+                    
+                    // 현재 위치
+                    MapCircle(
+                        center: CLLocationCoordinate2D(
+                            latitude: currentLatitude(),
+                            longitude: currentLongitude()
+                        ),
+                        radius: CLLocationDistance(5)
+                    )
+                    .foregroundStyle(.keyPrimary)
+                    .stroke(Color.cfWhite, lineWidth: 3)
+                    .mapOverlayLevel(level: .aboveLabels)
+                }
+                .mapStyle(.standard(elevation: .flat))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: -12, trailing: 0))
+                .disabled(true)
                 
                 // 컴피존 안내 문구 - 안, 밖, 없음
-                Text("컴피존이 없어요!")
+                Text(toastMessage)
                     .comfieFont(.body)
                     .foregroundStyle(Color.textBlack)
                     .padding(.vertical, 10)
@@ -71,13 +93,47 @@ struct ComfieZoneSettingView: View {
                 .frame(width: 24, height: 24)
         }
     }
+    
+    private var toastMessage: LocalizedStringResource {
+        let toastMessageStrings = strings.ToastMessage.self
+        if state.isLocationAuthorized == false {
+            return toastMessageStrings.hasNotLocationAuthorization
+        } else if state.comfieZone == nil {
+            return toastMessageStrings.hasNotComfieZone
+        } else if state.isInComfieZone {
+            return toastMessageStrings.inComfieZone
+        } else {
+            return toastMessageStrings.notInComfieZone
+        }
+    }
+    
+    private func currentLatitude() -> CLLocationDegrees {
+        if let currentLatitude = state.currentLocation?.latitude {
+            return currentLatitude
+        } else if let comfieZoneLatitude = state.comfieZone?.latitude {
+            return comfieZoneLatitude
+        } else {
+            return state.initialPosition.center.latitude
+        }
+    }
+    
+    private func currentLongitude() -> CLLocationDegrees {
+        if let currentLongitude = state.currentLocation?.longitude {
+            return currentLongitude
+        } else if let comfieZoneLongitude = state.comfieZone?.longitude {
+            return comfieZoneLongitude
+        } else {
+            return state.initialPosition.center.longitude
+        }
+    }
 }
 
 #Preview {
     ComfieZoneSettingView(
         intent: ComfieZoneSettingStore(
             popupIntent: ComfieZoneSettingPopupStore(),
-            locationUseCase: LocationUseCase(locationService: .init())
+            locationUseCase: LocationUseCase(locationService: .init(), comfiZoneRepository: ComfieZoneRepository()),
+            comfieZoneRepository: ComfieZoneRepository()
         )
     )
 }

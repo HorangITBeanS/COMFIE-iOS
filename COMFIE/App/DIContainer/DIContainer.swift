@@ -13,12 +13,18 @@ struct DIContainer {
     // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
     let retrospectionRepository: RetrospectionRepositoryProtocol = RetrospectionRepository()
+    let comfieZoneRepository: ComfieZoneRepositoryProtocol = ComfieZoneRepository()
     
     // MARK: - Service
     private func makeLocationService() -> LocationService { LocationService() }
     
     // MARK: - UseCase
-    private func makeLocationUseCase() -> LocationUseCase { LocationUseCase(locationService: makeLocationService()) }
+    private func makeLocationUseCase() -> LocationUseCase {
+        LocationUseCase(
+            locationService: makeLocationService(),
+            comfiZoneRepository: comfieZoneRepository
+        )
+    }
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore {
@@ -39,7 +45,8 @@ struct DIContainer {
     private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore {
         ComfieZoneSettingStore(
             popupIntent: makeComfieZoneSettingPopupIntent(),
-            locationUseCase: makeLocationUseCase()
+            locationUseCase: makeLocationUseCase(),
+            comfieZoneRepository: comfieZoneRepository
         )
     }
     

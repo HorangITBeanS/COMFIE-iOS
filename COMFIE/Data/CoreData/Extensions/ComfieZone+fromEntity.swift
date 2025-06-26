@@ -19,8 +19,8 @@ extension ComfieZone {
         
         let comfieZone = ComfieZone(
             id: id,
-            longitude: latitude,
-            latitude: longitude,
+            longitude: longitude,
+            latitude: latitude,
             name: name
         )
         

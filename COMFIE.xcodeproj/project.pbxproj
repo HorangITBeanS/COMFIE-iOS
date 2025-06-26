@@ -59,6 +59,8 @@
 		5149D3C42DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */; };
 		517FCAC32D7AB2B100A250A3 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC22D7AB2B100A250A3 /* Memo.swift */; };
 		517FCAC52D7AB31100A250A3 /* ComfieZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517FCAC42D7AB31100A250A3 /* ComfieZone.swift */; };
+		518020102DE4A40D0035AC0E /* ComfieZoneRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5180200F2DE4A40D0035AC0E /* ComfieZoneRepositoryProtocol.swift */; };
+		518020122DE4A5420035AC0E /* ComfieZoneRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518020112DE4A5420035AC0E /* ComfieZoneRepository.swift */; };
 		518666F02DC0B3F40078C6B4 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518666EF2DC0B3F40078C6B4 /* LocationService.swift */; };
 		518666F32DC0C3900078C6B4 /* LocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518666F22DC0C3900078C6B4 /* LocationUseCase.swift */; };
 		51895ADC2DA69B2C00AFA569 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51895ADB2DA69B2C00AFA569 /* MoreView.swift */; };
@@ -215,6 +217,8 @@
 		5149D3C12DA1662C00173C30 /* StringLiterals+ComfieZoneSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringLiterals+ComfieZoneSetting.swift"; sourceTree = "<group>"; };
 		517FCAC22D7AB2B100A250A3 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		517FCAC42D7AB31100A250A3 /* ComfieZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZone.swift; sourceTree = "<group>"; };
+		5180200F2DE4A40D0035AC0E /* ComfieZoneRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneRepositoryProtocol.swift; sourceTree = "<group>"; };
+		518020112DE4A5420035AC0E /* ComfieZoneRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfieZoneRepository.swift; sourceTree = "<group>"; };
 		518666EF2DC0B3F40078C6B4 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		518666F22DC0C3900078C6B4 /* LocationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUseCase.swift; sourceTree = "<group>"; };
 		51895ADB2DA69B2C00AFA569 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
@@ -288,6 +292,7 @@
 			children = (
 				B99A081A2DABAB910094EECB /* RetrospectionRepository */,
 				267F6B5C2D9CEF7C0089BD6D /* MemoRepository */,
+				5180200E2DE4A3DF0035AC0E /* ComfieZoneRepository */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -528,6 +533,15 @@
 				517FCAC42D7AB31100A250A3 /* ComfieZone.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		5180200E2DE4A3DF0035AC0E /* ComfieZoneRepository */ = {
+			isa = PBXGroup;
+			children = (
+				5180200F2DE4A40D0035AC0E /* ComfieZoneRepositoryProtocol.swift */,
+				518020112DE4A5420035AC0E /* ComfieZoneRepository.swift */,
+			);
+			path = ComfieZoneRepository;
 			sourceTree = "<group>";
 		};
 		518666F12DC0C3830078C6B4 /* UseCase */ = {
@@ -880,6 +894,7 @@
 				51F8F5AB2D91ACA800DD2E3D /* TextWithDifferentFont.swift in Sources */,
 				51454C1E2DAD3A47008EAEB0 /* NewComfieZoneTextFieldCell.swift in Sources */,
 				51895AED2DA6C44700AFA569 /* MoreStore.swift in Sources */,
+				518020122DE4A5420035AC0E /* ComfieZoneRepository.swift in Sources */,
 				26D697B62D7F2DDF00AC200C /* Memo+toEntity.swift in Sources */,
 				26D697B82D7F2DEF00AC200C /* ComfieZone+toEntity.swift in Sources */,
 				5149D3C02DA163A700173C30 /* ComfieZoneInfoPopupView.swift in Sources */,
@@ -903,6 +918,7 @@
 				510341092D7782670050C718 /* OnboardingStore.swift in Sources */,
 				51454C1C2DAD3A25008EAEB0 /* ComfieZoneNameCell.swift in Sources */,
 				B9EA53072D7CA2CA00A32305 /* CFPopupView.swift in Sources */,
+				518020102DE4A40D0035AC0E /* ComfieZoneRepositoryProtocol.swift in Sources */,
 				267F6B592D9CEAEE0089BD6D /* MemoRepositoryProtocol.swift in Sources */,
 				267F6B2A2D91B7DD0089BD6D /* MemoView.swift in Sources */,
 				510341272D79A59A0050C718 /* UserDefaultsConstants.swift in Sources */,

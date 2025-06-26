@@ -141,7 +141,71 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "현재 위치"
+            "value" : "나의 위치"
+          }
+        }
+      }
+    },
+    "comfiezone_setting_toast_message_has_not_comfiezone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No COMFIE zone set!"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존이 없어요!"
+          }
+        }
+      }
+    },
+    "comfiezone_setting_toast_message_has_not_location_authorization" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow location access"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한이 꺼져있어요"
+          }
+        }
+      }
+    },
+    "comfiezone_setting_toast_message_in_comfiezone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inside the COMFIE zone"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존 안에 있어요"
+          }
+        }
+      }
+    },
+    "comfiezone_setting_toast_message_not_in_comfiezone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outside the COMFIE zone"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "컴피존 밖에 있어요"
           }
         }
       }
@@ -944,9 +1008,6 @@
           }
         }
       }
-    },
-    "컴피존이 없어요!" : {
-
     },
     "현재 ComfieZone: %@" : {
       "localizations" : {
