@@ -37,7 +37,8 @@ struct DIContainer {
     private func makeMemoIntent() -> MemoStore {
         MemoStore(
             router: router,
-            memoRepository: memoRepository
+            memoRepository: memoRepository,
+            locationUseCase: makeLocationUseCase()
         )
     }
     

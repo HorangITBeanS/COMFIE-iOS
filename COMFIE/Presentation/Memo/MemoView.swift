@@ -11,11 +11,11 @@ struct MemoView: View {
     private let strings = StringLiterals.Memo.self
     
     @State var intent: MemoStore
+    var isUserInComfieZone: Bool {
+        intent.state.isInComfieZone
+    }
     
     @FocusState private var isMemoInputFieldFocused: Bool
-    
-    // 컴피존 관련 모델에서 주입 받아야 한다.
-    @State private var isUserInComfieZone: Bool = false
     
     private var isEditingMemo: Bool {
         intent.state.editingMemo != nil
@@ -32,7 +32,7 @@ struct MemoView: View {
                     }
                  
                 ZStack {
-                    MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
+                    MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
                         .onTapGesture {
                             intent(.backgroundTapped)
                         }
@@ -168,7 +168,8 @@ struct MemoView: View {
     MemoView(
         intent: MemoStore(
             router: Router(),
-            memoRepository: MockMemoRepository()
+            memoRepository: MockMemoRepository(),
+            locationUseCase: LocationUseCase(locationService: LocationService(), comfiZoneRepository: ComfieZoneRepository())
         )
     )
 }
