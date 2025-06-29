@@ -126,10 +126,10 @@ class MemoStore: IntentStore {
     
     // MARK: Side Effect
     enum SideEffect {
-        case ui(UI)
+        case memoInput(MemoInput)
         case scroll(Scroll)
         
-        enum UI {
+        enum MemoInput {
             case resignInputFocusWithSyncInput
             case setMemoInputFocus
             case updateInputViewWithState
@@ -144,7 +144,7 @@ class MemoStore: IntentStore {
     private let router: Router
     private let memoRepository: MemoRepositoryProtocol
     
-    private(set) var uiSideEffectPublisher = PassthroughSubject<SideEffect.UI, Never>()
+    private(set) var uiSideEffectPublisher = PassthroughSubject<SideEffect.MemoInput, Never>()
     private(set) var scrollSideEffectPublisher = PassthroughSubject<SideEffect.Scroll, Never>()
     
     // MARK: Init
@@ -332,7 +332,7 @@ extension MemoStore {
 
 // MARK: - Side Effect Method
 extension MemoStore {
-    private func performUISideEffect(for action: SideEffect.UI) {
+    private func performUISideEffect(for action: SideEffect.MemoInput) {
         uiSideEffectPublisher.send(action)
     }
     
