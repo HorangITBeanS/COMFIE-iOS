@@ -50,7 +50,7 @@ class MoreStore: IntentStore {
         case navigateToPrivacyPolicy
         
         case checkMailAppActivate
-        case copyMail
+        case copycfMail
         case hideMailUnavailablePopupView
         case navigateToMakers
     }
@@ -78,7 +78,7 @@ class MoreStore: IntentStore {
                 state.showMailUnavailablePopupView = true
             }
         case .copyMailButtonTapped:
-            state = handleAction(state, .copyMail)
+            state = handleAction(state, .copycfMail)
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                 self?.handleIntent(.hideMailCopyToast)
             }
@@ -102,8 +102,8 @@ class MoreStore: IntentStore {
             router.push(.privacyPolicy)
         case .checkMailAppActivate:
             newState.isMailAppActivate = MFMailComposeViewController.canSendMail()
-        case .copyMail:
-            copyEmail()
+        case .copycfMail:
+            copycfMail()
             newState.showMailUnavailablePopupView = false
             newState.showMailCopyToast = true
         case .hideMailUnavailablePopupView:
@@ -114,7 +114,7 @@ class MoreStore: IntentStore {
         return newState
     }
     
-    func copyEmail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
+    func copycfMail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
         if UIPasteboard.general.hasStrings {
             UIPasteboard.general.string = text
         }
