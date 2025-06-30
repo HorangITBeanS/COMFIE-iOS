@@ -24,13 +24,6 @@ extension View {
                     textColor: textColor,
                     content: content
                 )
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        withAnimation {
-                            showToast.wrappedValue = false
-                        }
-                    }
-                }
             }
         }
     }
