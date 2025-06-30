@@ -71,22 +71,20 @@ struct MoreView: View {
                     )
                 }
             )
-            
-            if intent.state.showMailUnavailablePopupView {
-                CFPopupView(type: .mailUnavailable,
-                            leftButtonType: .normal,
-                            leftButtonAction: { intent(.copyMailButtonTapped) },
-                            rightButtonAction: { intent(.closePopupButtonTapped) }
-                )
-            }
         }
+        .popup(showPopup: intent.state.showMailUnavailablePopupView,
+               type: .mailUnavailable,
+               leftButtonType: .normal,
+               leftButtonAction: { intent(.copyMailButtonTapped) },
+               rightButtonAction: { intent(.closePopupButtonTapped) }
+        )
         .cfToast(showToast: Binding(
             get: { intent.state.showMailCopyToast },
-            set: { _ in }
-        ),
+            set: { _ in }),
                  backgroundColor: .keyPrimary,
                  textColor: .cfWhite,
-                 content: strings.SendFeedback.mailCopyToast.localized)
+                 content: strings.SendFeedback.mailCopyToast.localized
+        )
     }
     
     // > 이미지
