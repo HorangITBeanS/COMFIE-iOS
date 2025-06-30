@@ -67,10 +67,6 @@ struct DIContainer {
             TermView(type: .service)
         case .privacyPolicy:
             TermView(type: .privacy)
-        case .locationTerm:
-            TermView(type: .location)
-        case .sendFeedback:
-            SendFeedbackView()
         case .makers:
             MakersView()
         }

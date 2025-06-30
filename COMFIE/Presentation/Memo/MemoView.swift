@@ -82,9 +82,11 @@ struct MemoView: View {
             Button {
                 intent(.moreButtonTapped)
             } label: {
-                Image(.icEllipsis)
+                Image(.icHamburger)
                     .resizable()
                     .frame(width: 24, height: 24)
+                    .symbolRenderingMode(.monochrome)
+                    .tint(.cfBlack)
             }
         }
         .padding(.horizontal, 19)
