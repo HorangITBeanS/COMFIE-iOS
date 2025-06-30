@@ -114,7 +114,7 @@ class MoreStore: IntentStore {
         return newState
     }
     
-    func copycfMail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
+    private func copycfMail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
         if UIPasteboard.general.hasStrings {
             UIPasteboard.general.string = text
         }
