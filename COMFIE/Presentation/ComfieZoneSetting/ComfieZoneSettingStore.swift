@@ -135,7 +135,7 @@ class ComfieZoneSettingStore: IntentStore {
         case .addComfieZone:
             // 현재 위치 가져오기
             let userLocation = locationUseCase.getCurrentLocation()?.coordinate
-            print("3 userLocation \(userLocation?.latitude ?? 33) \(userLocation?.longitude ?? 33)")
+            
             let comfieZone = ComfieZone(
                 id: UUID(),
                 longitude: userLocation?.longitude ?? 50.3663000,

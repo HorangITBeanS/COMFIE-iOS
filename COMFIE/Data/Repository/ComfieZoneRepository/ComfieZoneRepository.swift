@@ -29,9 +29,9 @@ final class ComfieZoneRepository: ComfieZoneRepositoryProtocol {
         let result = coreDataService.saveComfieZone(comfieZone)
         switch result {
         case .success:
-            print("이오 \(#function) success")
+            print("\(#function) success")
         case .failure(let failure):
-            print("이오 \(#function) fail \(failure)")
+            print("\(#function) fail \(failure)")
         }
     }
     
