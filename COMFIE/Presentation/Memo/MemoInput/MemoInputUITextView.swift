@@ -139,16 +139,16 @@ struct MemoInputUITextView: UIViewRepresentable {
         
         /// MemoStore에서 전달된 sideEffect를 감지하여 포커스를 제어하거나, 상태 기반으로 입력 뷰를 갱신합니다.
         func bindFocusControl() {
-            intent.sideEffectPublisher
+            intent.uiSideEffectPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] sideEffect in
                     guard let self = self else { return }
                     switch sideEffect {
-                    case .ui(.resignInputFocusWithSyncInput):
+                    case .resignInputFocusWithSyncInput:
                         self.unfocusTextView(textView)
-                    case .ui(.setMemoInputFocus):
+                    case .setMemoInputFocus:
                         self.focusTextView(textView)
-                    case .ui(.updateInputViewWithState):
+                    case .updateInputViewWithState:
                         self.textView.text = intent.state.inputMemoText
                         
                         updatePlaceholderVisibility(textView)

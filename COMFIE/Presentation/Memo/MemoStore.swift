@@ -126,19 +126,26 @@ class MemoStore: IntentStore {
     
     // MARK: Side Effect
     enum SideEffect {
-        case ui(UI)
+        case memoInput(MemoInput)
+        case scroll(Scroll)
         
-        enum UI {
+        enum MemoInput {
             case resignInputFocusWithSyncInput
             case setMemoInputFocus
             case updateInputViewWithState
+        }
+        
+        enum Scroll {
+            case toMemo(memo: Memo)
+            case toBottom
         }
     }
     
     private let router: Router
     private let memoRepository: MemoRepositoryProtocol
     
-    private(set) var sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    private(set) var uiSideEffectPublisher = PassthroughSubject<SideEffect.MemoInput, Never>()
+    private(set) var scrollSideEffectPublisher = PassthroughSubject<SideEffect.Scroll, Never>()
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol) {
@@ -159,7 +166,7 @@ class MemoStore: IntentStore {
         case .onAppear:
             state = handleAction(state, .memo(.fetchAll))
         case .backgroundTapped:
-            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
+            performUISideEffect(for: .resignInputFocusWithSyncInput)
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigation(.toComfieZoneSetting))
         case .moreButtonTapped:
@@ -189,13 +196,16 @@ extension MemoStore {
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
             let newState = handleAction(state, .input(.startEditing(memo)))
-            performSideEffect(for: .ui(.updateInputViewWithState))
-            performSideEffect(for: .ui(.setMemoInputFocus))
+            performUISideEffect(for: .updateInputViewWithState)
+            performUISideEffect(for: .setMemoInputFocus)
+            
+            // 메모 수정 시, 해당 메모 위치로 스크롤 이동
+            performScrollEffect(for: .toMemo(memo: memo))
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
-            performSideEffect(for: .ui(.updateInputViewWithState))
-            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
+            performUISideEffect(for: .updateInputViewWithState)
+            performUISideEffect(for: .resignInputFocusWithSyncInput)
             return newState
         case .retrospectionButtonTapped(let memo):
             let newState = handleNavigationAction(state, .toRetrospection(memo))
@@ -207,7 +217,7 @@ extension MemoStore {
         switch intent {
         case .memoInputButtonTapped:
             // ⚠️ 텍스트뷰에 보이는 값과 상태가 불일치하는 문제 방지를 위해, 입력 종료 시 델리게이트 메서드에서 동기화 메서드를 추가로 실행함.
-            performSideEffect(for: .ui(.resignInputFocusWithSyncInput))
+            performUISideEffect(for: .resignInputFocusWithSyncInput)
             
             // resignFirstResponder 호출과 그 후 동작들이 모두 메인 스레드(MainActor)에서 실행되어 순서가 보장됨.
             Task { @MainActor in
@@ -217,10 +227,13 @@ extension MemoStore {
                 } else {
                     // 새로운 메모 작성 중
                     self.state = handleAction(state, .memo(.save))
+                    
+                    // 메모가 추가 시, 해당 메모 위치(bottom)으로 스크롤 이동
+                    performScrollEffect(for: .toBottom)
                 }
             }
             
-            performSideEffect(for: .ui(.updateInputViewWithState))
+            performUISideEffect(for: .updateInputViewWithState)
             // 🥲 여기 리턴 값은 사실상 의미 없는 값
             return state
         case .updateNewMemo(let text):
@@ -319,8 +332,12 @@ extension MemoStore {
 
 // MARK: - Side Effect Method
 extension MemoStore {
-    private func performSideEffect(for action: SideEffect) {
-        sideEffectPublisher.send(action)
+    private func performUISideEffect(for action: SideEffect.MemoInput) {
+        uiSideEffectPublisher.send(action)
+    }
+    
+    private func performScrollEffect(for action: SideEffect.Scroll) {
+        scrollSideEffectPublisher.send(action)
     }
 }
 
