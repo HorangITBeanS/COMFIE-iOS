@@ -76,7 +76,7 @@ extension View {
     func cfNavigationBarWithImageTitle(
         _ titleImage: Image = Image(.icComfie),
         isBackButtonHidden: Bool = false,
-        backButtonAction: @escaping () -> Void = {},
+        backButtonAction: @escaping () -> Void = {}
     ) -> some View {
         modifier(
             CFNavigationBarModifierWithImageTitle(
