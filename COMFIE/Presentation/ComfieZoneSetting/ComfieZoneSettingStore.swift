@@ -46,12 +46,9 @@ class ComfieZoneSettingStore: IntentStore {
         // 지도 초기 위치
         var currentLocation: CLLocationCoordinate2D?
         var initialPosition = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(  // 정자역
-                latitude: 37.3663000,
-                longitude: 127.1083000
-            ),
-            latitudinalMeters: 200,  // 지도 반경
-            longitudinalMeters: 200
+            center: ComfieZoneConstant.defaultPosition,
+            latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,
+            longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
         )
         
         // Bottom Sheet
@@ -138,8 +135,8 @@ class ComfieZoneSettingStore: IntentStore {
             
             let comfieZone = ComfieZone(
                 id: UUID(),
-                longitude: userLocation?.longitude ?? 50.3663000,
-                latitude: userLocation?.latitude ?? 150.1083000,
+                longitude: userLocation?.longitude ?? ComfieZoneConstant.defaultPosition.longitude,
+                latitude: userLocation?.latitude ?? ComfieZoneConstant.defaultPosition.latitude,
                 name: state.newComfiezoneName
             )
             
@@ -169,10 +166,7 @@ class ComfieZoneSettingStore: IntentStore {
     
     // 컴피존 없을 때 > 초기값 설정
     private func createInitialStateWithoutComfieZone(isLocationAuthorized: Bool) -> State {
-        let defaultPosition = CLLocationCoordinate2D(  // 정자역
-            latitude: 37.3663000,
-            longitude: 127.1083000
-        )
+        let defaultPosition = ComfieZoneConstant.defaultPosition
         
         let position: CLLocationCoordinate2D
         if isLocationAuthorized,
@@ -209,7 +203,7 @@ class ComfieZoneSettingStore: IntentStore {
             let comfieZoneLocation = CLLocation(latitude: comfieZone.latitude, longitude: comfieZone.longitude)
             let userComfieZoneDistance = userLocation.distance(from: comfieZoneLocation)
             
-            isInComfieZone = userComfieZoneDistance <= 50.0  // 컴피존 반경
+            isInComfieZone = userComfieZoneDistance <= ComfieZoneConstant.comfieZoneRadius  // 컴피존 반경
         }
         
         return State(
@@ -226,8 +220,8 @@ class ComfieZoneSettingStore: IntentStore {
     private func makeCoordinateRegion(center: CLLocationCoordinate2D) -> MKCoordinateRegion {
         return MKCoordinateRegion(
             center: center,
-            latitudinalMeters: 200,  // 지도 반경
-            longitudinalMeters: 200
+            latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,  // 지도 반경
+            longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
         )
     }
 }
