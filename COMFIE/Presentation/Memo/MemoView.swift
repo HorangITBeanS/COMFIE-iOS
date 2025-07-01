@@ -116,6 +116,7 @@ struct MemoView: View {
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .disabled(intent.state.inputMemoText.isEmpty)
         }
         .padding(16)
         .background {
