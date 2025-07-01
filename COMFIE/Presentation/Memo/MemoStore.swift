@@ -10,10 +10,12 @@ import Foundation
 
 @Observable
 class MemoStore: IntentStore {
-    private(set) var state: State = .init()
+    private(set) var state: State
     // MARK: State
     struct State {
         var memos: [Memo] = []
+        var isInComfieZone: Bool = false
+        
         // createdAt 날짜 문자열(dotYMDFormat 기준)로 메모들을 그룹화하고 정렬한 결과
         var groupedMemos: [(date: String, memos: [Memo])] {
             let grouped = Dictionary(grouping: memos) { $0.createdAt.yyyyMMddString }
@@ -143,14 +145,18 @@ class MemoStore: IntentStore {
     
     private let router: Router
     private let memoRepository: MemoRepositoryProtocol
+    private let locationUseCase: LocationUseCase
     
     private(set) var uiSideEffectPublisher = PassthroughSubject<SideEffect.MemoInput, Never>()
     private(set) var scrollSideEffectPublisher = PassthroughSubject<SideEffect.Scroll, Never>()
     
     // MARK: Init
-    init(router: Router, memoRepository: MemoRepositoryProtocol) {
+    init(router: Router, memoRepository: MemoRepositoryProtocol, locationUseCase: LocationUseCase) {
         self.router = router
         self.memoRepository = memoRepository
+        self.locationUseCase = locationUseCase
+        
+        self.state = .init(isInComfieZone: locationUseCase.isInComfieZone())
     }
     
     // MARK: Method

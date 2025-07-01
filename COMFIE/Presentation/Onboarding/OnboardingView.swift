@@ -66,9 +66,7 @@ struct OnboardingView: View {
     OnboardingView(
         intent: OnboardingStore(
             router: Router(),
-            locationUseCase: LocationUseCase(
-                locationService: LocationService()
-            )
+            locationUseCase: LocationUseCase(locationService: .init(), comfiZoneRepository: ComfieZoneRepository())
         )
     )
 }

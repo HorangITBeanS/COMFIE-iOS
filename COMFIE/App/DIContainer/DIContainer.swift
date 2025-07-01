@@ -13,12 +13,18 @@ struct DIContainer {
     // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
     let retrospectionRepository: RetrospectionRepositoryProtocol = RetrospectionRepository()
+    let comfieZoneRepository: ComfieZoneRepositoryProtocol = ComfieZoneRepository()
     
     // MARK: - Service
     private func makeLocationService() -> LocationService { LocationService() }
     
     // MARK: - UseCase
-    private func makeLocationUseCase() -> LocationUseCase { LocationUseCase(locationService: makeLocationService()) }
+    private func makeLocationUseCase() -> LocationUseCase {
+        LocationUseCase(
+            locationService: makeLocationService(),
+            comfiZoneRepository: comfieZoneRepository
+        )
+    }
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore {
@@ -31,13 +37,18 @@ struct DIContainer {
     private func makeMemoIntent() -> MemoStore {
         MemoStore(
             router: router,
-            memoRepository: memoRepository
+            memoRepository: memoRepository,
+            locationUseCase: makeLocationUseCase()
         )
     }
     
     private func makeComfieZoneSettingPopupIntent() -> ComfieZoneSettingPopupStore { ComfieZoneSettingPopupStore() }
     private func makeComfieZoneSettingIntent() -> ComfieZoneSettingStore {
-        ComfieZoneSettingStore(popupIntent: makeComfieZoneSettingPopupIntent())
+        ComfieZoneSettingStore(
+            popupIntent: makeComfieZoneSettingPopupIntent(),
+            locationUseCase: makeLocationUseCase(),
+            comfieZoneRepository: comfieZoneRepository
+        )
     }
     
     private func makeRetrospectionIntent(memo: Memo) -> RetrospectionStore {

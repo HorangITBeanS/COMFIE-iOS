@@ -11,8 +11,7 @@ struct MemoListView: View {
     private let strings = StringLiterals.Memo.self
     
     @Binding var intent: MemoStore
-    // TODO: isUserInComfieZone 변경 필요
-    @Binding var isUserInComfieZone: Bool
+    let isUserInComfieZone: Bool
     
     @Namespace private var scrollViewBottomId
     
@@ -76,11 +75,12 @@ struct MemoListView: View {
 #Preview {
     @Previewable @State var intent = MemoStore(
         router: Router(),
-        memoRepository: MockMemoRepository()
+        memoRepository: MockMemoRepository(),
+        locationUseCase: LocationUseCase(locationService: LocationService(), comfiZoneRepository: ComfieZoneRepository())
     )
     @Previewable @State var isUserInComfieZone = false
     
-    MemoListView(intent: $intent, isUserInComfieZone: $isUserInComfieZone)
+    MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
         .onAppear {
             intent(.onAppear)
         }
