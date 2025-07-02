@@ -13,7 +13,6 @@ extension StringLiterals {
             static let deleteComfieZone: LocalizedStringResource = "popup_title_delete_comfiezone"
             static let deleteMemo: LocalizedStringResource = "popup_title_delete_memo"
             static let deleteRetrospection: LocalizedStringResource = "popup_title_delete_retrospection"
-            static let exitWithoutSaving: LocalizedStringResource = "popup_title_exit_without_saving"
             static let requestLocationPermission: LocalizedStringResource = "popup_title_request_location_permission"
             static let mailUnavailable: LocalizedStringResource = "popup_title_mail_unavailable"
         }
@@ -22,7 +21,6 @@ extension StringLiterals {
             static let deleteComfieZone: LocalizedStringResource = "popup_subtitle_delete_comfiezone"
             static let deleteMemo: LocalizedStringResource = "popup_subtitle_delete_memo"
             static let deleteRetrospection: LocalizedStringResource = "popup_subtitle_delete_retrospection"
-            static let exitWithoutSaving: LocalizedStringResource = "popup_subtitle_exit_without_saving"
             static let requestLocationPermission: LocalizedStringResource = "popup_subtitle_request_location_permission"
             static let mailUnavailable: LocalizedStringResource = "popup_subtitle_mail_unavailable"
         }
