@@ -574,6 +574,12 @@
     },
     "onboarding_next_button" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -584,6 +590,12 @@
     },
     "onboarding_request_location" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE turns your diary into emoji based on your location.\nTo ensure smooth experience, "
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -594,6 +606,12 @@
     },
     "onboarding_request_location_description" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without location access,\nthe diary-to-emoji feature may be limited."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -604,6 +622,12 @@
     },
     "onboarding_request_location_highlight" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "please allow your location access."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
