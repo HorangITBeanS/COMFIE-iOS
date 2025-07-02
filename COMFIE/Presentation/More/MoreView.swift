@@ -81,7 +81,7 @@ struct MoreView: View {
         .cfToast(showToast: Binding(
             get: { intent.state.showMailCopyToast },
             set: { _ in }),
-                 backgroundColor: .keyPrimary,
+                 backgroundColor: .cfGray,
                  textColor: .cfWhite,
                  content: strings.SendFeedback.mailCopyToast.localized
         )
