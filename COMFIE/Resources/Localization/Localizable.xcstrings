@@ -784,14 +784,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud may be off or not connected.\nPlease contact us at comfie.team@gmail.com."
+            "state" : "needs_review",
+            "value" : "iCloud mail may be off or not connected.\nPlease contact us at comfie.team@gmail.com."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud가 꺼져있거나 연결되지 않은 것 같아요.\n개인 메일을 통해 comfie.team@gmail.com으로\n문의해주시면 감사하겠습니다. "
+            "value" : "iCloud mail이 꺼져있거나 연결되지 않은 것 같아요.\n개인 메일을 통해 comfie.team@gmail.com으로\n문의해주시면 감사하겠습니다. "
           }
         }
       }
