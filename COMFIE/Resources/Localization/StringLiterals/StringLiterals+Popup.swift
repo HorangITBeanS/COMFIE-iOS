@@ -28,8 +28,6 @@ extension StringLiterals {
         enum ButtonDescription {
             static let delete: LocalizedStringResource = "popup_button_delete"
             static let cancel: LocalizedStringResource = "popup_button_cancel"
-            static let noSave: LocalizedStringResource = "popup_button_no_save"
-            static let keepEdit: LocalizedStringResource = "popup_button_keep_edit"
             static let doNext: LocalizedStringResource = "popup_button_do_next"
             static let goSetting: LocalizedStringResource = "popup_button_go_setting"
             static let copyMail: LocalizedStringResource = "popup_button_copy_mail"

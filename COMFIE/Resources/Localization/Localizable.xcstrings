@@ -593,7 +593,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "COMFIE turns your diary into emoji based on your location.\nTo ensure smooth experience,"
+            "value" : "COMFIE turns your diary into emoji based on your location.\nTo ensure smooth experience, \nplease allow your location access."
           }
         },
         "ko" : {
@@ -728,26 +728,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "설정하러 가기"
-          }
-        }
-      }
-    },
-    "popup_button_keep_edit" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "계속 수정"
-          }
-        }
-      }
-    },
-    "popup_button_no_save" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "저장 안 함"
           }
         }
       }
