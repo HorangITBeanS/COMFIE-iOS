@@ -417,7 +417,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meet the COMFIE Team"
+            "value" : "COMFIE Developers"
           }
         },
         "ko" : {
@@ -433,13 +433,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "More"
+            "value" : "Setting"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "더보기"
+            "value" : "설정"
           }
         }
       }
@@ -545,7 +545,39 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terms of Use"
+            "value" : "Terms of Service"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서비스 이용약관"
+          }
+        }
+      }
+    },
+    "more_term_privacy_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "more_term_service_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Service"
           }
         },
         "ko" : {
