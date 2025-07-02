@@ -5,6 +5,12 @@
       "comment" : "Bundle name",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -37,8 +43,8 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Verifying your location to display your current location and set the diary access area."
+            "state" : "translated",
+            "value" : "Verifying your location to display\nyour current location and\nset the diary access area."
           }
         },
         "ko" : {
