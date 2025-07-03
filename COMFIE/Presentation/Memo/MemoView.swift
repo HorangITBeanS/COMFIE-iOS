@@ -49,6 +49,10 @@ struct MemoView: View {
                     .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             
+            Image(.tutorial)
+                .resizable()
+                .ignoresSafeArea()
+            
             if intent.state.deletingMemo != nil {
                 CFPopupView(type: .deleteMemo) {
                     intent(.deletePopup(.confirmDeleteButtonTapped))
