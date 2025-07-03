@@ -769,7 +769,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authentication is required."
+            "value" : "Authentication is required to delete outside your COMF!E zone."
           }
         },
         "ko" : {
