@@ -785,7 +785,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete this memo? \nThis action cannot be undone. "
+            "value" : "Are you sure you want to delete this diary? \nThis action cannot be undone. "
           }
         },
         "ko" : {
@@ -865,7 +865,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete this memo?"
+            "value" : "Delete this diary?"
           }
         },
         "ko" : {
