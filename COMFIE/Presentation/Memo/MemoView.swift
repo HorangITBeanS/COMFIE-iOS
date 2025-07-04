@@ -9,10 +9,7 @@ import SwiftUI
 
 struct MemoView: View {
     private let strings = StringLiterals.Memo.self
-    
-    @AppStorage("hasSeenTutorial") private var hasSeenTutorial: Bool = false
-    @State private var showTutorial: Bool = false // 처음 진입 시 확인용
-    
+
     @State var intent: MemoStore
     var isUserInComfieZone: Bool {
         intent.state.isInComfieZone
@@ -57,15 +54,12 @@ struct MemoView: View {
                     .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             
-            if showTutorial {
+            if intent.state.showTutorial {
                 Image(.tutorial)
                     .resizable()
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation {
-                            showTutorial = false
-                            hasSeenTutorial = true
-                        }
+                        intent(.tutorialTapped)
                     }
             }
             
@@ -79,9 +73,6 @@ struct MemoView: View {
         }
         .onAppear {
             intent(.onAppear)
-            if !hasSeenTutorial {
-                showTutorial = true
-            }
         }
     }
     
