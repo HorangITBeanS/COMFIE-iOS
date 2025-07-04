@@ -29,6 +29,11 @@ extension StringLiterals {
 // 더보기 > 약관 및 정책
 extension StringLiterals.More {
     enum Term {
+        enum Title {
+            static let service: LocalizedStringResource = "more_term_service_navigation_title"
+            static let privacy: LocalizedStringResource = "more_term_privacy_navigation_title"
+        }
+        
         enum ContentURL {
             static let service = "https://sites.google.com/view/comfie-terms-of-use/terms-of-use-%EA%B5%AD%EB%AC%B8"
             static let privacy = "https://sites.google.com/view/comfie-privacypolicy/privacy-policy%EA%B5%AD%EB%AC%B8"

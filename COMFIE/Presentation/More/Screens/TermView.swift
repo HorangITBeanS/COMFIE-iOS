@@ -16,13 +16,20 @@ struct TermView: View {
         CFWebView(urlString: contentURL())
             .edgesIgnoringSafeArea(.bottom)
             .background(Color.keyBackground)
-            .cfNavigationBarWithImageTitle()
+            .cfNavigationBar(navigationTitle())
     }
     
     private func contentURL() -> String {
         switch type {
         case .service: strings.ContentURL.service
         case .privacy: strings.ContentURL.privacy
+        }
+    }
+    
+    private func navigationTitle() -> String {
+        switch type {
+        case .service: strings.Title.service.localized
+        case .privacy: strings.Title.privacy.localized
         }
     }
 }

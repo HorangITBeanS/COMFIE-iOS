@@ -28,7 +28,7 @@ struct MakersView: View {
             Spacer()
         }
         .background(Color.keyBackground)
-        .cfNavigationBarWithImageTitle()
+        .cfNavigationBar(strings.navigatioinTitle.localized)
     }
     
     @ViewBuilder

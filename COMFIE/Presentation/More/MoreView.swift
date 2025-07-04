@@ -59,7 +59,7 @@ struct MoreView: View {
             }
             .frame(maxWidth: .infinity)
             .background(Color.keyBackground)
-            .cfNavigationBarWithImageTitle()
+            .cfNavigationBar(strings.navigationTitle.localized)
             // 의견 보내기 - 메일앱 활성화 사용자 - 메일앱 시트
             .sheet(
                 isPresented: .constant(state.showMailSheet),
@@ -81,7 +81,7 @@ struct MoreView: View {
         .cfToast(showToast: Binding(
             get: { intent.state.showMailCopyToast },
             set: { _ in }),
-                 backgroundColor: .keyPrimary,
+                 backgroundColor: .cfGray,
                  textColor: .cfWhite,
                  content: strings.SendFeedback.mailCopyToast.localized
         )

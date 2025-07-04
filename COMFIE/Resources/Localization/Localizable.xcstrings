@@ -417,7 +417,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meet the COMFIE Team"
+            "value" : "COMFIE Developers"
           }
         },
         "ko" : {
@@ -433,13 +433,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "More"
+            "value" : "Setting"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "더보기"
+            "value" : "설정"
           }
         }
       }
@@ -481,7 +481,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Email Copied"
+            "value" : "Email Copied!"
           }
         },
         "ko" : {
@@ -545,7 +545,39 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terms of Use"
+            "value" : "Terms of Service"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서비스 이용약관"
+          }
+        }
+      }
+    },
+    "more_term_privacy_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "more_term_service_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Service"
           }
         },
         "ko" : {
@@ -574,6 +606,12 @@
     },
     "onboarding_next_button" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -584,16 +622,28 @@
     },
     "onboarding_request_location" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMFIE turns your diary into emoji based on your location.\nTo ensure smooth experience, \nplease allow your location access."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "COMFIE는 사용자의 위치를 기반으로 메모를 이모지로 변환해요. 원활한 사용을 위해  위치 권한을 허용해 주세요."
+            "value" : "COMFIE는 사용자의 위치를 기반으로 메모를 이모지로 변환해요. 원활한 사용을 위해 위치 권한을 허용해 주세요."
           }
         }
       }
     },
     "onboarding_request_location_description" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without location access,\nthe diary-to-emoji feature may be limited."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -604,6 +654,12 @@
     },
     "onboarding_request_location_highlight" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "please allow your location access."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -708,32 +764,12 @@
         }
       }
     },
-    "popup_button_keep_edit" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "계속 수정"
-          }
-        }
-      }
-    },
-    "popup_button_no_save" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "저장 안 함"
-          }
-        }
-      }
-    },
     "popup_subtitle_delete_comfiezone" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authentication is required."
+            "value" : "Authentication is required to delete outside your COMF!E zone."
           }
         },
         "ko" : {
@@ -749,7 +785,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete this memo? \nThis action cannot be undone. "
+            "value" : "Are you sure you want to delete this diary? \nThis action cannot be undone. "
           }
         },
         "ko" : {
@@ -776,28 +812,18 @@
         }
       }
     },
-    "popup_subtitle_exit_without_saving" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "회고 수정사항이 반영되지 않습니다."
-          }
-        }
-      }
-    },
     "popup_subtitle_mail_unavailable" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud may be off or not connected.\nPlease contact us at comfie.team@gmail.com."
+            "state" : "needs_review",
+            "value" : "iCloud mail may be off or not connected.\nPlease contact us at comfie.team@gmail.com."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud가 꺼져있거나 연결되지 않은 것 같아요.\n개인 메일을 통해 comfie.team@gmail.com으로\n문의해주시면 감사하겠습니다. "
+            "value" : "iCloud mail이 꺼져있거나 연결되지 않은 것 같아요.\n개인 메일을 통해 comfie.team@gmail.com으로\n문의해주시면 감사하겠습니다. "
           }
         }
       }
@@ -838,8 +864,8 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Delete this memo?"
+            "state" : "translated",
+            "value" : "Delete this diary?"
           }
         },
         "ko" : {
@@ -862,16 +888,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이 회고를 삭제할까요?"
-          }
-        }
-      }
-    },
-    "popup_title_exit_without_saving" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "수정사항을 저장하지 않고 나가시겠어요?"
           }
         }
       }
@@ -928,7 +944,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Delete"
           }
         },
@@ -944,7 +960,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Done"
           }
         },

@@ -29,14 +29,3 @@ struct MemoInputTextView: View {
         .frame(height: dynamicHeight)
     }
 }
-
-#Preview {
-    MemoInputTextView(
-        memoStore: .constant(
-            MemoStore(
-                router: Router(),
-                memoRepository: MockMemoRepository()
-            )
-        )
-    )
-}

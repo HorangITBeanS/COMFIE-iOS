@@ -24,16 +24,12 @@ struct MemoView: View {
             Color.keyBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                navigationBarView
-                    .onTapGesture {
-                        intent(.backgroundTapped)
-                    }
-                 
-                ZStack {
+                ZStack(alignment: .top) {
                     MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
                         .onTapGesture {
                             intent(.backgroundTapped)
                         }
+                        .padding(.top, 56)
                     
                     if isEditingMemo {
                         VStack {
@@ -42,6 +38,11 @@ struct MemoView: View {
                                 .padding(.bottom, 10)
                         }
                     }
+                    
+                    navigationBarView
+                        .onTapGesture {
+                            intent(.backgroundTapped)
+                        }
                 }
                 
                 memoInputView
@@ -92,6 +93,10 @@ struct MemoView: View {
         .padding(.horizontal, 19)
         .padding(.vertical, 16)
         .background(.cfWhite)
+        .shadow(color: Color.black.opacity(0.04),
+                radius: 12,
+                x: 0,
+                y: 8)
     }
     
     private var memoInputView: some View {
