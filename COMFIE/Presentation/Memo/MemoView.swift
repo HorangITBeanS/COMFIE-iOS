@@ -24,11 +24,6 @@ struct MemoView: View {
             Color.keyBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                navigationBarView
-                    .onTapGesture {
-                        intent(.backgroundTapped)
-                    }
-                
                 ZStack(alignment: .top) {
                     MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
                         .onTapGesture {
