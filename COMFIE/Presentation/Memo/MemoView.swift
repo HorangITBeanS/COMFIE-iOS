@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MemoView: View {
     private let strings = StringLiterals.Memo.self
-    
+
     @State var intent: MemoStore
     var isUserInComfieZone: Bool {
         intent.state.isInComfieZone
@@ -49,6 +49,15 @@ struct MemoView: View {
                     .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             
+            if intent.state.showTutorial {
+                Image(.tutorial)
+                    .resizable()
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        intent(.tutorialTapped)
+                    }
+            }
+            
             if intent.state.deletingMemo != nil {
                 CFPopupView(type: .deleteMemo) {
                     intent(.deletePopup(.confirmDeleteButtonTapped))
@@ -57,7 +66,9 @@ struct MemoView: View {
                 }
             }
         }
-        .onAppear { intent(.onAppear) }
+        .onAppear {
+            intent(.onAppear)
+        }
     }
     
     // MARK: - View Property

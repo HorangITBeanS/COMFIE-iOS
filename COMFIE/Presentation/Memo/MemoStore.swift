@@ -6,7 +6,7 @@
 //
 
 import Combine
-import Foundation
+import SwiftUI
 
 @Observable
 class MemoStore: IntentStore {
@@ -57,6 +57,9 @@ class MemoStore: IntentStore {
         mutating func resetDeletingMemo() {
             deletingMemo = nil
         }
+        
+        @AppStorage("hasSeenTutorial") var hasSeenTutorial: Bool = false
+        var showTutorial: Bool = false
     }
     
     // MARK: Intent
@@ -69,6 +72,7 @@ class MemoStore: IntentStore {
         case backgroundTapped
         case comfieZoneSettingButtonTapped
         case moreButtonTapped
+        case tutorialTapped
         
         enum PopupIntent {
             case confirmDeleteButtonTapped
@@ -97,6 +101,7 @@ class MemoStore: IntentStore {
         case input(InputAction)
         case popup(PopupAction)
         case navigation(NavigationAction)
+        case tutorial(TutorialAction)
         
         enum MemoAction {
             case fetchAll
@@ -123,6 +128,11 @@ class MemoStore: IntentStore {
             case toRetrospection(Memo)
             case toComfieZoneSetting
             case toMore
+        }
+        
+        enum TutorialAction {
+            case showTutorial
+            case dismissTutorial
         }
     }
     
@@ -171,12 +181,17 @@ class MemoStore: IntentStore {
             
         case .onAppear:
             state = handleAction(state, .memo(.fetchAll))
+            if !state.hasSeenTutorial {
+                state = handleAction(state, .tutorial(.showTutorial))
+            }
         case .backgroundTapped:
             performUISideEffect(for: .resignInputFocusWithSyncInput)
         case .comfieZoneSettingButtonTapped:
             state = handleAction(state, .navigation(.toComfieZoneSetting))
         case .moreButtonTapped:
             state = handleAction(state, .navigation(.toMore))
+        case .tutorialTapped:
+            state = handleAction(state, .tutorial(.dismissTutorial))
         }
     }
     
@@ -190,6 +205,8 @@ class MemoStore: IntentStore {
             return handlePopupAction(state, action)
         case .navigation(let action):
             return handleNavigationAction(state, action)
+        case .tutorial(let action):
+            return handleTutorialAction(state, action)
         }
     }
 }
@@ -333,6 +350,18 @@ extension MemoStore {
             router.push(.more)
         }
         return state
+    }
+    
+    private func handleTutorialAction(_ state: State, _ action: Action.TutorialAction) -> State {
+        var newState = state
+        switch action {
+        case .showTutorial:
+            newState.showTutorial = true
+        case .dismissTutorial:
+            newState.showTutorial = false
+            newState.hasSeenTutorial = true
+        }
+        return newState
     }
 }
 
