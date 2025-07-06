@@ -58,6 +58,10 @@ struct CFNavigationBar: View {
         }
         .frame(height: 56)
         .background(Color.cfWhite)
+        .shadow(color: Color.black.opacity(0.04),
+                radius: 12,
+                x: 0,
+                y: 8)
     }
     
     @ViewBuilder

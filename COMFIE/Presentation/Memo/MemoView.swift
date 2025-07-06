@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MemoView: View {
     private let strings = StringLiterals.Memo.self
-    
+
     @State var intent: MemoStore
     var isUserInComfieZone: Bool {
         intent.state.isInComfieZone
@@ -24,16 +24,12 @@ struct MemoView: View {
             Color.keyBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                navigationBarView
-                    .onTapGesture {
-                        intent(.backgroundTapped)
-                    }
-                 
-                ZStack {
+                ZStack(alignment: .top) {
                     MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
                         .onTapGesture {
                             intent(.backgroundTapped)
                         }
+                        .padding(.top, 56)
                     
                     if isEditingMemo {
                         VStack {
@@ -42,10 +38,24 @@ struct MemoView: View {
                                 .padding(.bottom, 10)
                         }
                     }
+                    
+                    navigationBarView
+                        .onTapGesture {
+                            intent(.backgroundTapped)
+                        }
                 }
                 
                 memoInputView
                     .ignoresSafeArea(.keyboard, edges: .bottom)
+            }
+            
+            if intent.state.showTutorial {
+                Image(.tutorial)
+                    .resizable()
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        intent(.tutorialTapped)
+                    }
             }
             
             if intent.state.deletingMemo != nil {
@@ -56,7 +66,9 @@ struct MemoView: View {
                 }
             }
         }
-        .onAppear { intent(.onAppear) }
+        .onAppear {
+            intent(.onAppear)
+        }
     }
     
     // MARK: - View Property
@@ -82,14 +94,20 @@ struct MemoView: View {
             Button {
                 intent(.moreButtonTapped)
             } label: {
-                Image(.icEllipsis)
+                Image(.icHamburger)
                     .resizable()
                     .frame(width: 24, height: 24)
+                    .symbolRenderingMode(.monochrome)
+                    .tint(.cfBlack)
             }
         }
         .padding(.horizontal, 19)
         .padding(.vertical, 16)
         .background(.cfWhite)
+        .shadow(color: Color.black.opacity(0.04),
+                radius: 12,
+                x: 0,
+                y: 8)
     }
     
     private var memoInputView: some View {
@@ -114,6 +132,7 @@ struct MemoView: View {
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .disabled(intent.state.inputMemoText.isEmpty)
         }
         .padding(16)
         .background {

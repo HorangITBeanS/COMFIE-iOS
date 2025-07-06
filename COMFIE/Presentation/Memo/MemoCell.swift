@@ -12,7 +12,7 @@ struct MemoCell: View {
     
     let memo: Memo
     
-    @State private var isMemoHidden: Bool = true
+    @State private var isMemoHidden: Bool = false
     
     @Binding var intent: MemoStore
     
