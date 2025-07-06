@@ -13,6 +13,8 @@ struct MemoListView: View {
     @Binding var intent: MemoStore
     let isUserInComfieZone: Bool
     
+    @Namespace private var scrollViewBottomId
+    
     var body: some View {
         if intent.state.memos.isEmpty {
             ZStack(alignment: .center) {
@@ -24,27 +26,48 @@ struct MemoListView: View {
                     .foregroundStyle(.textDarkgray)
             }
         } else {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    ForEach(intent.state.groupedMemos, id: \.date) { group in
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text(group.date)
-                                .comfieFont(.systemBody)
-                                .foregroundStyle(.textDarkgray)
-                            
-                            ForEach(group.memos) { memo in
-                                MemoCell(
-                                    memo: memo,
-                                    intent: $intent,
-                                    isUserInComfieZone: isUserInComfieZone
-                                )
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ForEach(intent.state.groupedMemos, id: \.date) { group in
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text(group.date)
+                                    .comfieFont(.systemBody)
+                                    .foregroundStyle(.textDarkgray)
+                                
+                                ForEach(group.memos) { memo in
+                                    MemoCell(
+                                        memo: memo,
+                                        intent: $intent,
+                                        isUserInComfieZone: isUserInComfieZone
+                                    )
+                                    .id(memo.id)
+                                }
+                            }
+                        }
+                    }
+                    .padding(24)
+                    .id(scrollViewBottomId)
+                }
+                .scrollIndicators(.hidden)
+                .defaultScrollAnchor(.bottom)
+                .onReceive(intent.scrollSideEffectPublisher) { effect in
+                    switch effect {
+                    case .toMemo(let memo):
+                        Task { @MainActor in
+                            withAnimation {
+                                proxy.scrollTo(memo.id, anchor: UnitPoint(x: 0.5, y: 0.8))
+                            }
+                        }
+                    case .toBottom:
+                        Task { @MainActor in
+                            withAnimation {
+                                proxy.scrollTo(scrollViewBottomId, anchor: .bottom)
                             }
                         }
                     }
                 }
-                .padding(24)
             }
-            .scrollIndicators(.hidden)
         }
     }
 }

@@ -23,16 +23,24 @@ class MoreStore: IntentStore {
         // 메일앱 활성화 여부
         var isMailAppActivate: Bool = false
         var showMailSheet: Bool = false
+        
+        var showMailUnavailablePopupView: Bool = false
+        var showMailCopyToast: Bool = false
     }
     
     enum Intent {
         case serviceTermRowTapped
         case privacyPolicyRowTapped
-        case locationTermRowTapped
         
         // 의견 보내기 - 메일앱 활성화 체크 후 화면 전환
         case sendFeedbackRowTapped
         case dismissMailSheet
+        
+        // 메일 비활성화 알럿 내 버튼
+        case copyMailButtonTapped
+        case closePopupButtonTapped
+        
+        case hideMailCopyToast
         
         case makersRowTapped
     }
@@ -40,15 +48,15 @@ class MoreStore: IntentStore {
     enum Action {
         case navigateToServiceTerm
         case navigateToPrivacyPolicy
-        case navigateToLocationTerm
         
         case checkMailAppActivate
-        case navigateToSendFeedback
+        case copycfMail
+        case hideMailUnavailablePopupView
         case navigateToMakers
     }
     
     private let router: Router
-
+    
     init(router: Router) {
         self.router = router
     }
@@ -59,8 +67,6 @@ class MoreStore: IntentStore {
             _ = handleAction(state, .navigateToServiceTerm)
         case .privacyPolicyRowTapped:
             _ = handleAction(state, .navigateToPrivacyPolicy)
-        case .locationTermRowTapped:
-            _ = handleAction(state, .navigateToLocationTerm)
         case .sendFeedbackRowTapped:
             // 메일앱 활성화 여부 확인
             state = handleAction(state, .checkMailAppActivate)
@@ -69,12 +75,21 @@ class MoreStore: IntentStore {
                 state.showMailSheet = true
             } else {
                 // 활성화 X > 기본 화면
-                _ = handleAction(state, .navigateToSendFeedback)
+                state.showMailUnavailablePopupView = true
             }
-        case .makersRowTapped:
-            _ = handleAction(state, .navigateToMakers)
+        case .copyMailButtonTapped:
+            state = handleAction(state, .copycfMail)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                self?.handleIntent(.hideMailCopyToast)
+            }
+        case .closePopupButtonTapped:
+            state = handleAction(state, .hideMailUnavailablePopupView)
         case .dismissMailSheet:
             state.showMailSheet = false
+        case .hideMailCopyToast:
+            state.showMailCopyToast = false
+        case .makersRowTapped:
+            _ = handleAction(state, .navigateToMakers)
         }
     }
     
@@ -85,15 +100,23 @@ class MoreStore: IntentStore {
             router.push(.serviceTerm)
         case .navigateToPrivacyPolicy:
             router.push(.privacyPolicy)
-        case .navigateToLocationTerm:
-            router.push(.locationTerm)
         case .checkMailAppActivate:
             newState.isMailAppActivate = MFMailComposeViewController.canSendMail()
-        case .navigateToSendFeedback:
-            router.push(.sendFeedback)
+        case .copycfMail:
+            copycfMail()
+            newState.showMailUnavailablePopupView = false
+            newState.showMailCopyToast = true
+        case .hideMailUnavailablePopupView:
+            newState.showMailUnavailablePopupView = false
         case .navigateToMakers:
             router.push(.makers)
         }
         return newState
+    }
+    
+    private func copycfMail(_ text: String = StringLiterals.More.SendFeedback.emailAddress) {
+        if UIPasteboard.general.hasStrings {
+            UIPasteboard.general.string = text
+        }
     }
 }

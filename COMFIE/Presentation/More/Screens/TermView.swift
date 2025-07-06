@@ -8,35 +8,28 @@
 import SwiftUI
 
 struct TermView: View {
-    enum Term { case service, privacy, location }
+    enum Term { case service, privacy }
     let type: Term
     private let strings = StringLiterals.More.Term.self
     
     var body: some View {
-        ScrollView {
-            Text(content())
-                .comfieFont(.body)
-                .foregroundStyle(Color.textBlack)
-                .padding(24)
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.keyBackground)
-        .cfNavigationBar(navigationTitle())
+        CFWebView(urlString: contentURL())
+            .edgesIgnoringSafeArea(.bottom)
+            .background(Color.keyBackground)
+            .cfNavigationBar(navigationTitle())
     }
     
-    private func content() -> String {
+    private func contentURL() -> String {
         switch type {
-        case .service: strings.Content.service.localized
-        case .privacy: strings.Content.privacy.localized
-        case .location: strings.Content.location.localized
+        case .service: strings.ContentURL.service
+        case .privacy: strings.ContentURL.privacy
         }
     }
     
     private func navigationTitle() -> String {
         switch type {
-        case .service: strings.NavigationTitle.service.localized
-        case .privacy: strings.NavigationTitle.privacy.localized
-        case .location: strings.NavigationTitle.location.localized
+        case .service: strings.Title.service.localized
+        case .privacy: strings.Title.privacy.localized
         }
     }
 }
