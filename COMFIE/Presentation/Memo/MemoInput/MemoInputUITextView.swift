@@ -105,10 +105,10 @@ struct MemoInputUITextView: UIViewRepresentable {
     /// 텍스트뷰의 최대 줄 수에 따른 높이 제한 제약 생성
     private func createMaxHeightConstraint(for textView: UITextView) -> NSLayoutConstraint {
         let maxHeight = comfieUIBodyFont.lineHeight
-            * maxLineCount
-            + textView.textContainerInset.top
-            + textView.textContainerInset.bottom
-
+        * maxLineCount
+        + textView.textContainerInset.top
+        + textView.textContainerInset.bottom
+        
         let heightConstraint = textView.heightAnchor.constraint(lessThanOrEqualToConstant: maxHeight)
         heightConstraint.priority = .defaultHigh
         heightConstraint.isActive = true
@@ -162,6 +162,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         
         func textViewDidChange(_ textView: UITextView) {
             updatePlaceholderVisibility(textView)
+            updateTextViewHeight(textView)
         }
         
         /// 해담 메서드에서 최졷 동기화를 해야지 한글이 완전히 완성된 상태에서 동기화가 가능
@@ -179,24 +180,29 @@ struct MemoInputUITextView: UIViewRepresentable {
             
             let updatedText = currentText.replacingCharacters(in: textRange, with: text)
             
-            if !text.isEmpty { // 텍스트가 추가되는 경우
-                if text == "\n" || text == " " {
-                    handleEmojiTransformTrigger(textView, updatedText: updatedText)
+            if intent.state.isInComfieZone {
+                // 컴피존 내에서는 이모지 변환 없이 사용자가 입력한 텍스트 그대로 반영
+                intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
+                
+                return true
+            } else {
+                if !text.isEmpty { // 텍스트가 추가되는 경우
+                    if text == "\n" || text == " " {
+                        handleEmojiTransformTrigger(textView, updatedText: updatedText)
+                        
+                        return false
+                    }
+                    intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
+                    
+                    return true
+                } else { // 텍스트가 삭제되는 경우
+                    // 한글 입력 시 뷰에 보이는 텍스트와 내부 데이터가 다를 수 있어
+                    // 편집 종료 시 최종 동기화 수행.
+                    intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
+                    handleTextDeletion(textView)
                     
                     return false
                 }
-                
-                intent.handleIntent(.memoInput(.updateNewMemo(updatedText)))
-                updateTextViewHeight(textView)
-                
-                return true
-            } else { // 텍스트가 삭제되는 경우
-                // 한글 입력 시 뷰에 보이는 텍스트와 내부 데이터가 다를 수 있어
-                // 편집 종료 시 최종 동기화 수행.
-                intent.handleIntent(.memoInput(.updateNewMemo(textView.text)))
-                handleTextDeletion(textView)
-                
-                return false
             }
         }
         
