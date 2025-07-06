@@ -142,6 +142,7 @@ class MemoStore: IntentStore {
     private let locationUseCase: LocationUseCase
     
     private(set) var sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol, locationUseCase: LocationUseCase) {
@@ -149,7 +150,9 @@ class MemoStore: IntentStore {
         self.memoRepository = memoRepository
         self.locationUseCase = locationUseCase
         
-        self.state = .init(isInComfieZone: locationUseCase.isInComfieZone())
+        self.state = .init(isInComfieZone: locationUseCase.isInComfieZone(locationUseCase.getCurrentLocation()))
+        
+        observeIsInComfieZone()
     }
     
     // MARK: Method
@@ -327,6 +330,18 @@ extension MemoStore {
 extension MemoStore {
     private func performSideEffect(for action: SideEffect) {
         sideEffectPublisher.send(action)
+    }
+    
+    private func observeIsInComfieZone() {
+        locationUseCase.currentLocationPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] location in
+                guard let self = self else { return }
+                let isInComfieZone = self.locationUseCase.isInComfieZone(location)
+                self.state.isInComfieZone = isInComfieZone
+                print("컴피존 여부 실시간 \(Date()) 업데이트: \(isInComfieZone)")
+            }
+            .store(in: &cancellables)
     }
 }
 
