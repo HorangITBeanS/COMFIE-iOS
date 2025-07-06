@@ -339,7 +339,6 @@ extension MemoStore {
                 guard let self = self else { return }
                 let isInComfieZone = self.locationUseCase.isInComfieZone(location)
                 self.state.isInComfieZone = isInComfieZone
-                print("컴피존 여부 실시간 \(Date()) 업데이트: \(isInComfieZone)")
             }
             .store(in: &cancellables)
     }
