@@ -14,11 +14,14 @@ struct ComfieZoneSettingView: View {
     private var popupState: ComfieZoneSettingPopupStore.State { intent.popupIntent.state }
     private let strings = StringLiterals.ComfieZoneSetting.self
     
+    @State private var coordinater: CLLocationCoordinate2D?
+    @State private var cameraPosition: MapCameraPosition = .automatic
+    
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 // 지도 화면
-                Map(position: .constant(MapCameraPosition.region(state.initialPosition))) {
+                Map(position: $cameraPosition) {
                     // 컴피존 원
                     MapCircle(
                         center: CLLocationCoordinate2D(
@@ -33,8 +36,8 @@ struct ComfieZoneSettingView: View {
                     // 현재 위치
                     MapCircle(
                         center: CLLocationCoordinate2D(
-                            latitude: currentLatitude(),
-                            longitude: currentLongitude()
+                            latitude: coordinater?.latitude ?? currentLatitude(),
+                            longitude: coordinater?.longitude ?? currentLongitude()
                         ),
                         radius: CLLocationDistance(5)
                     )
@@ -81,6 +84,23 @@ struct ComfieZoneSettingView: View {
             rightButtonAction: { intent.popupIntent(.closeDeleteComfieZonePopup) }
         )
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
+        .onChange(of: intent.currentLocation) { _, newValue in
+            guard let newValue else { return }
+            withAnimation {
+                updateCameraPosition()
+                coordinater = newValue.coordinate
+            }
+        }
+    }
+    
+    private func updateCameraPosition() {
+        guard let location = intent.currentLocation else { return }
+        let region = MKCoordinateRegion(
+            center: location.coordinate,
+            latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,
+            longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
+        )
+        cameraPosition = .region(region)
     }
     
     // 네비게이션 바 우측 정보 버튼

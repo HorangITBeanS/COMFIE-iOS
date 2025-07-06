@@ -5,12 +5,17 @@
 //  Created by Anjin on 4/29/25.
 //
 
+import Combine
 import CoreLocation
 import Foundation
 
 class LocationUseCase {
     private let locationService: LocationService
     private let comfieZoneRepository: ComfieZoneRepositoryProtocol
+    
+    var currentLocationPublisher: AnyPublisher<CLLocation, Never> {
+        locationService.currentLocationPublisher
+    }
     
     init(
         locationService: LocationService,

@@ -5,6 +5,7 @@
 //  Created by Anjin on 4/4/25.
 //
 
+import Combine
 import MapKit
 import SwiftUI
 
@@ -19,6 +20,9 @@ class ComfieZoneSettingStore: IntentStore {
     private(set) var popupIntent: ComfieZoneSettingPopupStore
     private let locationUseCase: LocationUseCase
     private let comfieZoneRepository: ComfieZoneRepositoryProtocol
+    
+    private var cancellables = Set<AnyCancellable>()
+    private(set) var currentLocation: CLLocation?
     
     init(
         popupIntent: ComfieZoneSettingPopupStore,
@@ -39,6 +43,14 @@ class ComfieZoneSettingStore: IntentStore {
             // 컴피존 없음 > 초기 위치 설정
             self.state = createInitialStateWithoutComfieZone(isLocationAuthorized: isLocationAuthorized)
         }
+        
+        // subscribe to currentLocationPublisher
+        locationUseCase.currentLocationPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] location in
+                self?.currentLocation = location
+            }
+            .store(in: &cancellables)
     }
     
     private(set) var state: State = .init()
