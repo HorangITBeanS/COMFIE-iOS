@@ -1,23 +1,62 @@
 {
   "images" : [
     {
+      "filename" : "tutorial 1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "tutorial@2x 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "tutorial@3x 1.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "filename" : "tuto.png",
+      "idiom" : "universal",
+      "locale" : "en",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "tuto@2x.png",
+      "idiom" : "universal",
+      "locale" : "en",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "tuto@3x.png",
+      "idiom" : "universal",
+      "locale" : "en",
+      "scale" : "3x"
+    },
+    {
       "filename" : "tutorial.png",
       "idiom" : "universal",
+      "locale" : "ko",
       "scale" : "1x"
     },
     {
       "filename" : "tutorial@2x.png",
       "idiom" : "universal",
+      "locale" : "ko",
       "scale" : "2x"
     },
     {
       "filename" : "tutorial@3x.png",
       "idiom" : "universal",
+      "locale" : "ko",
       "scale" : "3x"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "localizable" : true
   }
 }
