@@ -768,14 +768,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Authentication is required to delete outside your COMF!E zone."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "삭제하려면 사용자 인증이 필요해요."
+            "value" : "컴피존 밖에서 삭제하려면 사용자 인증이 필요해요."
           }
         }
       }
