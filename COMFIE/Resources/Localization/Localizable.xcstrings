@@ -273,7 +273,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No diary yet."
+            "value" : "Your journal is empty"
           }
         },
         "ko" : {
