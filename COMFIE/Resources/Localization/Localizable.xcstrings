@@ -103,7 +103,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In a COMFIE zone, you can read\ndiary in its original text.\nOutside, it turns into emojis."
+            "value" : "In a COMFIE zone, you can read\njournal in its original text.\nOutside, it turns into emojis."
           }
         },
         "ko" : {
@@ -273,7 +273,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No diary yet."
+            "value" : "Your journal is empty"
           }
         },
         "ko" : {
@@ -433,7 +433,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Setting"
+            "value" : "Settings"
           }
         },
         "ko" : {
@@ -625,13 +625,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "COMFIE turns your diary into emoji based on your location.\nTo ensure smooth experience, \nplease allow your location access."
+            "value" : "COMFIE turns your journal into emojis based on your location.\nTo ensure smooth experience, \nplease allow your location access."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "COMFIE는 사용자의 위치를 기반으로 메모를 이모지로 변환해요. 원활한 사용을 위해 위치 권한을 허용해 주세요."
+            "value" : "COMFIE는 사용자의 위치를 기반으로 일기를 이모지로 변환해요. 원활한 사용을 위해 위치 권한을 허용해 주세요."
           }
         }
       }
@@ -641,13 +641,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Without location access,\nthe diary-to-emoji feature may be limited."
+            "value" : "Without location access,\nthe journal-to-emoji feature may be limited."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "위치 권한이 없으면 메모 이모지화 기능이 제한될 수 있어요."
+            "value" : "위치 권한이 없으면 이모지화 기능이 제한될 수 있어요."
           }
         }
       }
@@ -775,7 +775,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "삭제하려면 사용자 인증이 필요해요."
+            "value" : "컴피존 밖에서 삭제하려면 사용자 인증이 필요해요."
           }
         }
       }
@@ -785,7 +785,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete this diary? \nThis action cannot be undone. "
+            "value" : "Are you sure you want to delete this journal? \nThis action cannot be undone. "
           }
         },
         "ko" : {
@@ -865,7 +865,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete this diary?"
+            "value" : "Delete this journal?"
           }
         },
         "ko" : {
