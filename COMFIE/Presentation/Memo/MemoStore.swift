@@ -159,6 +159,7 @@ class MemoStore: IntentStore {
     
     private(set) var uiSideEffectPublisher = PassthroughSubject<SideEffect.MemoInput, Never>()
     private(set) var scrollSideEffectPublisher = PassthroughSubject<SideEffect.Scroll, Never>()
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol, locationUseCase: LocationUseCase) {
@@ -166,7 +167,9 @@ class MemoStore: IntentStore {
         self.memoRepository = memoRepository
         self.locationUseCase = locationUseCase
         
-        self.state = .init(isInComfieZone: locationUseCase.isInComfieZone())
+        self.state = .init(isInComfieZone: locationUseCase.isInComfieZone(locationUseCase.getCurrentLocation()))
+        
+        observeIsInComfieZone()
     }
     
     // MARK: Method
@@ -373,6 +376,17 @@ extension MemoStore {
     
     private func performScrollEffect(for action: SideEffect.Scroll) {
         scrollSideEffectPublisher.send(action)
+    }
+    
+    private func observeIsInComfieZone() {
+        locationUseCase.currentLocationPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] location in
+                guard let self = self else { return }
+                let isInComfieZone = self.locationUseCase.isInComfieZone(location)
+                self.state.isInComfieZone = isInComfieZone
+            }
+            .store(in: &cancellables)
     }
 }
 

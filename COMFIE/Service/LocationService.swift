@@ -5,14 +5,30 @@
 //  Created by Anjin on 4/29/25.
 //
 
+import Combine
 import CoreLocation
+import MapKit
+import SwiftUI
 
+@Observable
 class LocationService: NSObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
-        
-    private(set) var currentLocation: CLLocation?
+    
     private(set) var authorizationStatus: CLAuthorizationStatus = .notDetermined
-
+    
+    private let currentLocationSubject = PassthroughSubject<CLLocation, Never>()
+    var currentLocationPublisher: AnyPublisher<CLLocation, Never> {
+        currentLocationSubject.eraseToAnyPublisher()
+    }
+    
+    private(set) var currentLocation: CLLocation? {
+        didSet {
+            if let location = currentLocation {
+                currentLocationSubject.send(location)
+            }
+        }
+    }
+    
     override init() {
         super.init()
         manager.delegate = self
@@ -49,5 +65,14 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     // 위치 추적 실패 시 요청되는 메서드
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("위치 추적 실패: \(error.localizedDescription)")
+    }
+    
+    func currentRegion() -> MKCoordinateRegion? {
+        guard let location = currentLocation else { return nil }
+        return MKCoordinateRegion(
+            center: location.coordinate,
+            latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,
+            longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
+        )
     }
 }
