@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct COMFIERoutingView: View {
-    @State private var router: Router = Router()
+    @Environment(Router.self) private var router
+    let diContainer: DIContainer
     
     var body: some View {
+        @Bindable var router = router
         NavigationStack(path: $router.path) {
-            router.rootView()
+            router.rootView(diContainer)
                 .onAppear { finishLoadingView() }
                 .navigationDestination(for: Route.self) { route in
-                    route.view(router)
+                    route.view(diContainer)
                 }
         }
         .environment(router)
@@ -29,8 +31,4 @@ struct COMFIERoutingView: View {
             }
         }
     }
-}
-
-#Preview {
-    COMFIERoutingView()
 }
