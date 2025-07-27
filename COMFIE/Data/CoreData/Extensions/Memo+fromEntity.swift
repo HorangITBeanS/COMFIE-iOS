@@ -23,8 +23,7 @@ extension Memo {
             createdAt: createdAt,
             originalText: originalText,
             emojiText: emojiText,
-            originalRetrospectionText: entity.originalRetrospectionText,
-            emojiRetrospectionText: entity.emojiRetrospectionText
+            retrospectionText: entity.retrospectionText
         )
         
         return .success(memo)
