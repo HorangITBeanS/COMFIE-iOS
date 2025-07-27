@@ -111,7 +111,7 @@ struct CoreDataTestView: View {
     private func addMemo() {
         guard !newMemoText.isEmpty else { return }
         
-        let newMemo = Memo(id: UUID(), createdAt: .now, originalText: newMemoText, emojiText: "😊", retrospectionText: "회고")
+        let newMemo = Memo(id: UUID(), createdAt: .now, originalText: newMemoText, emojiText: "😊", originalRetrospectionText: "회고", emojiRetrospectionText: "🤩")
         let result = coreDataService.saveMemo(newMemo)
         
         switch result {

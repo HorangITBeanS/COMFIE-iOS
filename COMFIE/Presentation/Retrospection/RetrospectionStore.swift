@@ -122,7 +122,7 @@ class RetrospectionStore: IntentStore {
         switch action {
         case .fetchMemo:
             newState.originalMemo = memo.originalText
-            if let retrospection = memo.retrospectionText { newState.inputContent = retrospection }
+            if let retrospection = memo.originalRetrospectionText { newState.inputContent = retrospection }
             newState.createdDate = memo.createdAt.toFormattedDateTimeString()
         case .updateRetrospection(let text): newState.inputContent = text
         case .showCompleteButton: newState.showCompleteButton = true
