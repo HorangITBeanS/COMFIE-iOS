@@ -22,7 +22,7 @@ enum Route: Hashable {
     case privacyPolicy
     case makers
     
-    @ViewBuilder func view(_ router: Router) -> some View {
-        DIContainer(router: router).makeView(self)
+    @ViewBuilder func view(_ diContainer: DIContainer) -> some View {
+        diContainer.makeView(self)
     }
 }

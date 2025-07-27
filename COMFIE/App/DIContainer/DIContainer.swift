@@ -7,8 +7,12 @@
 
 import SwiftUI
 
-struct DIContainer {
+class DIContainer {
     let router: Router
+    
+    init(router: Router) {
+        self.router = router
+    }
     
     // MARK: - Repository
     let memoRepository: MemoRepositoryProtocol = MemoRepository()
@@ -16,12 +20,12 @@ struct DIContainer {
     let comfieZoneRepository: ComfieZoneRepositoryProtocol = ComfieZoneRepository()
     
     // MARK: - Service
-    private func makeLocationService() -> LocationService { LocationService() }
+    lazy var makeLocationService: LocationService = { LocationService() }()
     
     // MARK: - UseCase
     private func makeLocationUseCase() -> LocationUseCase {
         LocationUseCase(
-            locationService: makeLocationService(),
+            locationService: makeLocationService,
             comfiZoneRepository: comfieZoneRepository
         )
     }
