@@ -28,7 +28,7 @@ struct ComfieZoneSettingView: View {
                             latitude: state.comfieZone?.latitude ?? 30,
                             longitude: state.comfieZone?.longitude ?? 30
                         ),
-                        radius: CLLocationDistance(50)
+                        radius: CLLocationDistance(ComfieZoneConstant.comfieZoneRadius)
                     )
                     .foregroundStyle(.keyPrimary.opacity(0.2))
                     .mapOverlayLevel(level: .aboveLabels)
@@ -86,6 +86,7 @@ struct ComfieZoneSettingView: View {
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
         .onChange(of: intent.currentLocation) { _, newValue in
             guard let newValue else { return }
+            intent(.updateAllStatesByNewCurrentLocation)
             withAnimation {
                 updateCameraPosition()
                 coordinater = newValue.coordinate
