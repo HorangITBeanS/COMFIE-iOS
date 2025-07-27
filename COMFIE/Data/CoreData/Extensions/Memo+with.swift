@@ -6,14 +6,13 @@
 //
 
 extension Memo {
-    func with(retrospectionText: String?, emojiRetrospectionText: String?) -> Memo {
+    func with(retrospectionText: String?) -> Memo {
         Memo(
             id: self.id,
             createdAt: self.createdAt,
             originalText: self.originalText,
             emojiText: self.emojiText,
-            originalRetrospectionText: retrospectionText,
-            emojiRetrospectionText: emojiRetrospectionText
+            retrospectionText: retrospectionText
         )
     }
 }

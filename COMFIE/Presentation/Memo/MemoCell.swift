@@ -24,7 +24,7 @@ struct MemoCell: View {
     }
     
     private var hasRetrospection: Bool {
-        memo.originalRetrospectionText != nil
+        memo.retrospectionText != nil
     }
     
     private var shouldShowMemo: Bool {
@@ -72,10 +72,9 @@ struct MemoCell: View {
             }
             
             // 회고가 있는 경우
-            if let originalRetrospectionText = memo.originalRetrospectionText,
-               let emojiRetrospectionText = memo.emojiRetrospectionText {
+            if let retrospectionText = memo.retrospectionText {
                 HStack {
-                    Text(isUserInComfieZone ? originalRetrospectionText : emojiRetrospectionText)
+                    Text(isUserInComfieZone ? retrospectionText : memo.emojiText)
                         .lineLimit(3)
                     Spacer()
                 }

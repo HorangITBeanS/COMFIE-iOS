@@ -72,8 +72,7 @@ extension CoreDataService {
         
         do {
             if let entity = try context.fetch(request).first {
-                entity.originalRetrospectionText = memo.originalRetrospectionText
-                entity.emojiRetrospectionText = memo.emojiRetrospectionText
+                entity.retrospectionText = memo.retrospectionText
                 try context.save()
                 return .success(())
             } else {
@@ -131,8 +130,7 @@ extension CoreDataService {
             // 기존 데이터 업데이트
             entity.originalText = newMemo.originalText
             entity.emojiText = newMemo.emojiText
-            entity.originalRetrospectionText = newMemo.originalRetrospectionText
-            entity.emojiRetrospectionText = newMemo.emojiRetrospectionText
+            entity.retrospectionText = newMemo.retrospectionText
             
             try self.context.save()
             return .success(())
@@ -202,8 +200,7 @@ extension CoreDataService {
         
         do {
             if let entity = try context.fetch(request).first {
-                entity.originalRetrospectionText = nil
-                entity.emojiRetrospectionText = nil
+                entity.retrospectionText = nil
                 try context.save()
                 return .success(())
             } else {
