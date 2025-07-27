@@ -83,7 +83,7 @@ class ComfieZoneSettingStore: IntentStore {
         case checkButtonTapped
         case xButtonTapped
         
-        // update
+        // Update State
         case updateAllStatesByNewCurrentLocation
     }
     
@@ -139,14 +139,9 @@ class ComfieZoneSettingStore: IntentStore {
             let comfieZone = comfieZoneRepository.fetchComfieZone()
             
             if let comfieZone {
-                state = createStateWithComfieZone(
-                    comfieZone,
-                    isLocationAuthorized: isLocationAuthorized
-                )
+                state = createStateWithComfieZone(comfieZone, isLocationAuthorized: isLocationAuthorized)
             } else {
-                state = createInitialStateWithoutComfieZone(
-                    isLocationAuthorized: isLocationAuthorized
-                )
+                state = createInitialStateWithoutComfieZone(isLocationAuthorized: isLocationAuthorized)
             }
         }
     }
@@ -221,7 +216,7 @@ class ComfieZoneSettingStore: IntentStore {
             latitude: comfieZone.latitude,
             longitude: comfieZone.longitude
         )
-        var userLocationCoordinate: CLLocationCoordinate2D? = nil
+        var userLocationCoordinate: CLLocationCoordinate2D?
         var isInComfieZone = false
         
         if isLocationAuthorized,
