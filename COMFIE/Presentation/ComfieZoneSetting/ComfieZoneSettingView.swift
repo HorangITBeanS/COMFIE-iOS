@@ -86,7 +86,11 @@ struct ComfieZoneSettingView: View {
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
         .onChange(of: intent.currentLocation) { _, newValue in
             guard let newValue else { return }
-            intent(.updateAllStatesByNewCurrentLocation)
+            
+            if state.comfieZone != nil {
+                intent(.updateAllStatesByNewCurrentLocation)
+            }
+            
             withAnimation {
                 updateCameraPosition()
                 coordinater = newValue.coordinate
