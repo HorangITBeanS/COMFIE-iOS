@@ -36,6 +36,8 @@ class RetrospectionStore: IntentStore {
         var inputContent: String?
         var createdDate: String = ""
         
+        var emojiString: EmojiString = .init()
+        
         var showCompleteButton: Bool = false
         var showDeletePopupView: Bool = false
     }
@@ -122,15 +124,20 @@ class RetrospectionStore: IntentStore {
         switch action {
         case .fetchMemo:
             newState.originalMemo = memo.originalText
-            if let retrospection = memo.retrospectionText { newState.inputContent = retrospection }
+            if let retrospection = memo.originalRetrospectionText { newState.inputContent = retrospection }
             newState.createdDate = memo.createdAt.toFormattedDateTimeString()
-        case .updateRetrospection(let text): newState.inputContent = text
+        case .updateRetrospection(let text):
+            newState.inputContent = text
+        case .saveRetrospection:
+            newState.emojiString.syncWithNewString(newState.inputContent ?? "")
+            newState.emojiString.setUnassignedEmojis()
+            saveRetrospection(newState)
+        case .deleteRetrospection:
+            deleteRetrospection(newState)
+            
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
-            
-        case .saveRetrospection: saveRetrospection(newState)
-        case .deleteRetrospection: deleteRetrospection(newState)
-            
+         
         case .showDeletePopupView: newState.showDeletePopupView = true
         case .hideDeletePopupView: newState.showDeletePopupView = false
         case .popToLast: router.pop()
@@ -144,7 +151,8 @@ class RetrospectionStore: IntentStore {
 extension RetrospectionStore {
     private func saveRetrospection(_ state: State) {
         let content = state.inputContent?.isEmpty == true ? nil : state.inputContent
-        let updatedmemo = memo.with(retrospectionText: content)
+        let updatedmemo = memo.with(originalRetrospectionText: content,
+                                    emojiRetrospectionText: state.emojiString.getEmojiString())
         
         switch repository.save(memo: updatedmemo) {
         case .success:
