@@ -16,6 +16,7 @@ struct ComfieZoneSettingView: View {
     
     @State private var coordinater: CLLocationCoordinate2D?
     @State private var cameraPosition: MapCameraPosition = .automatic
+    @State private var refreshButtonRotation: Double = 0
     
     var body: some View {
         VStack(spacing: 0) {
@@ -28,7 +29,7 @@ struct ComfieZoneSettingView: View {
                             latitude: state.comfieZone?.latitude ?? 30,
                             longitude: state.comfieZone?.longitude ?? 30
                         ),
-                        radius: CLLocationDistance(50)
+                        radius: CLLocationDistance(ComfieZoneConstant.comfieZoneRadius)
                     )
                     .foregroundStyle(.keyPrimary.opacity(0.2))
                     .mapOverlayLevel(level: .aboveLabels)
@@ -58,6 +59,19 @@ struct ComfieZoneSettingView: View {
                     .background(Color.keyTransparent)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .padding(.bottom, 16)
+                
+                // 새로고침 버튼
+                Button {
+                    withAnimation(.easeInOut(duration: 0.7)) {
+                        refreshButtonRotation -= 360
+                    }
+                    
+                    intent(.updateAllStatesByNewCurrentLocation)
+                } label: {
+                    refreshButton
+                }
+                .padding(.trailing, 16)
+                .padding(.bottom, 16)
             }
             
             // 컴피존 설정 시트
@@ -86,6 +100,11 @@ struct ComfieZoneSettingView: View {
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
         .onChange(of: intent.currentLocation) { _, newValue in
             guard let newValue else { return }
+            
+            if state.comfieZone != nil {
+                intent(.updateAllStatesByNewCurrentLocation)
+            }
+            
             withAnimation {
                 updateCameraPosition()
                 coordinater = newValue.coordinate
@@ -111,6 +130,21 @@ struct ComfieZoneSettingView: View {
             Image(.icInfo)
                 .resizable()
                 .frame(width: 24, height: 24)
+        }
+    }
+    
+    // 하단 새로고침 버튼
+    private var refreshButton: some View {
+        HStack {
+            Spacer()
+            
+            Image(.icRefresh)
+                .resizable()
+                .frame(width: 24, height: 24)
+                .padding(12)
+                .background(Color.cfWhite)
+                .clipShape(Circle())
+                .rotationEffect(.degrees(refreshButtonRotation))
         }
     }
     
