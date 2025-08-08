@@ -5,8 +5,8 @@
 //  Created by Anjin on 3/5/25.
 //
 
-import Testing
 @testable import COMFIE
+import Testing
 
 struct COMFIETests {
 
