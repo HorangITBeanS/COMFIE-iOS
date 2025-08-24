@@ -101,9 +101,10 @@ class ComfieZoneSettingStore: IntentStore {
             }
         case .updateComfieZoneNameTextField(let text):
             state.newComfiezoneName = text
-        case .checkButtonTapped:
+        case .checkButtonTapped:  // 컴피존 추가
             withAnimation {
                 state = handleAction(state, .addComfieZone)
+                triggerCurrentLocationUpdate()
             }
         case .xButtonTapped:
             popupIntent(.openDeleteComfieZonePopup)
@@ -127,6 +128,7 @@ class ComfieZoneSettingStore: IntentStore {
                     }
                 }
             }
+            triggerCurrentLocationUpdate()
         case .updateAllStatesByNewCurrentLocation:
             let isLocationAuthorized = getLocationAuthStatus()
             let comfieZone = comfieZoneRepository.fetchComfieZone()
@@ -240,5 +242,9 @@ class ComfieZoneSettingStore: IntentStore {
             latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,  // 지도 반경
             longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
         )
+    }
+    
+    private func triggerCurrentLocationUpdate() {
+        locationUseCase.triggerLocationUpdate()
     }
 }

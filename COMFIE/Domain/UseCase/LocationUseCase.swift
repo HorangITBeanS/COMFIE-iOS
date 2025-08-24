@@ -48,4 +48,8 @@ class LocationUseCase {
             return false
         }
     }
+    
+    func triggerLocationUpdate() {
+        locationService.sendLocationToSubscriber()
+    }
 }

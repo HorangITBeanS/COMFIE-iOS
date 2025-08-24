@@ -89,4 +89,9 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
         )
     }
+    
+    func sendLocationToSubscriber() {
+        guard let location = currentLocation else { return }
+        currentLocationSubject.send(location)
+    }
 }
