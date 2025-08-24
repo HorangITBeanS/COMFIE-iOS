@@ -32,17 +32,10 @@ class ComfieZoneSettingStore: IntentStore {
         self.popupIntent = popupIntent
         self.locationUseCase = locationUseCase
         self.comfieZoneRepository = comfieZoneRepository
-        
-        let isLocationAuthorized = self.getLocationAuthStatus()  // 위치 권한 여부
-        let comfieZone = comfieZoneRepository.fetchComfieZone()  // 컴피존
-        
-        if let comfieZone {
-            // 컴피존 있음 > 나의 위치로 지도 고정, 위치 권한 사라지면 컴피존 위치로 고정
-            self.state = createStateWithComfieZone(comfieZone, isLocationAuthorized: isLocationAuthorized)
-        } else {
-            // 컴피존 없음 > 초기 위치 설정
-            self.state = createInitialStateWithoutComfieZone(isLocationAuthorized: isLocationAuthorized)
-        }
+
+        // 초기 위치, 컴피존 설정
+        currentLocation = locationUseCase.getCurrentLocation()
+        handleIntent(.updateAllStatesByNewCurrentLocation)
         
         // subscribe to currentLocationPublisher
         locationUseCase.currentLocationPublisher
