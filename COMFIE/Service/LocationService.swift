@@ -54,6 +54,20 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     // 위치 권한 변경 시 요청되는 메서드
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         self.authorizationStatus = status
+        
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+            manager.startUpdatingLocation()
+            // 캐시된 위치가 있으면 즉시 설정
+            if let cachedLocation = manager.location {
+                currentLocation = cachedLocation
+            }
+        case .denied, .restricted:
+            manager.stopUpdatingLocation()
+            currentLocation = nil
+        default:
+            break
+        }
     }
     
     // 위치 변경 시 요청되는 메서드
