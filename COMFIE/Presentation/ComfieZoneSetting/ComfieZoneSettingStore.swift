@@ -32,17 +32,10 @@ class ComfieZoneSettingStore: IntentStore {
         self.popupIntent = popupIntent
         self.locationUseCase = locationUseCase
         self.comfieZoneRepository = comfieZoneRepository
-        
-        let isLocationAuthorized = self.getLocationAuthStatus()  // 위치 권한 여부
-        let comfieZone = comfieZoneRepository.fetchComfieZone()  // 컴피존
-        
-        if let comfieZone {
-            // 컴피존 있음 > 나의 위치로 지도 고정, 위치 권한 사라지면 컴피존 위치로 고정
-            self.state = createStateWithComfieZone(comfieZone, isLocationAuthorized: isLocationAuthorized)
-        } else {
-            // 컴피존 없음 > 초기 위치 설정
-            self.state = createInitialStateWithoutComfieZone(isLocationAuthorized: isLocationAuthorized)
-        }
+
+        // 초기 위치, 컴피존 설정
+        currentLocation = locationUseCase.getCurrentLocation()
+        handleIntent(.updateAllStatesByNewCurrentLocation)
         
         // subscribe to currentLocationPublisher
         locationUseCase.currentLocationPublisher
@@ -108,9 +101,10 @@ class ComfieZoneSettingStore: IntentStore {
             }
         case .updateComfieZoneNameTextField(let text):
             state.newComfiezoneName = text
-        case .checkButtonTapped:
+        case .checkButtonTapped:  // 컴피존 추가
             withAnimation {
                 state = handleAction(state, .addComfieZone)
+                triggerCurrentLocationUpdate()
             }
         case .xButtonTapped:
             popupIntent(.openDeleteComfieZonePopup)
@@ -134,6 +128,7 @@ class ComfieZoneSettingStore: IntentStore {
                     }
                 }
             }
+            triggerCurrentLocationUpdate()
         case .updateAllStatesByNewCurrentLocation:
             let isLocationAuthorized = getLocationAuthStatus()
             let comfieZone = comfieZoneRepository.fetchComfieZone()
@@ -247,5 +242,9 @@ class ComfieZoneSettingStore: IntentStore {
             latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,  // 지도 반경
             longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
         )
+    }
+    
+    private func triggerCurrentLocationUpdate() {
+        locationUseCase.triggerLocationUpdate()
     }
 }

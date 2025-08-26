@@ -98,6 +98,7 @@ struct ComfieZoneSettingView: View {
             rightButtonAction: { intent.popupIntent(.closeDeleteComfieZonePopup) }
         )
         .toolbar(.hidden, for: .navigationBar)  // 기본 네비게이션바 삭제
+        .onAppear { updateCameraPosition() }
         .onChange(of: intent.currentLocation) { _, newValue in
             guard let newValue else { return }
             
@@ -113,9 +114,13 @@ struct ComfieZoneSettingView: View {
     }
     
     private func updateCameraPosition() {
-        guard let location = intent.currentLocation else { return }
+        var mapLocationCoordinator = ComfieZoneConstant.defaultPosition
+        if let currentLocationCoordinator = intent.currentLocation?.coordinate {
+            mapLocationCoordinator = currentLocationCoordinator
+        }
+        
         let region = MKCoordinateRegion(
-            center: location.coordinate,
+            center: mapLocationCoordinator,
             latitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.latitude,
             longitudinalMeters: ComfieZoneConstant.mapRadiusInMeters.longitude
         )
