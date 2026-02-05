@@ -302,10 +302,12 @@ extension MemoStore {
         case .syncInputSnapshot(let originalText, let emojiText):
             let syncedEmojiText: String
             if newState.isInComfieZone {
+                // 원문 모드에서는 기존 이모지 매핑을 최대한 유지한다.
                 let seededPreviousEmojiText: String
                 if newState.inputOriginalText.isEmpty,
                    newState.inputMemoText.isEmpty,
                    emojiText.count == originalText.count {
+                    // 최초 동기화 시 전달된 이모지 스냅샷을 신뢰한다.
                     seededPreviousEmojiText = emojiText
                 } else {
                     seededPreviousEmojiText = newState.inputMemoText

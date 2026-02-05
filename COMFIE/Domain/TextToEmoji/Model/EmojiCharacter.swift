@@ -21,6 +21,7 @@ struct EmojiCharacter {
         }
     }
     
+    /// 이모지로 변환 가능한 입력 문자만 허용한다. (공백/줄바꿈/이미 이모지 제외)
     static func isEmojiConvertibleCharacter(_ char: Character) -> Bool {
         if char == " " || char == "\n" || isEmoji(char) {
             return false

@@ -43,11 +43,13 @@ struct EmojiString {
         self = EmojiString(originalText: originalText, emojiText: emojiText)
     }
 
+    /// 저장 직전에 원문/이모지 길이를 정규화해 데이터 불일치를 방지합니다.
     static func normalizedForPersist(originalText: String, preferredEmojiText: String) -> EmojiString {
         if originalText.count == preferredEmojiText.count {
             return EmojiString(originalText: originalText, emojiText: preferredEmojiText)
         }
 
+        // 길이 불일치 시 원문 기준으로 재구성하고, 변환 가능한 문자만 이모지로 유지한다.
         var normalized = EmojiString(originalText: originalText, emojiText: originalText)
         let originalCharacters = Array(originalText)
         let preferredCharacters = Array(preferredEmojiText)
@@ -68,6 +70,7 @@ struct EmojiString {
         return normalized
     }
 
+    /// 원문 모드에서 텍스트가 바뀌어도 기존 이모지 매핑을 최대한 유지합니다.
     static func mergedEmojiTextPreservingUnchanged(
         previousOriginalText: String,
         previousEmojiText: String,
@@ -116,6 +119,7 @@ struct EmojiString {
             return String(normalizedOldEmoji.dropLast())
         }
 
+        // 공통 부분 수열(LCS)로 기존 매핑을 최대한 유지한다.
         var mergedEmoji = newOriginal
         let matchedIndexPairs = lcsMatchedIndexPairs(old: oldOriginal, new: newOriginal)
         for (oldIndex, newIndex) in matchedIndexPairs {
@@ -124,56 +128,6 @@ struct EmojiString {
         }
 
         return String(mergedEmoji)
-    }
-    
-    /// index 위치까지 이모지를 적용한 문자열을 설정합니다.
-    mutating func applyEmojiString(at index: Int, _ newString: String) {
-        syncWithNewString(newString)
-        changeEmoji(upTo: index)
-    }
-    
-    /// 변경된 문자열과 emojiCharacters를 동기화합니다.
-    /// - Note: newString에 문자가 **추가된 경우**에만 실행됩니다.
-    mutating func syncWithNewString(_ newString: String) {
-        let originalCharacters = Array(newString)
-        var originalIndex = 0
-        
-        guard newString.count > emojiCharacters.count else { return}
-        
-        var newCharacters: [EmojiCharacter] = []
-
-        for i in 0..<emojiCharacters.count {
-            let emojiCharacter = emojiCharacters[i]
-            let currentChar = emojiCharacter.emojiCharacter ?? emojiCharacter.originalCharacter
-            let updatedChar = originalCharacters[originalIndex]
-            
-            if updatedChar != currentChar {
-                while originalCharacters[originalIndex] != currentChar {
-                    newCharacters.append(
-                        EmojiCharacter(originalCharacter: originalCharacters[originalIndex])
-                    )
-                    originalIndex += 1
-                }
-            }
-            
-            newCharacters.append(emojiCharacter)
-            originalIndex += 1
-        }
-        
-        // 나머지 추가된 문자 반영
-        if originalIndex < originalCharacters.count {
-            originalCharacters[originalIndex...].forEach {
-                    newCharacters.append(EmojiCharacter(originalCharacter: $0))
-                }
-        }
-
-        emojiCharacters = newCharacters
-    }
-    
-    /// index 위치까지 모든 character에 이모지를 적용합니다.
-    mutating private func changeEmoji(upTo index: Int) {
-        guard emojiCharacters.count > index && index > 0 else { return }
-        (0...index).forEach { emojiCharacters[$0].setEmojiCharacter() }
     }
     
     /// 현재 이모지 적용 상태의 문자열을 반환합니다.
@@ -214,24 +168,12 @@ struct EmojiString {
         }
     }
     
-    /// 지정된 범위의 이모지 문자열을 삭제합니다.
-    mutating func deleteEmojiString(from start: Int, to end: Int? = nil) {
-        let toIndex = end ?? start
-        
-        // 삭제 범위가 유효한지 확인합니다.
-        guard start >= 0, toIndex < emojiCharacters.count, start <= toIndex else {
-            print("deleteEmojiString(start:end:) 인덱스 문제: \(start), \(String(describing: end))")
-            return
-        }
-
-        emojiCharacters.removeSubrange(start...toIndex)
-    }
-
     private mutating func setEmojiCharacter(_ emoji: Character, at index: Int) {
         guard emojiCharacters.indices.contains(index) else { return }
         emojiCharacters[index].emojiCharacter = emoji
     }
 
+    /// LCS 기반으로 공통 문자 인덱스 쌍을 구합니다.
     private static func lcsMatchedIndexPairs(old: [Character], new: [Character]) -> [(Int, Int)] {
         guard !old.isEmpty, !new.isEmpty else { return [] }
 

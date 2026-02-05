@@ -11,6 +11,7 @@ extension MemoInputUITextView.Coordinator {
     // MARK: - Snapshot/Rendering
 
     func normalizedOriginalText() -> String {
+        // inputOriginalText가 비어 있으면 기존 입력값으로 폴백한다.
         if !intent.state.inputOriginalText.isEmpty {
             return intent.state.inputOriginalText
         }
@@ -18,6 +19,7 @@ extension MemoInputUITextView.Coordinator {
     }
 
     func normalizedEmojiText(with originalText: String) -> String {
+        // 이모지 스냅샷이 없으면 원문을 그대로 사용한다.
         if !intent.state.inputMemoText.isEmpty {
             return intent.state.inputMemoText
         }
@@ -47,6 +49,7 @@ extension MemoInputUITextView.Coordinator {
         var emoji = ""
         let fullRange = NSRange(location: 0, length: storage.length)
 
+        // attachment 토큰은 원문/이모지를 각각 복원한다.
         storage.enumerateAttributes(in: fullRange, options: []) { attributes, range, _ in
             if let token = attributes[.attachment] as? MemoEmojiTokenAttachment {
                 original.append(token.original)
@@ -72,6 +75,7 @@ extension MemoInputUITextView.Coordinator {
             return NSAttributedString(string: originalText, attributes: [.font: font])
         }
 
+        // 원문과 이모지가 다른 지점만 토큰 attachment로 치환한다.
         for index in 0..<count {
             let originalCharacter = originalCharacters[index]
             let emojiCharacter = emojiCharacters[index]

@@ -16,7 +16,6 @@ struct MemoCell: View {
     
     @Binding var intent: MemoStore
     
-    // TODO: isUserInComfieZone 변경 필요
     let isUserInComfieZone: Bool
     
     private var isEditing: Bool {

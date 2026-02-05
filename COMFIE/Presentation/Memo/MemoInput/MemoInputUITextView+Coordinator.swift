@@ -11,6 +11,7 @@ import UIKit
 
 extension MemoInputUITextView {
     final class Coordinator: NSObject, UITextViewDelegate {
+        // IME 조합 중 변경 범위를 추적하기 위한 구조체
         struct PendingChange {
             let range: NSRange
             let replacementLength: Int
@@ -28,7 +29,9 @@ extension MemoInputUITextView {
         private var cancellables = Set<AnyCancellable>()
 
         var isMutating = false
+        // shouldChangeTextIn에서 잡은 변경을 textViewDidChange에서 처리한다.
         var pendingChange: PendingChange?
+        // IME 조합 완료 시점까지 미뤄야 하는 변경을 보관한다.
         var deferredChange: PendingChange?
         var lastSelectionRange = NSRange(location: 0, length: 0)
         var lastTextChangeTime: TimeInterval = 0
@@ -75,6 +78,7 @@ extension MemoInputUITextView {
             let currentSnapshot = snapshot(from: textView.textStorage)
             let modeChanged = lastEmojiMode != isEmojiMode
 
+            // 스냅샷이 동일하면 렌더링을 건너뛰어 커서 튐을 줄인다.
             if !force, !modeChanged {
                 let isSameSnapshot = currentSnapshot.original == normalizedOriginal
                     && (isEmojiMode ? currentSnapshot.emoji == normalizedEmoji : currentSnapshot.original == normalizedOriginal)
@@ -87,6 +91,7 @@ extension MemoInputUITextView {
             isMutating = true
 
             if isEmojiMode {
+                // 이모지 모드에서는 토큰 attachment로 렌더링한다.
                 textView.attributedText = attributedText(
                     originalText: normalizedOriginal,
                     emojiText: normalizedEmoji,
@@ -129,6 +134,7 @@ extension MemoInputUITextView {
             }
 
             if isEmojiMode {
+                // IME 조합 여부에 따라 변환 시점을 분리한다.
                 let isComposing = (textView.markedTextRange != nil)
                 if isComposing, let markedTextRange = textView.markedTextRange {
                     let marked = textView.memoIME_nsRange(from: markedTextRange)

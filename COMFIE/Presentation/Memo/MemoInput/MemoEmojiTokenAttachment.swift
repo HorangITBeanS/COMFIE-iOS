@@ -18,6 +18,7 @@ final class MemoEmojiTokenAttachment: NSTextAttachment {
         self.emoji = emoji
         super.init(data: nil, ofType: nil)
 
+        // 이모지를 이미지로 렌더링해 텍스트 레이아웃/커서 동작을 안정화한다.
         let emojiString = NSAttributedString(string: emoji, attributes: [.font: font])
         let textSize = emojiString.size()
         let width = max(1, ceil(textSize.width))
