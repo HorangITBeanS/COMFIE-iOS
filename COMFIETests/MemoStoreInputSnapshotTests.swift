@@ -253,7 +253,7 @@ struct MemoStoreInputSnapshotTests {
         var resignSideEffectCount = 0
         store.uiSideEffectPublisher
             .sink { sideEffect in
-                if case .resignInputFocusWithSyncInput = sideEffect {
+                if case .resignInputFocusWithoutSync = sideEffect {
                     resignSideEffectCount += 1
                 }
             }
@@ -269,6 +269,148 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
         #expect(resignSideEffectCount == 1)
         _ = cancellables
+    }
+
+    @MainActor
+    @Test func coordinatorHarnessWiresTextViewDelegate() {
+        let harness = makeMemoInputCoordinator()
+        let coordinator = harness.coordinator
+        let textView = harness.textView
+
+        #expect(textView.delegate === coordinator)
+    }
+
+    @MainActor
+    @Test func programmaticResignAfterSaveDoesNotRestoreClearedSnapshot() async throws {
+        let harness = makeMemoInputCoordinator()
+        let coordinator = harness.coordinator
+        let textView = harness.textView
+        let store = harness.store
+        let repository = harness.repository
+
+        coordinator.bindFocusControl()
+        textView.text = "a1"
+        coordinator.syncSnapshotToStore(textView)
+
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+
+        try await waitUntil(timeoutTick: 40) {
+            repository.savedMemos.count == 1
+        }
+        #expect(store.state.inputOriginalText.isEmpty)
+        #expect(store.state.inputMemoText.isEmpty)
+
+        textView.delegate?.textViewDidEndEditing?(textView)
+
+        #expect(store.state.inputOriginalText.isEmpty)
+        #expect(store.state.inputMemoText.isEmpty)
+    }
+
+    @MainActor
+    @Test func saveRequestRecoversToIdleWhenFinalSyncCallbackIsDropped() async throws {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        #expect(store.state.savePhase != .idle)
+
+        try await waitUntil(timeoutTick: 80) {
+            store.state.savePhase == .idle
+        }
+        #expect(store.state.savePhase == .idle)
+        #expect(repository.saveCallCount == 0)
+
+        let requestID = try #require(beginSaveRequestID(store))
+        completeFinalSync(
+            store,
+            requestID: requestID,
+            originalText: "ab",
+            emojiText: "ab"
+        )
+
+        try await waitUntil(timeoutTick: 40) {
+            repository.savedMemos.count == 1
+        }
+        #expect(store.state.savePhase == .idle)
+    }
+
+    @MainActor
+    @Test func lateFinalSyncCompletionAfterTimeoutStillPersistsWithoutRetry() async throws {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        let timedOutRequestID = try #require(beginSaveRequestID(store))
+
+        try await waitUntil(timeoutTick: 80) {
+            store.state.savePhase == .idle
+        }
+        #expect(repository.saveCallCount == 0)
+
+        completeFinalSync(
+            store,
+            requestID: timedOutRequestID,
+            originalText: "ab",
+            emojiText: "ab"
+        )
+
+        try await waitUntil(timeoutTick: 40) {
+            repository.savedMemos.count == 1
+        }
+        let savedMemo = try #require(repository.savedMemos.first)
+        #expect(savedMemo.originalText == "ab")
+        #expect(store.state.savePhase == .idle)
+    }
+
+    @MainActor
+    @Test func lateFinalSyncCompletionAfterTimeoutIsIgnoredAfterInputChanges() async throws {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        let timedOutRequestID = try #require(beginSaveRequestID(store))
+
+        try await waitUntil(timeoutTick: 80) {
+            store.state.savePhase == .idle
+        }
+        #expect(repository.saveCallCount == 0)
+
+        // timeout 이후 입력이 바뀌면 이전 요청의 늦은 callback은 무시되어야 한다.
+        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "abc", emojiText: "abc")))
+        completeFinalSync(
+            store,
+            requestID: timedOutRequestID,
+            originalText: "ab",
+            emojiText: "ab"
+        )
+
+        #expect(repository.saveCallCount == 0)
+        #expect(repository.savedMemos.isEmpty)
+        #expect(store.state.inputOriginalText == "abc")
+        #expect(store.state.savePhase == .idle)
+    }
+
+    @MainActor
+    @Test func requestFinalSyncWithNilTextViewUsesStateSnapshotFallback() async throws {
+        let harness = makeMemoInputCoordinator()
+        let coordinator = harness.coordinator
+        let store = harness.store
+        let repository = harness.repository
+
+        coordinator.bindFocusControl()
+        coordinator.textView = nil
+
+        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+
+        try await waitUntil(timeoutTick: 40) {
+            repository.savedMemos.count == 1
+        }
+        let savedMemo = try #require(repository.savedMemos.first)
+        #expect(savedMemo.originalText == "ab")
+        #expect(savedMemo.emojiText.count == 2)
+        #expect(store.state.savePhase == .idle)
     }
 
     @Test func backgroundTappedRequestsResignWithoutPersist() {
@@ -627,6 +769,7 @@ struct MemoStoreInputSnapshotTests {
         textView.translatesAutoresizingMaskIntoConstraints = false
         let placeholderLabel = UILabel()
         coordinator.textView = textView
+        textView.delegate = coordinator
         coordinator.placeholderLabel = placeholderLabel
         let heightConstraint = textView.heightAnchor.constraint(lessThanOrEqualToConstant: 120)
         heightConstraint.isActive = true

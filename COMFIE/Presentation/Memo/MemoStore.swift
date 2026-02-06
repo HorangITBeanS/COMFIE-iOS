@@ -10,6 +10,8 @@ import SwiftUI
 
 @Observable
 class MemoStore: IntentStore {
+    private static let finalSyncTimeoutNanoseconds: UInt64 = 300_000_000
+
     private(set) var state: State
     // MARK: State
     struct State {
@@ -93,6 +95,7 @@ class MemoStore: IntentStore {
             case syncInputSnapshot(originalText: String, emojiText: String)
             case memoInputButtonTapped
             case finalSyncCompleted(requestID: UUID, originalText: String, emojiText: String)
+            case finalSyncTimedOut(requestID: UUID)
         }
         
         enum MemoCellIntent {
@@ -121,6 +124,7 @@ class MemoStore: IntentStore {
         enum InputAction {
             case syncInputSnapshot(originalText: String, emojiText: String)
             case finalSyncCompleted(requestID: UUID, originalText: String, emojiText: String)
+            case finalSyncTimedOut(requestID: UUID)
             case startEditing(Memo)
             case cancelEditing
         }
@@ -149,6 +153,7 @@ class MemoStore: IntentStore {
         
         enum MemoInput {
             case resignInputFocusWithSyncInput
+            case resignInputFocusWithoutSync
             case requestFinalSyncAndResign(requestID: UUID)
             case setMemoInputFocus
         }
@@ -166,6 +171,8 @@ class MemoStore: IntentStore {
     private(set) var uiSideEffectPublisher = PassthroughSubject<SideEffect.MemoInput, Never>()
     private(set) var scrollSideEffectPublisher = PassthroughSubject<SideEffect.Scroll, Never>()
     private var cancellables = Set<AnyCancellable>()
+    private var finalSyncTimeoutTask: Task<Void, Never>?
+    private var timedOutFinalSyncRequestID: UUID?
     
     // MARK: Init
     init(router: Router, memoRepository: MemoRepositoryProtocol, locationUseCase: LocationUseCase) {
@@ -176,6 +183,10 @@ class MemoStore: IntentStore {
         self.state = .init(isInComfieZone: locationUseCase.isInComfieZone(locationUseCase.getCurrentLocation()))
         
         observeIsInComfieZone()
+    }
+
+    deinit {
+        cancelFinalSyncTimeout()
     }
     
     // MARK: Method
@@ -235,7 +246,7 @@ extension MemoStore {
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
-            performUISideEffect(for: .resignInputFocusWithSyncInput)
+            performUISideEffect(for: .resignInputFocusWithoutSync)
             return newState
         case .retrospectionButtonTapped(let memo):
             let newState = handleNavigationAction(state, .toRetrospection(memo))
@@ -249,9 +260,11 @@ extension MemoStore {
             guard case .idle = state.savePhase else { return state }
 
             let requestID = UUID()
+            timedOutFinalSyncRequestID = nil
             var newState = state
             newState.savePhase = .awaitingFinalSync(requestID: requestID)
             performUISideEffect(for: .requestFinalSyncAndResign(requestID: requestID))
+            startFinalSyncTimeout(for: requestID)
             return newState
         case .syncInputSnapshot(let originalText, let emojiText):
             return handleAction(state, .input(.syncInputSnapshot(originalText: originalText, emojiText: emojiText)))
@@ -266,6 +279,8 @@ extension MemoStore {
                     )
                 )
             )
+        case .finalSyncTimedOut(let requestID):
+            return handleAction(state, .input(.finalSyncTimedOut(requestID: requestID)))
         }
     }
     
@@ -305,15 +320,33 @@ extension MemoStore {
         var newState = state
         switch action {
         case .syncInputSnapshot(let originalText, let emojiText):
+            if case .idle = newState.savePhase,
+               timedOutFinalSyncRequestID != nil,
+               newState.inputOriginalText != originalText || newState.inputMemoText != emojiText {
+                timedOutFinalSyncRequestID = nil
+            }
             return applyInputSnapshot(newState, originalText: originalText, emojiText: emojiText)
         case .finalSyncCompleted(let requestID, let originalText, let emojiText):
-            guard case .awaitingFinalSync(let currentRequestID) = newState.savePhase else {
-                return newState
+            let isAwaitingMatchedRequest: Bool
+            if case .awaitingFinalSync(let currentRequestID) = newState.savePhase {
+                isAwaitingMatchedRequest = (currentRequestID == requestID)
+            } else {
+                isAwaitingMatchedRequest = false
             }
-            guard currentRequestID == requestID else {
+
+            let isLateCompletionForTimedOutRequest: Bool
+            if case .idle = newState.savePhase {
+                isLateCompletionForTimedOutRequest = (timedOutFinalSyncRequestID == requestID)
+            } else {
+                isLateCompletionForTimedOutRequest = false
+            }
+
+            guard isAwaitingMatchedRequest || isLateCompletionForTimedOutRequest else {
                 return newState
             }
 
+            cancelFinalSyncTimeout()
+            timedOutFinalSyncRequestID = nil
             newState = applyInputSnapshot(newState, originalText: originalText, emojiText: emojiText)
             newState.savePhase = .persisting
 
@@ -324,6 +357,18 @@ extension MemoStore {
                 performScrollEffect(for: .toBottom)
                 return persistedState
             }
+        case .finalSyncTimedOut(let requestID):
+            guard case .awaitingFinalSync(let currentRequestID) = newState.savePhase else {
+                return newState
+            }
+            guard currentRequestID == requestID else {
+                return newState
+            }
+
+            newState.savePhase = .idle
+            timedOutFinalSyncRequestID = requestID
+            cancelFinalSyncTimeout()
+            return newState
         case .startEditing(let memo):
             // 작성되고 있던 메모 reset
             newState.resetEditingMemo()
@@ -396,6 +441,24 @@ extension MemoStore {
 
 // MARK: - Helper Methods
 extension MemoStore {
+    private func startFinalSyncTimeout(for requestID: UUID) {
+        cancelFinalSyncTimeout()
+
+        finalSyncTimeoutTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: Self.finalSyncTimeoutNanoseconds)
+            guard !Task.isCancelled, let self else { return }
+
+            await MainActor.run {
+                self.handleIntent(.memoInput(.finalSyncTimedOut(requestID: requestID)))
+            }
+        }
+    }
+
+    private func cancelFinalSyncTimeout() {
+        finalSyncTimeoutTask?.cancel()
+        finalSyncTimeoutTask = nil
+    }
+
     private func applyInputSnapshot(_ state: State, originalText: String, emojiText: String) -> State {
         var newState = state
 
