@@ -8,12 +8,10 @@
 import UIKit
 
 final class MemoEmojiTokenAttachment: NSTextAttachment {
-    let tokenID: UUID
     let original: String
     let emoji: String
 
     init(original: String, emoji: String, font: UIFont) {
-        self.tokenID = UUID()
         self.original = original
         self.emoji = emoji
         super.init(data: nil, ofType: nil)
