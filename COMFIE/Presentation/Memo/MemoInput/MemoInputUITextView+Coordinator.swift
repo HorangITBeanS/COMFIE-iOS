@@ -59,12 +59,25 @@ extension MemoInputUITextView {
                         if let textView {
                             unfocusTextView(textView)
                         }
+                    case .requestFinalSyncAndResign(let requestID):
+                        guard let textView else { return }
+                        let currentSnapshot = snapshot(from: textView.textStorage)
+                        let emojiText = isEmojiMode ? currentSnapshot.emoji : currentSnapshot.original
+
+                        intent.handleIntent(
+                            .memoInput(
+                                .finalSyncCompleted(
+                                    requestID: requestID,
+                                    originalText: currentSnapshot.original,
+                                    emojiText: emojiText
+                                )
+                            )
+                        )
+                        unfocusTextView(textView)
                     case .setMemoInputFocus:
                         if let textView {
                             focusTextView(textView)
                         }
-                    case .updateInputViewWithState:
-                        applyStateToTextView(force: true)
                     }
                 }
                 .store(in: &cancellables)
@@ -114,13 +127,13 @@ extension MemoInputUITextView {
         // MARK: - UITextViewDelegate
 
         func textViewDidChange(_ textView: UITextView) {
-            updatePlaceholderVisibility(textView)
-            updateTextViewHeight(textView)
-
             guard !isMutating else {
                 pendingChange = nil
                 return
             }
+
+            updatePlaceholderVisibility(textView)
+            updateTextViewHeight(textView)
 
             if lastEmojiMode == nil {
                 lastEmojiMode = isEmojiMode

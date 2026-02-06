@@ -13,6 +13,12 @@ class MemoStore: IntentStore {
     private(set) var state: State
     // MARK: State
     struct State {
+        enum SavePhase: Equatable {
+            case idle
+            case awaitingFinalSync(requestID: UUID)
+            case persisting
+        }
+
         var memos: [Memo] = []
         var isInComfieZone: Bool = false
         
@@ -32,6 +38,7 @@ class MemoStore: IntentStore {
         // 사용자가 텍스트 필드에 입력하는 메모
         var inputMemoText: String = ""
         var inputOriginalText: String = ""
+        var savePhase: SavePhase = .idle
         var editingMemo: Memo?
         var deletingMemo: Memo?
         
@@ -85,6 +92,7 @@ class MemoStore: IntentStore {
         enum MemoInputIntent {
             case syncInputSnapshot(originalText: String, emojiText: String)
             case memoInputButtonTapped
+            case finalSyncCompleted(requestID: UUID, originalText: String, emojiText: String)
         }
         
         enum MemoCellIntent {
@@ -112,6 +120,7 @@ class MemoStore: IntentStore {
         
         enum InputAction {
             case syncInputSnapshot(originalText: String, emojiText: String)
+            case finalSyncCompleted(requestID: UUID, originalText: String, emojiText: String)
             case startEditing(Memo)
             case cancelEditing
         }
@@ -140,8 +149,8 @@ class MemoStore: IntentStore {
         
         enum MemoInput {
             case resignInputFocusWithSyncInput
+            case requestFinalSyncAndResign(requestID: UUID)
             case setMemoInputFocus
-            case updateInputViewWithState
         }
         
         enum Scroll {
@@ -219,7 +228,6 @@ extension MemoStore {
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
             let newState = handleAction(state, .input(.startEditing(memo)))
-            performUISideEffect(for: .updateInputViewWithState)
             performUISideEffect(for: .setMemoInputFocus)
             
             // 메모 수정 시, 해당 메모 위치로 스크롤 이동
@@ -227,7 +235,6 @@ extension MemoStore {
             return newState
         case .editingCancelButtonTapped:
             let newState = handleAction(state, .input(.cancelEditing))
-            performUISideEffect(for: .updateInputViewWithState)
             performUISideEffect(for: .resignInputFocusWithSyncInput)
             return newState
         case .retrospectionButtonTapped(let memo):
@@ -239,28 +246,26 @@ extension MemoStore {
     private func handleMemoInputIntent(_ intent: Intent.MemoInputIntent) -> State {
         switch intent {
         case .memoInputButtonTapped:
-            // ⚠️ 텍스트뷰에 보이는 값과 상태가 불일치하는 문제 방지를 위해, 입력 종료 시 델리게이트 메서드에서 동기화 메서드를 추가로 실행함.
-            performUISideEffect(for: .resignInputFocusWithSyncInput)
-            
-            // resignFirstResponder 호출과 그 후 동작들이 모두 메인 스레드(MainActor)에서 실행되어 순서가 보장됨.
-            Task { @MainActor in
-                if let editingMemo = state.editingMemo {
-                    // 메모 수정 중
-                    self.state = handleAction(state, .memo(.update(editingMemo)))
-                } else {
-                    // 새로운 메모 작성 중
-                    self.state = handleAction(state, .memo(.save))
-                    
-                    // 메모가 추가 시, 해당 메모 위치(bottom)으로 스크롤 이동
-                    performScrollEffect(for: .toBottom)
-                }
-            }
-            
-            performUISideEffect(for: .updateInputViewWithState)
-            // 🥲 여기 리턴 값은 사실상 의미 없는 값
-            return state
+            guard case .idle = state.savePhase else { return state }
+
+            let requestID = UUID()
+            var newState = state
+            newState.savePhase = .awaitingFinalSync(requestID: requestID)
+            performUISideEffect(for: .requestFinalSyncAndResign(requestID: requestID))
+            return newState
         case .syncInputSnapshot(let originalText, let emojiText):
             return handleAction(state, .input(.syncInputSnapshot(originalText: originalText, emojiText: emojiText)))
+        case .finalSyncCompleted(let requestID, let originalText, let emojiText):
+            return handleAction(
+                state,
+                .input(
+                    .finalSyncCompleted(
+                        requestID: requestID,
+                        originalText: originalText,
+                        emojiText: emojiText
+                    )
+                )
+            )
         }
     }
     
@@ -300,31 +305,25 @@ extension MemoStore {
         var newState = state
         switch action {
         case .syncInputSnapshot(let originalText, let emojiText):
-            let syncedEmojiText: String
-            if newState.isInComfieZone {
-                // 원문 모드에서는 기존 이모지 매핑을 최대한 유지한다.
-                let seededPreviousEmojiText: String
-                if newState.inputOriginalText.isEmpty,
-                   newState.inputMemoText.isEmpty,
-                   emojiText.count == originalText.count {
-                    // 최초 동기화 시 전달된 이모지 스냅샷을 신뢰한다.
-                    seededPreviousEmojiText = emojiText
-                } else {
-                    seededPreviousEmojiText = newState.inputMemoText
-                }
-
-                syncedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
-                    previousOriginalText: newState.inputOriginalText,
-                    previousEmojiText: seededPreviousEmojiText,
-                    newOriginalText: originalText
-                )
-            } else {
-                syncedEmojiText = emojiText
+            return applyInputSnapshot(newState, originalText: originalText, emojiText: emojiText)
+        case .finalSyncCompleted(let requestID, let originalText, let emojiText):
+            guard case .awaitingFinalSync(let currentRequestID) = newState.savePhase else {
+                return newState
+            }
+            guard currentRequestID == requestID else {
+                return newState
             }
 
-            newState.inputOriginalText = originalText
-            newState.inputMemoText = syncedEmojiText
-            newState.emojiString.syncWithSnapshot(originalText: originalText, emojiText: syncedEmojiText)
+            newState = applyInputSnapshot(newState, originalText: originalText, emojiText: emojiText)
+            newState.savePhase = .persisting
+
+            if let editingMemo = newState.editingMemo {
+                return handleAction(newState, .memo(.update(editingMemo)))
+            } else {
+                let persistedState = handleAction(newState, .memo(.save))
+                performScrollEffect(for: .toBottom)
+                return persistedState
+            }
         case .startEditing(let memo):
             // 작성되고 있던 메모 reset
             newState.resetEditingMemo()
@@ -397,6 +396,37 @@ extension MemoStore {
 
 // MARK: - Helper Methods
 extension MemoStore {
+    private func applyInputSnapshot(_ state: State, originalText: String, emojiText: String) -> State {
+        var newState = state
+
+        let syncedEmojiText: String
+        if newState.isInComfieZone {
+            // 원문 모드에서는 기존 이모지 매핑을 최대한 유지한다.
+            let seededPreviousEmojiText: String
+            if newState.inputOriginalText.isEmpty,
+               newState.inputMemoText.isEmpty,
+               emojiText.count == originalText.count {
+                // 최초 동기화 시 전달된 이모지 스냅샷을 신뢰한다.
+                seededPreviousEmojiText = emojiText
+            } else {
+                seededPreviousEmojiText = newState.inputMemoText
+            }
+
+            syncedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
+                previousOriginalText: newState.inputOriginalText,
+                previousEmojiText: seededPreviousEmojiText,
+                newOriginalText: originalText
+            )
+        } else {
+            syncedEmojiText = emojiText
+        }
+
+        newState.inputOriginalText = originalText
+        newState.inputMemoText = syncedEmojiText
+        newState.emojiString.syncWithSnapshot(originalText: originalText, emojiText: syncedEmojiText)
+        return newState
+    }
+
     private func syncEmojiStringForPersist(_ state: inout State) {
         let originalSource = state.inputOriginalText.isEmpty ? state.inputMemoText : state.inputOriginalText
         state.emojiString = EmojiString.normalizedForPersist(
@@ -435,8 +465,10 @@ extension MemoStore {
             newState.inputMemoText = ""
             newState.inputOriginalText = ""
             newState.emojiString = EmojiString()
+            newState.savePhase = .idle
         case .failure(let error):
             print("메모 저장 실패: \(error)")
+            newState.savePhase = .idle
         }
         return newState
     }
@@ -455,8 +487,10 @@ extension MemoStore {
             }
             
             newState.resetEditingMemo()
+            newState.savePhase = .idle
         case .failure(let error):
             print("메모 업데이트 실패: \(error)")
+            newState.savePhase = .idle
         }
         return newState
     }
