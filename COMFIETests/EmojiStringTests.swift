@@ -10,7 +10,7 @@ struct EmojiStringTests {
         #expect(emojiString.getEmojiString() == "😀b!")
     }
 
-    @Test func setUnassignedEmojisSkipsSpaceAndDigits() {
+    @Test func setUnassignedEmojisSkipsSpaceAndConvertsDigits() {
         var emojiString = EmojiString(originalText: "a 1!", emojiText: "a 1!")
 
         emojiString.setUnassignedEmojis()
@@ -19,8 +19,34 @@ struct EmojiStringTests {
         #expect(result.count == 4)
         #expect(result[0] != "a")
         #expect(result[1] == " ")
-        #expect(result[2] == "1")
+        #expect(result[2] != "1")
         #expect(result[3] != "!")
+    }
+
+    @Test func setUnassignedEmojisConvertsUnicodeLettersAcrossScripts() {
+        let original = "éЖ中あ"
+        var emojiString = EmojiString(originalText: original, emojiText: original)
+
+        emojiString.setUnassignedEmojis()
+
+        let result = Array(emojiString.getEmojiString())
+        let expected = Array(original)
+        #expect(result.count == expected.count)
+        for index in expected.indices {
+            #expect(result[index] != expected[index])
+        }
+    }
+
+    @Test func setUnassignedEmojisConvertsDecomposedAccentAsSingleCharacter() {
+        let decomposed = "e\u{0301}"
+        var emojiString = EmojiString(originalText: decomposed, emojiText: decomposed)
+
+        emojiString.setUnassignedEmojis()
+
+        let converted = emojiString.getEmojiString()
+        #expect(Array(decomposed).count == 1)
+        #expect(Array(converted).count == 1)
+        #expect(converted != decomposed)
     }
 
     @Test func snapshotInitHandlesLengthMismatchWithoutCrash() {
@@ -37,7 +63,7 @@ struct EmojiStringTests {
         let emoji = Array(emojiString.getEmojiString())
         #expect(emojiString.getOriginalString() == "ab1")
         #expect(emoji.count == 3)
-        #expect(emoji[2] == "1")
+        #expect(emoji[2] != "1")
     }
 
     @Test func mergedEmojiTextPreservingUnchangedSupportsTailAppendFastPath() {

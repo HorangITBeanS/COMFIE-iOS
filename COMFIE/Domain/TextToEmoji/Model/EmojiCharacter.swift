@@ -4,6 +4,7 @@
 //
 //  Created by zaehorang on 4/15/25.
 //
+import Foundation
 
 /// 각 문자를 하나의 이모지와 매칭하는 구조입니다.
 /// 예: 'a' → 🐯, '한' → 🐯
@@ -27,22 +28,25 @@ struct EmojiCharacter {
             return false
         }
 
-        guard let scalar = char.unicodeScalars.first,
-              char.unicodeScalars.count == 1 else {
+        let scalars = char.unicodeScalars
+        if !scalars.isEmpty, scalars.allSatisfy({ CharacterSet.letters.contains($0) }) {
+            return true
+        }
+
+        guard let scalar = scalars.first,
+              scalars.count == 1 else {
             return false
         }
 
         let value = Int(scalar.value)
-        let isHangulSyllable = (0xAC00...0xD7A3).contains(value)
-        let isHangulJamo = (0x3131...0x318E).contains(value) || (0x1100...0x11FF).contains(value)
-        let isLatinAlphabet = (0x41...0x5A).contains(value) || (0x61...0x7A).contains(value)
+        let isASCIIDigit = (0x30...0x39).contains(value)
         let isASCIIPunctuation =
             (0x21...0x2F).contains(value)
             || (0x3A...0x40).contains(value)
             || (0x5B...0x60).contains(value)
             || (0x7B...0x7E).contains(value)
 
-        return isHangulSyllable || isHangulJamo || isLatinAlphabet || isASCIIPunctuation
+        return isASCIIDigit || isASCIIPunctuation
     }
 
     private static func isEmoji(_ char: Character) -> Bool {

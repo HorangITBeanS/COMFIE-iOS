@@ -11,10 +11,6 @@ struct EmojiString {
     init() {
         self.emojiCharacters = []
     }
-    
-    init(memo: Memo) {
-        self.init(originalText: memo.originalText, emojiText: memo.emojiText)
-    }
 
     init(originalText: String, emojiText: String) {
         let originalCharacters = Array(originalText)
@@ -135,22 +131,6 @@ struct EmojiString {
         emojiCharacters
             .map { String($0.emojiCharacter ?? $0.originalCharacter) }
             .joined()
-    }
-    
-    /// index 위치까지의 이모지 적용 문자열을 반환합니다.
-    func getEmojiString(to index: Int) -> String {
-        var string = ""
-        guard index >= 0 && index < emojiCharacters.count else {
-            print("getEmojiString(to:) index out of range.: \(index)")
-            return string
-        }
-        
-        for i in 0...index {
-            let chracter = emojiCharacters[i]
-            
-            string += String(chracter.emojiCharacter ?? chracter.originalCharacter)
-        }
-        return string
     }
     
     /// 원본 문자열을 반환합니다.

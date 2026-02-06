@@ -69,7 +69,7 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.emojiString.getEmojiString() == "😀b")
     }
 
-    @Test func saveFinalizesUnconvertedCharactersFromSnapshot() async throws {
+    @Test func saveFinalizesConvertibleCharactersFromSnapshot() async throws {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
@@ -86,7 +86,7 @@ struct MemoStoreInputSnapshotTests {
         #expect(savedMemo.originalText == "a1")
         #expect(savedEmojiCharacters.count == 2)
         #expect(savedEmojiCharacters[0] != "a")
-        #expect(savedEmojiCharacters[1] == "1")
+        #expect(savedEmojiCharacters[1] != "1")
         #expect(store.state.inputMemoText.isEmpty)
         #expect(store.state.inputOriginalText.isEmpty)
     }
