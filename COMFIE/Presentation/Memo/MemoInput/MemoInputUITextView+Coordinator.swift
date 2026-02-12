@@ -132,6 +132,9 @@ extension MemoInputUITextView {
                     emojiText: seededEmoji,
                     revision: intent.state.inputSnapshotRevision
                 )
+                // Seed 기반 재렌더 시 이전 입력 사이클의 IME 임시 상태를 제거한다.
+                pendingChange = nil
+                deferredChange = nil
                 lastAppliedInputSeedVersion = intent.state.inputSeedVersion
                 lastEmojiMode = isEmojiMode
                 return
