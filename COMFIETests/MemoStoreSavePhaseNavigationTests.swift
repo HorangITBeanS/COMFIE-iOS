@@ -58,4 +58,27 @@ struct MemoStoreSavePhaseNavigationTests {
 
         #expect(store.state.deletingMemo == nil)
     }
+
+    @Test func confirmDeletePopupIsIgnoredWhileSaveInProgress() {
+        let store = MemoStore(
+            router: Router(),
+            memoRepository: MockMemoRepository(),
+            locationUseCase: StaticComfieZoneLocationUseCase()
+        )
+        let memo = Memo(id: UUID(), createdAt: .now, originalText: "a", emojiText: "😀")
+
+        store.handleIntent(.memoCell(.deleteButtonTapped(memo)))
+        #expect(store.state.deletingMemo?.id == memo.id)
+
+        store.handleIntent(.memoInput(.draftAvailabilityChangedWithRevision(isEmpty: false, revision: 1)))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        guard case .awaitingFinalSync = store.state.savePhase else {
+            Issue.record("savePhase should be awaitingFinalSync before popup confirm guard check")
+            return
+        }
+
+        store.handleIntent(.deletePopup(.confirmDeleteButtonTapped))
+
+        #expect(store.state.deletingMemo?.id == memo.id)
+    }
 }

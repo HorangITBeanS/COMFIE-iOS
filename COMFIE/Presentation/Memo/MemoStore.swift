@@ -326,6 +326,7 @@ extension MemoStore {
         case .cancelDeleteButtonTapped:
             return handleAction(state, .popup(.cancelDelete))
         case .confirmDeleteButtonTapped:
+            guard state.savePhase == .idle else { return state }
             return handleAction(state, .memo(.delete))
         }
     }
