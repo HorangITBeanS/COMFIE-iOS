@@ -242,6 +242,29 @@ struct MemoStoreInputSnapshotTests {
         _ = cancellables
     }
 
+    @Test func saveTappedWithEmptyInputDoesNotStartFinalSync() {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+        var cancellables = Set<AnyCancellable>()
+        var requestCount = 0
+
+        store.uiSideEffectPublisher
+            .sink { sideEffect in
+                if case .requestFinalSyncAndResign = sideEffect {
+                    requestCount += 1
+                }
+            }
+            .store(in: &cancellables)
+
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+
+        #expect(requestCount == 0)
+        #expect(repository.saveCallCount == 0)
+        #expect(repository.updateCallCount == 0)
+        #expect(store.state.savePhase == .idle)
+        _ = cancellables
+    }
+
     @Test func finalSyncCompletedWithMismatchedRequestIDDoesNotPersist() throws {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
