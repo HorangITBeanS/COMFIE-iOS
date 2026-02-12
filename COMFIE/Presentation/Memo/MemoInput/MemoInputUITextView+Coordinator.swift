@@ -42,7 +42,11 @@ extension MemoInputUITextView {
         var lastTextChangeTime: TimeInterval = 0
         var lastTextLength = 0
         var lastEmojiMode: Bool?
+        var lastAppliedInputSeedVersion = 0
         private var endEditingSyncPolicy: EndEditingSyncPolicy = .sync
+        var draftOriginalText = ""
+        var draftEmojiText = ""
+        var draftRevision = 0
 
         var isEmojiMode: Bool {
             !intent.state.isInComfieZone
@@ -51,6 +55,10 @@ extension MemoInputUITextView {
         init(parent: MemoInputUITextView, intent: Binding<MemoStore>) {
             self.parent = parent
             self._intent = intent
+            self.draftOriginalText = intent.wrappedValue.state.inputOriginalText
+            self.draftEmojiText = intent.wrappedValue.state.inputMemoText
+            self.draftRevision = intent.wrappedValue.state.inputSnapshotRevision
+            self.lastAppliedInputSeedVersion = intent.wrappedValue.state.inputSeedVersion
         }
 
         /// MemoStore에서 전달된 sideEffect를 감지하여 포커스를 제어하거나, 상태 기반으로 입력 뷰를 갱신합니다.
@@ -73,22 +81,22 @@ extension MemoInputUITextView {
                         }
                     case .requestFinalSyncAndResign(let requestID):
                         endEditingSyncPolicy = .skipOnce
-                        let currentSnapshot: (original: String, emoji: String)
                         if let textView {
-                            currentSnapshot = snapshot(from: textView.textStorage)
+                            syncSnapshotToStore(textView)
                         } else {
-                            let originalText = normalizedOriginalText()
-                            let emojiText = normalizedEmojiText(with: originalText)
-                            currentSnapshot = (original: originalText, emoji: emojiText)
+                            syncDraftFromFallbackIfNeeded()
                         }
-                        let emojiText = isEmojiMode ? currentSnapshot.emoji : currentSnapshot.original
+                        let inputSnapshot = MemoStore.MemoInputSnapshot(
+                            originalText: draftOriginalText,
+                            emojiText: draftEmojiText,
+                            revision: draftRevision
+                        )
 
                         intent.handleIntent(
                             .memoInput(
-                                .finalSyncCompleted(
+                                .finalSyncCompletedWithRevision(
                                     requestID: requestID,
-                                    originalText: currentSnapshot.original,
-                                    emojiText: emojiText
+                                    snapshot: inputSnapshot
                                 )
                             )
                         )
@@ -108,41 +116,38 @@ extension MemoInputUITextView {
         func applyStateToTextView(force: Bool) {
             guard let textView else { return }
 
-            let normalizedOriginal = normalizedOriginalText()
-            let normalizedEmoji = normalizedEmojiText(with: normalizedOriginal)
-            let currentSnapshot = snapshot(from: textView.textStorage)
             let modeChanged = lastEmojiMode != isEmojiMode
+            let seedVersionChanged = lastAppliedInputSeedVersion != intent.state.inputSeedVersion
 
-            // 스냅샷이 동일하면 렌더링을 건너뛰어 커서 튐을 줄인다.
-            if !force, !modeChanged {
-                let isSameSnapshot = currentSnapshot.original == normalizedOriginal
-                    && (isEmojiMode ? currentSnapshot.emoji == normalizedEmoji : currentSnapshot.original == normalizedOriginal)
-                if isSameSnapshot {
-                    return
-                }
-            }
-
-            let oldSelection = textView.selectedRange
-            isMutating = true
-
-            if isEmojiMode {
-                // 이모지 모드에서는 토큰 attachment로 렌더링한다.
-                textView.attributedText = attributedText(
-                    originalText: normalizedOriginal,
-                    emojiText: normalizedEmoji,
-                    font: parent.comfieUIBodyFont
+            if force || seedVersionChanged {
+                let seededOriginal = normalizedOriginalText()
+                let seededEmoji = normalizedEmojiText(with: seededOriginal)
+                render(
+                    textView,
+                    originalText: seededOriginal,
+                    emojiText: seededEmoji
                 )
-            } else {
-                textView.text = normalizedOriginal
+                syncDraftCache(
+                    originalText: seededOriginal,
+                    emojiText: seededEmoji,
+                    revision: intent.state.inputSnapshotRevision
+                )
+                lastAppliedInputSeedVersion = intent.state.inputSeedVersion
+                lastEmojiMode = isEmojiMode
+                return
             }
 
-            textView.selectedRange = clampedSelection(oldSelection, maxLength: textView.textStorage.length)
-            isMutating = false
+            guard modeChanged else {
+                updateTextViewHeight(textView)
+                return
+            }
+            guard textView.markedTextRange == nil else { return }
 
-            updatePlaceholderVisibility(textView)
-            updateTextViewHeight(textView)
-            lastTextLength = textView.textStorage.length
-            lastSelectionRange = textView.selectedRange
+            render(
+                textView,
+                originalText: draftOriginalText,
+                emojiText: draftEmojiText
+            )
             lastEmojiMode = isEmojiMode
         }
 

@@ -105,18 +105,117 @@ private struct MemoInputCoordinatorHarness {
     let repository: MemoRepositorySpy
 }
 
+private func syncInputSnapshot(
+    _ store: MemoStore,
+    originalText: String,
+    emojiText: String,
+    revision: Int? = nil
+) {
+    let nextRevision = revision ?? max(1, store.state.inputSnapshotRevision + 1)
+    store.handleIntent(
+        .memoInput(
+            .syncInputSnapshotWithRevision(
+                .init(
+                    originalText: originalText,
+                    emojiText: emojiText,
+                    revision: nextRevision
+                )
+            )
+        )
+    )
+}
+
+private func publishDraftAvailability(
+    _ store: MemoStore,
+    isEmpty: Bool,
+    revision: Int
+) {
+    store.handleIntent(
+        .memoInput(
+            .draftAvailabilityChangedWithRevision(
+                isEmpty: isEmpty,
+                revision: revision
+            )
+        )
+    )
+}
+
+@MainActor
 struct MemoStoreInputSnapshotTests {
 
     @Test func syncInputSnapshotUpdatesStateAndDomainSnapshot() {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "😀b")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "😀b")
 
         #expect(store.state.inputOriginalText == "ab")
         #expect(store.state.inputMemoText == "😀b")
+        #expect(store.state.isInputEmpty == false)
         #expect(store.state.emojiString.getOriginalString() == "ab")
         #expect(store.state.emojiString.getEmojiString() == "😀b")
+    }
+
+    @Test func syncInputSnapshotWithRevisionUpdatesRevisionState() {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        store.handleIntent(
+            .memoInput(
+                .syncInputSnapshotWithRevision(
+                    .init(originalText: "ab", emojiText: "😀b", revision: 3)
+                )
+            )
+        )
+
+        #expect(store.state.inputOriginalText == "ab")
+        #expect(store.state.inputMemoText == "😀b")
+        #expect(store.state.inputSnapshotRevision == 3)
+    }
+
+    @Test func lowerRevisionSnapshotDoesNotRollbackRevisionState() {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        store.handleIntent(
+            .memoInput(
+                .syncInputSnapshotWithRevision(
+                    .init(originalText: "abc", emojiText: "😀😃😄", revision: 5)
+                )
+            )
+        )
+        store.handleIntent(
+            .memoInput(
+                .syncInputSnapshotWithRevision(
+                    .init(originalText: "ab", emojiText: "😀😃", revision: 2)
+                )
+            )
+        )
+
+        #expect(store.state.inputOriginalText == "ab")
+        #expect(store.state.inputMemoText == "😀😃")
+        #expect(store.state.inputSnapshotRevision == 5)
+    }
+
+    @Test func draftAvailabilityEventUpdatesInputEmptyWithoutMutatingSnapshot() {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        syncInputSnapshot(store, originalText: "ab", emojiText: "😀b", revision: 3)
+
+        publishDraftAvailability(store, isEmpty: true, revision: 4)
+
+        #expect(store.state.isInputEmpty)
+        #expect(store.state.inputSnapshotRevision == 4)
+        #expect(store.state.inputOriginalText == "ab")
+        #expect(store.state.inputMemoText == "😀b")
+
+        publishDraftAvailability(store, isEmpty: false, revision: 5)
+
+        #expect(store.state.isInputEmpty == false)
+        #expect(store.state.inputSnapshotRevision == 5)
+        #expect(store.state.inputOriginalText == "ab")
+        #expect(store.state.inputMemoText == "😀b")
     }
 
     @Test func saveTappedRequestsFinalSyncAndDefersPersist() throws {
@@ -133,7 +232,7 @@ struct MemoStoreInputSnapshotTests {
             }
             .store(in: &cancellables)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "a1", emojiText: "a1")))
+        syncInputSnapshot(store, originalText: "a1", emojiText: "a1")
         store.handleIntent(.memoInput(.memoInputButtonTapped))
 
         let requestID = try #require(receivedRequestID)
@@ -147,17 +246,14 @@ struct MemoStoreInputSnapshotTests {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "a1", emojiText: "a1")))
+        syncInputSnapshot(store, originalText: "a1", emojiText: "a1")
         let requestID = try #require(beginSaveRequestID(store))
 
-        store.handleIntent(
-            .memoInput(
-                .finalSyncCompleted(
-                    requestID: UUID(),
-                    originalText: "a1",
-                    emojiText: "a1"
-                )
-            )
+        completeFinalSync(
+            store,
+            requestID: UUID(),
+            originalText: "a1",
+            emojiText: "a1"
         )
 
         #expect(repository.saveCallCount == 0)
@@ -169,7 +265,7 @@ struct MemoStoreInputSnapshotTests {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "a1", emojiText: "a1")))
+        syncInputSnapshot(store, originalText: "a1", emojiText: "a1")
         let requestID = try #require(beginSaveRequestID(store))
         completeFinalSync(
             store,
@@ -199,7 +295,7 @@ struct MemoStoreInputSnapshotTests {
         repository.saveResult = .failure(MemoRepositorySpyError.forcedFailure)
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "a1", emojiText: "a1")))
+        syncInputSnapshot(store, originalText: "a1", emojiText: "a1")
         let requestID = try #require(beginSaveRequestID(store))
         completeFinalSync(
             store,
@@ -228,7 +324,7 @@ struct MemoStoreInputSnapshotTests {
             }
             .store(in: &cancellables)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab")
         store.handleIntent(.memoInput(.memoInputButtonTapped))
         store.handleIntent(.memoInput(.memoInputButtonTapped))
 
@@ -271,7 +367,6 @@ struct MemoStoreInputSnapshotTests {
         _ = cancellables
     }
 
-    @MainActor
     @Test func coordinatorHarnessWiresTextViewDelegate() {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
@@ -280,7 +375,6 @@ struct MemoStoreInputSnapshotTests {
         #expect(textView.delegate === coordinator)
     }
 
-    @MainActor
     @Test func programmaticResignAfterSaveDoesNotRestoreClearedSnapshot() async throws {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
@@ -306,12 +400,11 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.inputMemoText.isEmpty)
     }
 
-    @MainActor
     @Test func saveRequestRecoversToIdleWhenFinalSyncCallbackIsDropped() async throws {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab")
         store.handleIntent(.memoInput(.memoInputButtonTapped))
         #expect(store.state.savePhase != .idle)
 
@@ -335,12 +428,11 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
     }
 
-    @MainActor
     @Test func lateFinalSyncCompletionAfterTimeoutStillPersistsWithoutRetry() async throws {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab")
         let timedOutRequestID = try #require(beginSaveRequestID(store))
 
         try await waitUntil(timeoutTick: 80) {
@@ -363,12 +455,11 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
     }
 
-    @MainActor
     @Test func lateFinalSyncCompletionAfterTimeoutIsIgnoredAfterInputChanges() async throws {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab")
         let timedOutRequestID = try #require(beginSaveRequestID(store))
 
         try await waitUntil(timeoutTick: 80) {
@@ -377,7 +468,7 @@ struct MemoStoreInputSnapshotTests {
         #expect(repository.saveCallCount == 0)
 
         // timeout 이후 입력이 바뀌면 이전 요청의 늦은 callback은 무시되어야 한다.
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "abc", emojiText: "abc")))
+        syncInputSnapshot(store, originalText: "abc", emojiText: "abc")
         completeFinalSync(
             store,
             requestID: timedOutRequestID,
@@ -391,7 +482,33 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
     }
 
-    @MainActor
+    @Test func lateFinalSyncCompletionAfterTimeoutIsIgnoredAfterAvailabilityRevisionChange() async throws {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab", revision: 1)
+        let timedOutRequestID = try #require(beginSaveRequestID(store))
+
+        try await waitUntil(timeoutTick: 80) {
+            store.state.savePhase == .idle
+        }
+        #expect(repository.saveCallCount == 0)
+
+        publishDraftAvailability(store, isEmpty: false, revision: 2)
+        completeFinalSync(
+            store,
+            requestID: timedOutRequestID,
+            originalText: "ab",
+            emojiText: "ab",
+            revision: 1
+        )
+
+        #expect(repository.saveCallCount == 0)
+        #expect(repository.savedMemos.isEmpty)
+        #expect(store.state.inputSnapshotRevision == 2)
+        #expect(store.state.savePhase == .idle)
+    }
+
     @Test func requestFinalSyncWithNilTextViewUsesStateSnapshotFallback() async throws {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
@@ -401,7 +518,7 @@ struct MemoStoreInputSnapshotTests {
         coordinator.bindFocusControl()
         coordinator.textView = nil
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab")
         store.handleIntent(.memoInput(.memoInputButtonTapped))
 
         try await waitUntil(timeoutTick: 40) {
@@ -427,7 +544,7 @@ struct MemoStoreInputSnapshotTests {
             }
             .store(in: &cancellables)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "ab")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "ab")
         store.handleIntent(.backgroundTapped)
 
         #expect(resignSideEffectCount == 1)
@@ -442,7 +559,7 @@ struct MemoStoreInputSnapshotTests {
         let locationUseCase = ToggleComfieZoneLocationUseCase(initialInComfieZone: false)
         let store = makeMemoStore(repository: repository, locationUseCase: locationUseCase)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab", emojiText: "😀😃")))
+        syncInputSnapshot(store, originalText: "ab", emojiText: "😀😃")
 
         locationUseCase.setInComfieZone(true)
         try await waitUntil(timeoutTick: 40) {
@@ -463,8 +580,8 @@ struct MemoStoreInputSnapshotTests {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository, isInComfieZone: true)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab!", emojiText: "😀😃😄")))
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "ab!", emojiText: "ab!")))
+        syncInputSnapshot(store, originalText: "ab!", emojiText: "😀😃😄")
+        syncInputSnapshot(store, originalText: "ab!", emojiText: "ab!")
 
         #expect(store.state.inputOriginalText == "ab!")
         #expect(store.state.inputMemoText == "😀😃😄")
@@ -474,8 +591,8 @@ struct MemoStoreInputSnapshotTests {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository, isInComfieZone: true)
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "abc", emojiText: "😀😃😄")))
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "abxc", emojiText: "abxc")))
+        syncInputSnapshot(store, originalText: "abc", emojiText: "😀😃😄")
+        syncInputSnapshot(store, originalText: "abxc", emojiText: "abxc")
 
         #expect(store.state.inputOriginalText == "abxc")
         #expect(store.state.inputMemoText == "😀😃x😄")
@@ -559,7 +676,7 @@ struct MemoStoreInputSnapshotTests {
         store.handleIntent(.onAppear)
         store.handleIntent(.memoCell(.editButtonTapped(existingMemo)))
 
-        store.handleIntent(.memoInput(.syncInputSnapshot(originalText: "abc", emojiText: "abc")))
+        syncInputSnapshot(store, originalText: "abc", emojiText: "abc")
         let requestID = try #require(beginSaveRequestID(store))
         completeFinalSync(
             store,
@@ -582,7 +699,43 @@ struct MemoStoreInputSnapshotTests {
         #expect(emojiCharacters[2] != "c")
     }
 
-    @MainActor
+    @Test func plainModeAppendingHangulCharacterPreservesExistingEmojiMappingOnUpdate() async throws {
+        let repository = MemoRepositorySpy()
+        let existingMemo = Memo(
+            id: UUID(),
+            createdAt: .now,
+            originalText: "가나",
+            emojiText: "😀😃"
+        )
+        repository.memos = [existingMemo]
+
+        let store = makeMemoStore(repository: repository, isInComfieZone: true)
+        store.handleIntent(.onAppear)
+        store.handleIntent(.memoCell(.editButtonTapped(existingMemo)))
+
+        syncInputSnapshot(store, originalText: "가나다", emojiText: "가나다")
+        let requestID = try #require(beginSaveRequestID(store))
+        completeFinalSync(
+            store,
+            requestID: requestID,
+            originalText: "가나다",
+            emojiText: "가나다"
+        )
+
+        try await waitUntil(timeoutTick: 40) {
+            repository.updatedMemos.count == 1
+        }
+
+        let updatedMemo = try #require(repository.updatedMemos.first)
+        let emojiCharacters = Array(updatedMemo.emojiText)
+
+        #expect(updatedMemo.originalText == "가나다")
+        #expect(emojiCharacters.count == 3)
+        #expect(emojiCharacters[0] == "😀")
+        #expect(emojiCharacters[1] == "😃")
+        #expect(emojiCharacters[2] != "다")
+    }
+
     @Test func imeMarkedRangeConvertsOnlyBeforeComposingRange() {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
@@ -598,12 +751,10 @@ struct MemoStoreInputSnapshotTests {
         #expect(secondAttachment == nil)
     }
 
-    @MainActor
     @Test func imeMultiCharacterInsertTokenizesInsertedRange() {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
         let textView = harness.textView
-        let store = harness.store
         textView.text = "ab"
 
         _ = coordinator.textView(
@@ -623,15 +774,13 @@ struct MemoStoreInputSnapshotTests {
         #expect(secondAttachment is NSTextAttachment)
         #expect(thirdAttachment is NSTextAttachment)
         #expect(fourthAttachment is NSTextAttachment)
-        #expect(store.state.inputOriginalText == "abxy")
+        #expect(coordinator.draftOriginalText == "abxy")
     }
 
-    @MainActor
     @Test func imeCursorMoveFlushesPendingSingleInsertConversion() {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
         let textView = harness.textView
-        let store = harness.store
         textView.text = "ab"
 
         _ = coordinator.textView(
@@ -647,10 +796,9 @@ struct MemoStoreInputSnapshotTests {
         let secondAttachment = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
 
         #expect(secondAttachment is NSTextAttachment)
-        #expect(store.state.inputOriginalText == "abc")
+        #expect(coordinator.draftOriginalText == "abc")
     }
 
-    @MainActor
     @Test func finalSyncSideEffectFromStoreIsHandledByCoordinator() async throws {
         let harness = makeMemoInputCoordinator()
         let coordinator = harness.coordinator
@@ -678,118 +826,123 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
     }
 
-    private func beginSaveRequestID(_ store: MemoStore) -> UUID? {
-        store.handleIntent(.memoInput(.memoInputButtonTapped))
-        guard case .awaitingFinalSync(let requestID) = store.state.savePhase else {
-            return nil
-        }
-        return requestID
+}
+
+private func beginSaveRequestID(_ store: MemoStore) -> UUID? {
+    store.handleIntent(.memoInput(.memoInputButtonTapped))
+    guard case .awaitingFinalSync(let requestID) = store.state.savePhase else {
+        return nil
     }
+    return requestID
+}
 
-    private func completeFinalSync(
-        _ store: MemoStore,
-        requestID: UUID,
-        originalText: String? = nil,
-        emojiText: String? = nil
-    ) {
-        let resolvedOriginalText = originalText ?? store.state.inputOriginalText
-        let resolvedEmojiText = emojiText ?? store.state.inputMemoText
+private func completeFinalSync(
+    _ store: MemoStore,
+    requestID: UUID,
+    originalText: String? = nil,
+    emojiText: String? = nil,
+    revision: Int? = nil
+) {
+    let resolvedOriginalText = originalText ?? store.state.inputOriginalText
+    let resolvedEmojiText = emojiText ?? store.state.inputMemoText
+    let resolvedRevision = revision ?? max(1, store.state.inputSnapshotRevision)
 
-        store.handleIntent(
-            .memoInput(
-                .finalSyncCompleted(
-                    requestID: requestID,
+    store.handleIntent(
+        .memoInput(
+            .finalSyncCompletedWithRevision(
+                requestID: requestID,
+                snapshot: .init(
                     originalText: resolvedOriginalText,
-                    emojiText: resolvedEmojiText
+                    emojiText: resolvedEmojiText,
+                    revision: resolvedRevision
                 )
             )
         )
+    )
+}
+
+private func assertAwaitingFinalSync(_ store: MemoStore, requestID: UUID) {
+    guard case .awaitingFinalSync(let pendingRequestID) = store.state.savePhase else {
+        Issue.record("savePhase가 awaitingFinalSync 상태가 아닙니다.")
+        return
     }
+    #expect(pendingRequestID == requestID)
+}
 
-    private func assertAwaitingFinalSync(_ store: MemoStore, requestID: UUID) {
-        guard case .awaitingFinalSync(let pendingRequestID) = store.state.savePhase else {
-            Issue.record("savePhase가 awaitingFinalSync 상태가 아닙니다.")
-            return
-        }
-        #expect(pendingRequestID == requestID)
-    }
-
-    private func makeMemoStore(
-        repository: MemoRepositoryProtocol,
-        isInComfieZone: Bool = false,
-        locationUseCase: LocationUseCase? = nil
-    ) -> MemoStore {
-        let resolvedLocationUseCase: LocationUseCase
-        if let locationUseCase {
-            resolvedLocationUseCase = locationUseCase
-        } else if isInComfieZone {
-            resolvedLocationUseCase = AlwaysInComfieZoneLocationUseCase(
-                locationService: LocationService(),
-                comfiZoneRepository: TestComfieZoneRepository()
-            )
-        } else {
-            resolvedLocationUseCase = LocationUseCase(
-                locationService: LocationService(),
-                comfiZoneRepository: TestComfieZoneRepository()
-            )
-        }
-
-        return MemoStore(
-            router: Router(),
-            memoRepository: repository,
-            locationUseCase: resolvedLocationUseCase
+private func makeMemoStore(
+    repository: MemoRepositoryProtocol,
+    isInComfieZone: Bool = false,
+    locationUseCase: LocationUseCase? = nil
+) -> MemoStore {
+    let resolvedLocationUseCase: LocationUseCase
+    if let locationUseCase {
+        resolvedLocationUseCase = locationUseCase
+    } else if isInComfieZone {
+        resolvedLocationUseCase = AlwaysInComfieZoneLocationUseCase(
+            locationService: LocationService(),
+            comfiZoneRepository: TestComfieZoneRepository()
+        )
+    } else {
+        resolvedLocationUseCase = LocationUseCase(
+            locationService: LocationService(),
+            comfiZoneRepository: TestComfieZoneRepository()
         )
     }
 
-    @MainActor
-    private func makeMemoInputCoordinator(isInComfieZone: Bool = false) -> MemoInputCoordinatorHarness {
-        let repository = MemoRepositorySpy()
-        let store = makeMemoStore(repository: repository, isInComfieZone: isInComfieZone)
+    return MemoStore(
+        router: Router(),
+        memoRepository: repository,
+        locationUseCase: resolvedLocationUseCase
+    )
+}
 
-        var dynamicHeight: CGFloat = 40
-        let dynamicHeightBinding = Binding<CGFloat>(
-            get: { dynamicHeight },
-            set: { dynamicHeight = $0 }
-        )
-        let intentBinding = Binding<MemoStore>(
-            get: { store },
-            set: { _ in }
-        )
+private func makeMemoInputCoordinator(isInComfieZone: Bool = false) -> MemoInputCoordinatorHarness {
+    let repository = MemoRepositorySpy()
+    let store = makeMemoStore(repository: repository, isInComfieZone: isInComfieZone)
 
-        let parent = MemoInputUITextView(
-            "placeholder",
-            dynamicHeight: dynamicHeightBinding,
-            intent: intentBinding
-        )
-        let coordinator = MemoInputUITextView.Coordinator(parent: parent, intent: intentBinding)
-        let textView = UITextView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
-        textView.font = parent.comfieUIBodyFont
-        textView.textContainerInset = UIEdgeInsets(top: 9, left: 12, bottom: 9, right: 8)
-        textView.isScrollEnabled = false
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        let placeholderLabel = UILabel()
-        coordinator.textView = textView
-        textView.delegate = coordinator
-        coordinator.placeholderLabel = placeholderLabel
-        let heightConstraint = textView.heightAnchor.constraint(lessThanOrEqualToConstant: 120)
-        heightConstraint.isActive = true
-        coordinator.textViewHeightConstraint = heightConstraint
+    var dynamicHeight: CGFloat = 40
+    let dynamicHeightBinding = Binding<CGFloat>(
+        get: { dynamicHeight },
+        set: { dynamicHeight = $0 }
+    )
+    let intentBinding = Binding<MemoStore>(
+        get: { store },
+        set: { _ in }
+    )
 
-        return MemoInputCoordinatorHarness(
-            coordinator: coordinator,
-            textView: textView,
-            placeholderLabel: placeholderLabel,
-            store: store,
-            repository: repository
-        )
+    let parent = MemoInputUITextView(
+        "placeholder",
+        dynamicHeight: dynamicHeightBinding,
+        intent: intentBinding
+    )
+    let coordinator = MemoInputUITextView.Coordinator(parent: parent, intent: intentBinding)
+    let textView = UITextView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
+    textView.font = parent.comfieUIBodyFont
+    textView.textContainerInset = UIEdgeInsets(top: 9, left: 12, bottom: 9, right: 8)
+    textView.isScrollEnabled = false
+    textView.translatesAutoresizingMaskIntoConstraints = false
+    let placeholderLabel = UILabel()
+    coordinator.textView = textView
+    textView.delegate = coordinator
+    coordinator.placeholderLabel = placeholderLabel
+    let heightConstraint = textView.heightAnchor.constraint(lessThanOrEqualToConstant: 120)
+    heightConstraint.isActive = true
+    coordinator.textViewHeightConstraint = heightConstraint
+
+    return MemoInputCoordinatorHarness(
+        coordinator: coordinator,
+        textView: textView,
+        placeholderLabel: placeholderLabel,
+        store: store,
+        repository: repository
+    )
+}
+
+private func waitUntil(timeoutTick: Int, condition: @escaping () -> Bool) async throws {
+    for _ in 0..<timeoutTick {
+        if condition() { return }
+        await Task.yield()
+        try await Task.sleep(nanoseconds: 10_000_000)
     }
-
-    private func waitUntil(timeoutTick: Int, condition: @escaping () -> Bool) async throws {
-        for _ in 0..<timeoutTick {
-            if condition() { return }
-            await Task.yield()
-            try await Task.sleep(nanoseconds: 10_000_000)
-        }
-        Issue.record("Timed out waiting for async state update")
-    }
+    Issue.record("Timed out waiting for async state update")
 }
