@@ -259,6 +259,7 @@ extension MemoStore {
     private func handleMemoCellIntent(_ intent: Intent.MemoCellIntent) -> State {
         switch intent {
         case .deleteButtonTapped(let memo):
+            guard state.savePhase == .idle else { return state }
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
             guard state.savePhase == .idle else { return state }

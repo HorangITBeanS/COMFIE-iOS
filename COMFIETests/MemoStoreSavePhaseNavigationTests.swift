@@ -38,4 +38,24 @@ struct MemoStoreSavePhaseNavigationTests {
 
         #expect(router.path.isEmpty)
     }
+
+    @Test func deleteTapIsIgnoredWhileSaveInProgress() {
+        let store = MemoStore(
+            router: Router(),
+            memoRepository: MockMemoRepository(),
+            locationUseCase: StaticComfieZoneLocationUseCase()
+        )
+        let memo = Memo(id: UUID(), createdAt: .now, originalText: "a", emojiText: "😀")
+
+        store.handleIntent(.memoInput(.draftAvailabilityChangedWithRevision(isEmpty: false, revision: 1)))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        guard case .awaitingFinalSync = store.state.savePhase else {
+            Issue.record("savePhase should be awaitingFinalSync before delete guard check")
+            return
+        }
+
+        store.handleIntent(.memoCell(.deleteButtonTapped(memo)))
+
+        #expect(store.state.deletingMemo == nil)
+    }
 }
