@@ -59,6 +59,46 @@ struct MemoStoreSavePhaseNavigationTests {
         #expect(store.state.deletingMemo == nil)
     }
 
+    @Test func comfieZoneSettingTapIsIgnoredWhileSaveInProgress() {
+        let router = Router()
+        let store = MemoStore(
+            router: router,
+            memoRepository: MockMemoRepository(),
+            locationUseCase: StaticComfieZoneLocationUseCase()
+        )
+
+        store.handleIntent(.memoInput(.draftAvailabilityChangedWithRevision(isEmpty: false, revision: 1)))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        guard case .awaitingFinalSync = store.state.savePhase else {
+            Issue.record("savePhase should be awaitingFinalSync before comfieZoneSetting guard check")
+            return
+        }
+
+        store.handleIntent(.comfieZoneSettingButtonTapped)
+
+        #expect(router.path.isEmpty)
+    }
+
+    @Test func moreTapIsIgnoredWhileSaveInProgress() {
+        let router = Router()
+        let store = MemoStore(
+            router: router,
+            memoRepository: MockMemoRepository(),
+            locationUseCase: StaticComfieZoneLocationUseCase()
+        )
+
+        store.handleIntent(.memoInput(.draftAvailabilityChangedWithRevision(isEmpty: false, revision: 1)))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        guard case .awaitingFinalSync = store.state.savePhase else {
+            Issue.record("savePhase should be awaitingFinalSync before more guard check")
+            return
+        }
+
+        store.handleIntent(.moreButtonTapped)
+
+        #expect(router.path.isEmpty)
+    }
+
     @Test func confirmDeletePopupIsIgnoredWhileSaveInProgress() {
         let store = MemoStore(
             router: Router(),
