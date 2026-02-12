@@ -228,6 +228,7 @@ class MemoStore: IntentStore {
                 state = handleAction(state, .tutorial(.showTutorial))
             }
         case .backgroundTapped:
+            guard state.savePhase == .idle else { return }
             performUISideEffect(for: .resignInputFocusWithSyncInput)
         case .comfieZoneSettingButtonTapped:
             guard state.savePhase == .idle else { return }

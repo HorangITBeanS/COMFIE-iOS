@@ -1,3 +1,4 @@
+import Combine
 @testable import COMFIE
 import CoreLocation
 import Testing
@@ -97,6 +98,36 @@ struct MemoStoreSavePhaseNavigationTests {
         store.handleIntent(.moreButtonTapped)
 
         #expect(router.path.isEmpty)
+    }
+
+    @Test func backgroundTapIsIgnoredWhileSaveInProgress() {
+        let store = MemoStore(
+            router: Router(),
+            memoRepository: MockMemoRepository(),
+            locationUseCase: StaticComfieZoneLocationUseCase()
+        )
+        var cancellables = Set<AnyCancellable>()
+        var resignSideEffectCount = 0
+
+        store.uiSideEffectPublisher
+            .sink { sideEffect in
+                if case .resignInputFocusWithSyncInput = sideEffect {
+                    resignSideEffectCount += 1
+                }
+            }
+            .store(in: &cancellables)
+
+        store.handleIntent(.memoInput(.draftAvailabilityChangedWithRevision(isEmpty: false, revision: 1)))
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        guard case .awaitingFinalSync = store.state.savePhase else {
+            Issue.record("savePhase should be awaitingFinalSync before background tap guard check")
+            return
+        }
+
+        store.handleIntent(.backgroundTapped)
+
+        #expect(resignSideEffectCount == 0)
+        _ = cancellables
     }
 
     @Test func confirmDeletePopupIsIgnoredWhileSaveInProgress() {
