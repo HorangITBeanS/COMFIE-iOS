@@ -274,6 +274,7 @@ extension MemoStore {
             performUISideEffect(for: .resignInputFocusWithoutSync)
             return newState
         case .retrospectionButtonTapped(let memo):
+            guard state.savePhase == .idle else { return state }
             let newState = handleNavigationAction(state, .toRetrospection(memo))
             return newState
         }
