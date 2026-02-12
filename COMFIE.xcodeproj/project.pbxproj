@@ -96,6 +96,7 @@
 		80BBE641EB024D18BF2D15A7 /* MemoEmojiTokenAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBFC1CC93364600AB0B2088 /* MemoEmojiTokenAttachment.swift */; };
 		A1F001A22F04000000ABC001 /* EmojiStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001A32F04000000ABC001 /* EmojiStringTests.swift */; };
 		A1F001A42F04000000ABC001 /* MemoStoreInputSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001A52F04000000ABC001 /* MemoStoreInputSnapshotTests.swift */; };
+		A1F001A62F04000000ABC001 /* RetrospectionEmojiMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001A72F04000000ABC001 /* RetrospectionEmojiMappingTests.swift */; };
 		B9134CA92E0BDD45001CE11A /* CFWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9134CA62E0BDD40001CE11A /* CFWebView.swift */; };
 		B95C98C12DAC9FEB0057C868 /* Memo+with.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95C98C02DAC9FE70057C868 /* Memo+with.swift */; };
 		B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */; };
@@ -230,6 +231,7 @@
 		9F79E96D20504ACFA322F680 /* MemoInputUITextView+Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MemoInputUITextView+Coordinator.swift"; sourceTree = "<group>"; };
 		A1F001A32F04000000ABC001 /* EmojiStringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiStringTests.swift; sourceTree = "<group>"; };
 		A1F001A52F04000000ABC001 /* MemoStoreInputSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoStoreInputSnapshotTests.swift; sourceTree = "<group>"; };
+		A1F001A72F04000000ABC001 /* RetrospectionEmojiMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionEmojiMappingTests.swift; sourceTree = "<group>"; };
 		B9134CA62E0BDD40001CE11A /* CFWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFWebView.swift; sourceTree = "<group>"; };
 		B95C98C02DAC9FE70057C868 /* Memo+with.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+with.swift"; sourceTree = "<group>"; };
 		B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionView.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				510340FA2D777C290050C718 /* COMFIETests.swift */,
 				A1F001A32F04000000ABC001 /* EmojiStringTests.swift */,
 				A1F001A52F04000000ABC001 /* MemoStoreInputSnapshotTests.swift */,
+				A1F001A72F04000000ABC001 /* RetrospectionEmojiMappingTests.swift */,
 			);
 			path = COMFIETests;
 			sourceTree = "<group>";
@@ -1030,6 +1033,7 @@
 				510340FC2D777C290050C718 /* COMFIETests.swift in Sources */,
 				A1F001A22F04000000ABC001 /* EmojiStringTests.swift in Sources */,
 				A1F001A42F04000000ABC001 /* MemoStoreInputSnapshotTests.swift in Sources */,
+				A1F001A62F04000000ABC001 /* RetrospectionEmojiMappingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
