@@ -43,8 +43,7 @@ extension MemoInputUITextView.Coordinator {
     }
 
     func syncDraftFromFallbackIfNeeded() {
-        guard draftOriginalText.isEmpty && draftEmojiText.isEmpty else { return }
-
+        // textView 인스턴스가 없으면 로컬 draft 캐시가 stale일 수 있어 Store seed를 우선 신뢰한다.
         let originalText = normalizedOriginalText()
         let emojiText = normalizedEmojiText(with: originalText)
         syncDraftCache(

@@ -553,6 +553,31 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
     }
 
+    @Test func requestFinalSyncWithNilTextViewIgnoresStaleCoordinatorDraft() async throws {
+        let harness = makeMemoInputCoordinator()
+        let coordinator = harness.coordinator
+        let store = harness.store
+        let repository = harness.repository
+
+        coordinator.bindFocusControl()
+        coordinator.draftOriginalText = "stale"
+        coordinator.draftEmojiText = "🙃🙃🙃🙃🙃"
+        coordinator.draftRevision = 99
+        coordinator.textView = nil
+
+        syncInputSnapshot(store, originalText: "ab", emojiText: "😀😃", revision: 4)
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+
+        try await waitUntil(timeoutTick: 40) {
+            repository.savedMemos.count == 1
+        }
+
+        let savedMemo = try #require(repository.savedMemos.first)
+        #expect(savedMemo.originalText == "ab")
+        #expect(savedMemo.emojiText == "😀😃")
+        #expect(store.state.savePhase == .idle)
+    }
+
     @Test func backgroundTappedRequestsResignWithoutPersist() {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
