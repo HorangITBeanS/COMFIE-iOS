@@ -131,30 +131,7 @@ class RetrospectionStore: IntentStore {
         case .updateRetrospection(let text):
             newState.inputContent = text
         case .saveRetrospection:
-            let content = newState.inputContent ?? ""
-            // 회고는 원문 텍스트만 입력되므로, 기존 이모지 매핑을 최대한 보존한 뒤 저장한다.
-            let previousOriginal = newState.lastSavedOriginal ?? memo.originalRetrospectionText ?? ""
-            let previousEmojiRaw = newState.lastSavedEmoji ?? memo.emojiRetrospectionText ?? previousOriginal
-            let normalizedPrevious = EmojiString.normalizedForPersist(
-                originalText: previousOriginal,
-                preferredEmojiText: previousEmojiRaw
-            )
-
-            let mergedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
-                previousOriginalText: previousOriginal,
-                previousEmojiText: normalizedPrevious.getEmojiString(),
-                newOriginalText: content
-            )
-
-            newState.emojiString = EmojiString.normalizedForPersist(
-                originalText: content,
-                preferredEmojiText: mergedEmojiText
-            )
-            newState.emojiString.setUnassignedEmojis()
-            if saveRetrospection(newState) {
-                newState.lastSavedOriginal = content
-                newState.lastSavedEmoji = newState.emojiString.getEmojiString()
-            }
+            persistRetrospection(&newState)
         case .deleteRetrospection:
             deleteRetrospection(newState)
             
@@ -166,6 +143,33 @@ class RetrospectionStore: IntentStore {
         case .popToLast: router.pop()
         }
         return newState
+    }
+
+    private func persistRetrospection(_ state: inout State) {
+        let content = state.inputContent ?? ""
+        // 회고는 원문 텍스트만 입력되므로, 기존 이모지 매핑을 최대한 보존한 뒤 저장한다.
+        let previousOriginal = state.lastSavedOriginal ?? memo.originalRetrospectionText ?? ""
+        let previousEmojiRaw = state.lastSavedEmoji ?? memo.emojiRetrospectionText ?? previousOriginal
+        let normalizedPrevious = EmojiString.normalizedForPersist(
+            originalText: previousOriginal,
+            preferredEmojiText: previousEmojiRaw
+        )
+
+        let mergedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
+            previousOriginalText: previousOriginal,
+            previousEmojiText: normalizedPrevious.getEmojiString(),
+            newOriginalText: content
+        )
+
+        state.emojiString = EmojiString.normalizedForPersist(
+            originalText: content,
+            preferredEmojiText: mergedEmojiText
+        )
+        state.emojiString.setUnassignedEmojis()
+        if saveRetrospection(state) {
+            state.lastSavedOriginal = content
+            state.lastSavedEmoji = state.emojiString.getEmojiString()
+        }
     }
 }
 
