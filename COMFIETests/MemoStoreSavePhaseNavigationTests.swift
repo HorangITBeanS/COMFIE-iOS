@@ -1,5 +1,5 @@
-import CoreLocation
 @testable import COMFIE
+import CoreLocation
 import Testing
 
 private struct EmptyComfieZoneRepository: ComfieZoneRepositoryProtocol {
