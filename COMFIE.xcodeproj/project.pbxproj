@@ -35,6 +35,7 @@
 		510340F62D777C260050C718 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F02D777C260050C718 /* Preview Assets.xcassets */; };
 		510340F72D777C260050C718 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510340F22D777C260050C718 /* Assets.xcassets */; };
 		510340F82D777C260050C718 /* COMFIEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340F32D777C260050C718 /* COMFIEApp.swift */; };
+		E3A8C1BF44AA4EE3A6F8C2D1 /* UITestBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C0D460A1B24C008ED21A10 /* UITestBootstrap.swift */; };
 		510340FC2D777C290050C718 /* COMFIETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FA2D777C290050C718 /* COMFIETests.swift */; };
 		510341002D777C2B0050C718 /* COMFIEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FD2D777C2B0050C718 /* COMFIEUITests.swift */; };
 		510341012D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */; };
@@ -171,6 +172,7 @@
 		510340F02D777C260050C718 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		510340F22D777C260050C718 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		510340F32D777C260050C718 /* COMFIEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEApp.swift; sourceTree = "<group>"; };
+		D2C0D460A1B24C008ED21A10 /* UITestBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestBootstrap.swift; sourceTree = "<group>"; };
 		510340FA2D777C290050C718 /* COMFIETests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIETests.swift; sourceTree = "<group>"; };
 		510340FD2D777C2B0050C718 /* COMFIEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEUITests.swift; sourceTree = "<group>"; };
 		510340FE2D777C2B0050C718 /* COMFIEUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMFIEUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 				5103412A2D79ABB60050C718 /* DIContainer */,
 				510341122D7993A90050C718 /* Router */,
 				510340F32D777C260050C718 /* COMFIEApp.swift */,
+				D2C0D460A1B24C008ED21A10 /* UITestBootstrap.swift */,
 				510341132D7993B80050C718 /* COMFIERoutingView.swift */,
 			);
 			path = App;
@@ -1002,6 +1005,7 @@
 				B9EA53112D7CA5DC00A32305 /* StringLiterals.swift in Sources */,
 				B99A081C2DABABA80094EECB /* RetrospectionRepositoryProtocol.swift in Sources */,
 				510340F82D777C260050C718 /* COMFIEApp.swift in Sources */,
+				E3A8C1BF44AA4EE3A6F8C2D1 /* UITestBootstrap.swift in Sources */,
 				51895AF62DA8FBF500AFA569 /* MakersView.swift in Sources */,
 				51F8F5B02D91ACF000DD2E3D /* StringLiterals_Onboarding.swift in Sources */,
 				51895AF42DA8F74100AFA569 /* MailView.swift in Sources */,
@@ -1215,7 +1219,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1255,7 +1259,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1277,7 +1281,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/COMFIE.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/COMFIE";
 			};
 			name = Debug;
@@ -1300,7 +1304,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/COMFIE.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/COMFIE";
 			};
 			name = Release;
@@ -1321,7 +1325,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = COMFIE;
 			};
 			name = Debug;
@@ -1342,7 +1346,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = COMFIE;
 			};
 			name = Release;

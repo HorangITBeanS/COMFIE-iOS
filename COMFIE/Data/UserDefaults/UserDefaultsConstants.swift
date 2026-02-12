@@ -10,5 +10,6 @@ import Foundation
 struct UserDefaultsConstants {
   enum Keys: String {
     case hasEverOnboarded = "hasEverOnboarded"
+    case hasSeenTutorial = "hasSeenTutorial"
   }
 }
