@@ -17,6 +17,11 @@ extension MemoInputUITextView {
             let replacementLength: Int
         }
 
+        private enum EndEditingSyncPolicy {
+            case sync
+            case skipOnce
+        }
+
         var parent: MemoInputUITextView
 
         @Binding var intent: MemoStore
@@ -37,6 +42,7 @@ extension MemoInputUITextView {
         var lastTextChangeTime: TimeInterval = 0
         var lastTextLength = 0
         var lastEmojiMode: Bool?
+        private var endEditingSyncPolicy: EndEditingSyncPolicy = .sync
 
         var isEmojiMode: Bool {
             !intent.state.isInComfieZone
@@ -56,15 +62,44 @@ extension MemoInputUITextView {
                     switch sideEffect {
                     case .resignInputFocusWithSyncInput:
                         syncSnapshotToStoreIfPossible()
+                        endEditingSyncPolicy = .sync
+                        if let textView {
+                            unfocusTextView(textView)
+                        }
+                    case .resignInputFocusWithoutSync:
+                        endEditingSyncPolicy = .skipOnce
+                        if let textView {
+                            unfocusTextView(textView)
+                        }
+                    case .requestFinalSyncAndResign(let requestID):
+                        endEditingSyncPolicy = .skipOnce
+                        let currentSnapshot: (original: String, emoji: String)
+                        if let textView {
+                            currentSnapshot = snapshot(from: textView.textStorage)
+                        } else {
+                            let originalText = normalizedOriginalText()
+                            let emojiText = normalizedEmojiText(with: originalText)
+                            currentSnapshot = (original: originalText, emoji: emojiText)
+                        }
+                        let emojiText = isEmojiMode ? currentSnapshot.emoji : currentSnapshot.original
+
+                        intent.handleIntent(
+                            .memoInput(
+                                .finalSyncCompleted(
+                                    requestID: requestID,
+                                    originalText: currentSnapshot.original,
+                                    emojiText: emojiText
+                                )
+                            )
+                        )
                         if let textView {
                             unfocusTextView(textView)
                         }
                     case .setMemoInputFocus:
+                        endEditingSyncPolicy = .sync
                         if let textView {
                             focusTextView(textView)
                         }
-                    case .updateInputViewWithState:
-                        applyStateToTextView(force: true)
                     }
                 }
                 .store(in: &cancellables)
@@ -114,13 +149,13 @@ extension MemoInputUITextView {
         // MARK: - UITextViewDelegate
 
         func textViewDidChange(_ textView: UITextView) {
-            updatePlaceholderVisibility(textView)
-            updateTextViewHeight(textView)
-
             guard !isMutating else {
                 pendingChange = nil
                 return
             }
+
+            updatePlaceholderVisibility(textView)
+            updateTextViewHeight(textView)
 
             if lastEmojiMode == nil {
                 lastEmojiMode = isEmojiMode
@@ -160,6 +195,10 @@ extension MemoInputUITextView {
 
         /// 편집 종료 시 최종 snapshot 동기화 수행
         func textViewDidEndEditing(_ textView: UITextView) {
+            if endEditingSyncPolicy == .skipOnce {
+                endEditingSyncPolicy = .sync
+                return
+            }
             syncSnapshotToStore(textView)
         }
 
