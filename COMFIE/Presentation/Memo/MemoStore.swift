@@ -292,7 +292,7 @@ extension MemoStore {
                 )
             )
         case .memoInputButtonTapped:
-            guard case .idle = state.savePhase else { return state }
+            guard case .idle = state.savePhase, !state.isInputEmpty else { return state }
 
             let requestID = UUID()
             pendingFinalSyncDraftRevision = state.inputSnapshotRevision

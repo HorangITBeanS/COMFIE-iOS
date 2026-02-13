@@ -3,10 +3,12 @@ import Foundation
 import Testing
 
 private final class RetrospectionRepositorySpy: RetrospectionRepositoryProtocol {
+    var saveCallCount = 0
     var savedMemos: [Memo] = []
     var deletedMemos: [Memo] = []
 
     func save(memo: Memo) -> Result<Void, Error> {
+        saveCallCount += 1
         savedMemos.append(memo)
         return .success(())
     }
@@ -19,6 +21,24 @@ private final class RetrospectionRepositorySpy: RetrospectionRepositoryProtocol 
 
 @MainActor
 struct RetrospectionEmojiMappingTests {
+    @Test func onAppearDoesNotTriggerDebouncedSaveWithoutUserInput() async throws {
+        let repository = RetrospectionRepositorySpy()
+        let memo = Memo(
+            id: UUID(),
+            createdAt: .now,
+            originalText: "",
+            emojiText: "",
+            originalRetrospectionText: "ab",
+            emojiRetrospectionText: "😀😃"
+        )
+        let store = RetrospectionStore(router: Router(), repository: repository, memo: memo)
+
+        store.handleIntent(.onAppear)
+        try await Task.sleep(nanoseconds: 700_000_000)
+
+        #expect(repository.saveCallCount == 0)
+        #expect(repository.savedMemos.isEmpty)
+    }
 
     @Test func savePreservesEmojiOnAppend() throws {
         let repository = RetrospectionRepositorySpy()
@@ -43,6 +63,27 @@ struct RetrospectionEmojiMappingTests {
         #expect(emoji.count == 3)
         #expect(emoji.hasPrefix("😀😃"))
         #expect(Array(emoji)[2] != "c")
+    }
+
+    @Test func clearingRetrospectionSavesBothOriginalAndEmojiAsNil() throws {
+        let repository = RetrospectionRepositorySpy()
+        let memo = Memo(
+            id: UUID(),
+            createdAt: .now,
+            originalText: "",
+            emojiText: "",
+            originalRetrospectionText: "ab",
+            emojiRetrospectionText: "😀😃"
+        )
+        let store = RetrospectionStore(router: Router(), repository: repository, memo: memo)
+
+        store.handleIntent(.onAppear)
+        store.handleIntent(.updateRetrospection(""))
+        store.handleIntent(.completeButtonTapped)
+
+        let saved = try #require(repository.savedMemos.last)
+        #expect(saved.originalRetrospectionText == nil)
+        #expect(saved.emojiRetrospectionText == nil)
     }
 
     @Test func savePreservesEmojiOnDelete() throws {

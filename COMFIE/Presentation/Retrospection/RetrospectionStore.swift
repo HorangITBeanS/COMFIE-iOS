@@ -20,7 +20,7 @@ class RetrospectionStore: IntentStore {
     let memo: Memo
     
     private var cancellables = Set<AnyCancellable>()
-    private let inputContentSubject = CurrentValueSubject<String, Never>("")
+    private let inputContentSubject = PassthroughSubject<String, Never>()
     
     init(router: Router, repository: RetrospectionRepositoryProtocol, memo: Memo) {
         self.router = router
@@ -174,8 +174,9 @@ class RetrospectionStore: IntentStore {
 extension RetrospectionStore {
     private func saveRetrospection(_ state: State) -> Bool {
         let content = state.inputContent?.isEmpty == true ? nil : state.inputContent
+        let emojiContent = content == nil ? nil : state.emojiString.getEmojiString()
         let updatedmemo = memo.with(originalRetrospectionText: content,
-                                    emojiRetrospectionText: state.emojiString.getEmojiString())
+                                    emojiRetrospectionText: emojiContent)
         
         switch repository.save(memo: updatedmemo) {
         case .success:

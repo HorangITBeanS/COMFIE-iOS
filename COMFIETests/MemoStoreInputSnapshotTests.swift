@@ -242,6 +242,29 @@ struct MemoStoreInputSnapshotTests {
         _ = cancellables
     }
 
+    @Test func saveTappedWithEmptyInputDoesNotStartFinalSync() {
+        let repository = MemoRepositorySpy()
+        let store = makeMemoStore(repository: repository)
+        var cancellables = Set<AnyCancellable>()
+        var requestCount = 0
+
+        store.uiSideEffectPublisher
+            .sink { sideEffect in
+                if case .requestFinalSyncAndResign = sideEffect {
+                    requestCount += 1
+                }
+            }
+            .store(in: &cancellables)
+
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+
+        #expect(requestCount == 0)
+        #expect(repository.saveCallCount == 0)
+        #expect(repository.updateCallCount == 0)
+        #expect(store.state.savePhase == .idle)
+        _ = cancellables
+    }
+
     @Test func finalSyncCompletedWithMismatchedRequestIDDoesNotPersist() throws {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
@@ -530,6 +553,19 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.savePhase == .idle)
     }
 
+    @Test func requestFinalSyncWithNilTextViewIgnoresStaleCoordinatorDraft() async throws {
+        let harness = makeMemoInputCoordinator()
+        let coordinator = harness.coordinator, store = harness.store, repository = harness.repository
+        coordinator.bindFocusControl()
+        coordinator.draftOriginalText = "stale"; coordinator.draftEmojiText = "🙃🙃🙃🙃🙃"
+        coordinator.draftRevision = 99; coordinator.textView = nil
+        syncInputSnapshot(store, originalText: "ab", emojiText: "😀😃", revision: 4)
+        store.handleIntent(.memoInput(.memoInputButtonTapped))
+        try await waitUntil(timeoutTick: 40) { repository.savedMemos.count == 1 }
+        let savedMemo = try #require(repository.savedMemos.first)
+        #expect(savedMemo.originalText == "ab"); #expect(savedMemo.emojiText == "😀😃"); #expect(store.state.savePhase == .idle)
+    }
+
     @Test func backgroundTappedRequestsResignWithoutPersist() {
         let repository = MemoRepositorySpy()
         let store = makeMemoStore(repository: repository)
@@ -797,6 +833,18 @@ struct MemoStoreInputSnapshotTests {
 
         #expect(secondAttachment is NSTextAttachment)
         #expect(coordinator.draftOriginalText == "abc")
+    }
+
+    @Test func imeSeedRenderClearsStalePendingChangeState() {
+        let harness = makeMemoInputCoordinator()
+        let coordinator = harness.coordinator, textView = harness.textView, store = harness.store
+        textView.text = "ab"; textView.selectedRange = NSRange(location: 2, length: 0)
+        _ = coordinator.textView(textView, shouldChangeTextIn: NSRange(location: 1, length: 0), replacementText: "c")
+        #expect(coordinator.pendingChange != nil)
+        syncInputSnapshot(store, originalText: "xy", emojiText: "xy", revision: 3); coordinator.applyStateToTextView(force: true)
+        #expect(coordinator.pendingChange == nil); #expect(coordinator.deferredChange == nil)
+        coordinator.lastSelectionRange = NSRange(location: 0, length: 0); textView.selectedRange = NSRange(location: 1, length: 0); coordinator.textViewDidChangeSelection(textView)
+        #expect(textView.textStorage.attribute(.attachment, at: 0, effectiveRange: nil) == nil); #expect(textView.textStorage.string == "xy")
     }
 
     @Test func finalSyncSideEffectFromStoreIsHandledByCoordinator() async throws {
