@@ -85,7 +85,7 @@ class MemoStore: IntentStore {
             deletingMemo = nil
         }
         
-        @AppStorage("hasSeenTutorial") var hasSeenTutorial: Bool = false
+        @AppStorage(UserDefaultsConstants.Keys.hasSeenTutorial.rawValue) var hasSeenTutorial: Bool = false
         var showTutorial: Bool = false
     }
     
@@ -508,7 +508,9 @@ extension MemoStore {
         finalSyncTimeoutTask = Task { [weak self] in
             try? await Task.sleep(nanoseconds: Self.finalSyncTimeoutNanoseconds)
             guard !Task.isCancelled, let self else { return }
-            self.handleIntent(.memoInput(.finalSyncTimedOut(requestID: requestID)))
+            await MainActor.run {
+                self.handleIntent(.memoInput(.finalSyncTimedOut(requestID: requestID)))
+            }
         }
     }
 

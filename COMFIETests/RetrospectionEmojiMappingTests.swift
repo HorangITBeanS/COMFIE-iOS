@@ -1,4 +1,5 @@
 @testable import COMFIE
+import Foundation
 import Testing
 
 private final class RetrospectionRepositorySpy: RetrospectionRepositoryProtocol {
@@ -19,7 +20,7 @@ private final class RetrospectionRepositorySpy: RetrospectionRepositoryProtocol 
 @MainActor
 struct RetrospectionEmojiMappingTests {
 
-    @Test func savePreservesEmojiOnAppend() {
+    @Test func savePreservesEmojiOnAppend() throws {
         let repository = RetrospectionRepositorySpy()
         let memo = Memo(
             id: UUID(),
@@ -44,7 +45,7 @@ struct RetrospectionEmojiMappingTests {
         #expect(Array(emoji)[2] != "c")
     }
 
-    @Test func savePreservesEmojiOnDelete() {
+    @Test func savePreservesEmojiOnDelete() throws {
         let repository = RetrospectionRepositorySpy()
         let memo = Memo(
             id: UUID(),
@@ -67,7 +68,7 @@ struct RetrospectionEmojiMappingTests {
         #expect(emoji == "😀😄")
     }
 
-    @Test func saveKeepsEmojiWhenUnchanged() {
+    @Test func saveKeepsEmojiWhenUnchanged() throws {
         let repository = RetrospectionRepositorySpy()
         let memo = Memo(
             id: UUID(),
@@ -90,7 +91,7 @@ struct RetrospectionEmojiMappingTests {
         #expect(emoji == "😀😃")
     }
 
-    @Test func saveNormalizesLengthMismatch() {
+    @Test func saveNormalizesLengthMismatch() throws {
         let repository = RetrospectionRepositorySpy()
         let memo = Memo(
             id: UUID(),
@@ -116,7 +117,7 @@ struct RetrospectionEmojiMappingTests {
         #expect(Array(emoji)[3] != "d")
     }
 
-    @Test func saveUsesLatestBaselineAcrossConsecutiveSaves() {
+    @Test func saveUsesLatestBaselineAcrossConsecutiveSaves() throws {
         let repository = RetrospectionRepositorySpy()
         let memo = Memo(
             id: UUID(),
