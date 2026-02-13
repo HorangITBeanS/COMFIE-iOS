@@ -69,7 +69,12 @@ extension MemoInputUITextView {
                     guard let self else { return }
                     switch sideEffect {
                     case .resignInputFocusWithSyncInput:
-                        syncSnapshotToStoreIfPossible()
+                        if let textView {
+                            flushPendingConversionBeforeSync(in: textView)
+                            syncSnapshotToStore(textView)
+                        } else {
+                            syncSnapshotToStoreIfPossible()
+                        }
                         endEditingSyncPolicy = .sync
                         if let textView {
                             unfocusTextView(textView)
@@ -82,6 +87,7 @@ extension MemoInputUITextView {
                     case .requestFinalSyncAndResign(let requestID):
                         endEditingSyncPolicy = .skipOnce
                         if let textView {
+                            flushPendingConversionBeforeSync(in: textView)
                             syncSnapshotToStore(textView)
                         } else {
                             syncDraftFromFallbackIfNeeded()
@@ -207,6 +213,7 @@ extension MemoInputUITextView {
                 endEditingSyncPolicy = .sync
                 return
             }
+            flushPendingConversionBeforeSync(in: textView)
             syncSnapshotToStore(textView)
         }
 

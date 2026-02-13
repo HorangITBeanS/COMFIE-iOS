@@ -70,8 +70,12 @@ extension MemoInputUITextView.Coordinator {
         guard convertedLength > 0 else { return }
 
         let insertedRange = NSRange(location: start, length: convertedLength)
+        // 단일 입력은 "현재 글자"를 보류하고, 직전 확정 글자까지만 변환한다.
         tokenizeBeforeMarkedStart(textView, targetIndex: insertedRange.location - 1, marked: nil)
-        tokenizeRange(textView, range: insertedRange)
+        // 붙여넣기/다글자 치환은 입력 직후 즉시 변환한다.
+        if insertedRange.length > 1 {
+            tokenizeRange(textView, range: insertedRange)
+        }
     }
 
     func deferPendingChangeIfNeeded() {
@@ -82,15 +86,15 @@ extension MemoInputUITextView.Coordinator {
     }
 
     func flushPendingConversionOnCursorMove(in textView: UITextView) {
-        if let change = pendingChange ?? deferredChange {
-            handleNonMarkedChange(in: textView, change: change)
-        } else if lastSelectionRange.location > 0 {
-            tokenizeBeforeMarkedStart(textView, targetIndex: lastSelectionRange.location - 1, marked: nil)
-        }
-
-        pendingChange = nil
-        deferredChange = nil
+        applyPendingConversionIfNeeded(in: textView)
         syncSnapshotToStore(textView)
+        lastTextLength = textView.textStorage.length
+    }
+
+    func flushPendingConversionBeforeSync(in textView: UITextView) {
+        guard isEmojiMode else { return }
+        guard textView.markedTextRange == nil else { return }
+        applyPendingConversionIfNeeded(in: textView)
         lastTextLength = textView.textStorage.length
     }
 
@@ -122,6 +126,17 @@ extension MemoInputUITextView.Coordinator {
         for index in stride(from: end - 1, through: start, by: -1) {
             tokenizeBeforeMarkedStart(textView, targetIndex: index, marked: nil)
         }
+    }
+
+    private func applyPendingConversionIfNeeded(in textView: UITextView) {
+        if let change = pendingChange ?? deferredChange {
+            handleNonMarkedChange(in: textView, change: change)
+        } else if lastSelectionRange.location > 0 {
+            tokenizeBeforeMarkedStart(textView, targetIndex: lastSelectionRange.location - 1, marked: nil)
+        }
+
+        pendingChange = nil
+        deferredChange = nil
     }
 
     // MARK: - Mode Conversion

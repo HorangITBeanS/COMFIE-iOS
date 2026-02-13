@@ -20,9 +20,31 @@ private final class StaticLocationUseCaseForIME: LocationUseCase {
 
 @MainActor
 struct MemoInputIMEInsertionTests {
-    @Test func singleCharacterInsertTokenizesInsertedCharacterOnChange() {
+    @Test func singleCharacterTypingConvertsPreviousCharacterAndDefersCurrentCharacter() {
         let (coordinator, textView, placeholderLabel) = makeIMECoordinator()
+        _ = coordinator.textView(
+            textView,
+            shouldChangeTextIn: NSRange(location: 0, length: 0),
+            replacementText: "a"
+        )
+        textView.text = "a"
+        textView.selectedRange = NSRange(location: 1, length: 0)
+        coordinator.textViewDidChange(textView)
+        let firstAfterA = textView.textStorage.attribute(.attachment, at: 0, effectiveRange: nil)
+        #expect(firstAfterA == nil)
+
+        _ = coordinator.textView(
+            textView,
+            shouldChangeTextIn: NSRange(location: 1, length: 0),
+            replacementText: "b"
+        )
         textView.text = "ab"
+        textView.selectedRange = NSRange(location: 2, length: 0)
+        coordinator.textViewDidChange(textView)
+        let firstAfterB = textView.textStorage.attribute(.attachment, at: 0, effectiveRange: nil)
+        let secondAfterB = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        #expect(firstAfterB is NSTextAttachment)
+        #expect(secondAfterB == nil)
 
         _ = coordinator.textView(
             textView,
@@ -32,9 +54,89 @@ struct MemoInputIMEInsertionTests {
         textView.text = "abc"
         textView.selectedRange = NSRange(location: 3, length: 0)
         coordinator.textViewDidChange(textView)
+        let secondAfterC = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        let thirdAfterC = textView.textStorage.attribute(.attachment, at: 2, effectiveRange: nil)
+        #expect(secondAfterC is NSTextAttachment)
+        #expect(thirdAfterC == nil)
+        _ = placeholderLabel
+    }
 
-        let insertedAttachment = textView.textStorage.attribute(.attachment, at: 2, effectiveRange: nil)
-        #expect(insertedAttachment is NSTextAttachment)
+    @Test func hangulCompositionConvertsPreviousSyllableWhenNextInputStarts() {
+        let (coordinator, textView, placeholderLabel) = makeIMECoordinator()
+        textView.attributedText = NSAttributedString(string: "밖ㅇ")
+        textView.selectedRange = NSRange(location: 2, length: 0)
+
+        coordinator.handleMarkedRange(in: textView, marked: NSRange(location: 1, length: 1))
+
+        let firstAttachment = textView.textStorage.attribute(.attachment, at: 0, effectiveRange: nil)
+        let secondAttachment = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        #expect(firstAttachment is NSTextAttachment)
+        #expect(secondAttachment == nil)
+        _ = placeholderLabel
+    }
+
+    @Test func middleCursorSingleTypingUsesSameDeferredRule() {
+        let (coordinator, textView, placeholderLabel) = makeIMECoordinator()
+        textView.text = "ab"
+
+        _ = coordinator.textView(
+            textView,
+            shouldChangeTextIn: NSRange(location: 1, length: 0),
+            replacementText: "x"
+        )
+        textView.text = "axb"
+        textView.selectedRange = NSRange(location: 2, length: 0)
+        coordinator.textViewDidChange(textView)
+
+        let firstAfterX = textView.textStorage.attribute(.attachment, at: 0, effectiveRange: nil)
+        let insertedX = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        #expect(firstAfterX is NSTextAttachment)
+        #expect(insertedX == nil)
+
+        _ = coordinator.textView(
+            textView,
+            shouldChangeTextIn: NSRange(location: 2, length: 0),
+            replacementText: "y"
+        )
+        textView.text = "axyb"
+        textView.selectedRange = NSRange(location: 3, length: 0)
+        coordinator.textViewDidChange(textView)
+
+        let xAfterY = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        let insertedY = textView.textStorage.attribute(.attachment, at: 2, effectiveRange: nil)
+        #expect(xAfterY is NSTextAttachment)
+        #expect(insertedY == nil)
+        _ = placeholderLabel
+    }
+
+    @Test func endEditingFlushesDeferredLastCharacter() {
+        let (coordinator, textView, placeholderLabel) = makeIMECoordinator()
+
+        _ = coordinator.textView(
+            textView,
+            shouldChangeTextIn: NSRange(location: 0, length: 0),
+            replacementText: "a"
+        )
+        textView.text = "a"
+        textView.selectedRange = NSRange(location: 1, length: 0)
+        coordinator.textViewDidChange(textView)
+
+        _ = coordinator.textView(
+            textView,
+            shouldChangeTextIn: NSRange(location: 1, length: 0),
+            replacementText: "b"
+        )
+        textView.text = "ab"
+        textView.selectedRange = NSRange(location: 2, length: 0)
+        coordinator.textViewDidChange(textView)
+
+        let secondBeforeEndEditing = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        #expect(secondBeforeEndEditing == nil)
+
+        coordinator.textViewDidEndEditing(textView)
+
+        let secondAfterEndEditing = textView.textStorage.attribute(.attachment, at: 1, effectiveRange: nil)
+        #expect(secondAfterEndEditing is NSTextAttachment)
         _ = placeholderLabel
     }
 }
