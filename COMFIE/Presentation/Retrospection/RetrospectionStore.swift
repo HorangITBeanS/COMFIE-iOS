@@ -35,8 +35,10 @@ class RetrospectionStore: IntentStore {
         var originalMemo: String = ""
         var inputContent: String?
         var createdDate: String = ""
-        
+
         var emojiString: EmojiString = .init()
+        var lastSavedOriginal: String?
+        var lastSavedEmoji: String?
         
         var showCompleteButton: Bool = false
         var showDeletePopupView: Bool = false
@@ -129,9 +131,30 @@ class RetrospectionStore: IntentStore {
         case .updateRetrospection(let text):
             newState.inputContent = text
         case .saveRetrospection:
-            newState.emojiString.syncWithNewString(newState.inputContent ?? "")
+            let content = newState.inputContent ?? ""
+            // 회고는 원문 텍스트만 입력되므로, 기존 이모지 매핑을 최대한 보존한 뒤 저장한다.
+            let previousOriginal = newState.lastSavedOriginal ?? memo.originalRetrospectionText ?? ""
+            let previousEmojiRaw = newState.lastSavedEmoji ?? memo.emojiRetrospectionText ?? previousOriginal
+            let normalizedPrevious = EmojiString.normalizedForPersist(
+                originalText: previousOriginal,
+                preferredEmojiText: previousEmojiRaw
+            )
+
+            let mergedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
+                previousOriginalText: previousOriginal,
+                previousEmojiText: normalizedPrevious.getEmojiString(),
+                newOriginalText: content
+            )
+
+            newState.emojiString = EmojiString.normalizedForPersist(
+                originalText: content,
+                preferredEmojiText: mergedEmojiText
+            )
             newState.emojiString.setUnassignedEmojis()
-            saveRetrospection(newState)
+            if saveRetrospection(newState) {
+                newState.lastSavedOriginal = content
+                newState.lastSavedEmoji = newState.emojiString.getEmojiString()
+            }
         case .deleteRetrospection:
             deleteRetrospection(newState)
             
@@ -149,7 +172,7 @@ class RetrospectionStore: IntentStore {
 // MARK: - Helper Methods
 
 extension RetrospectionStore {
-    private func saveRetrospection(_ state: State) {
+    private func saveRetrospection(_ state: State) -> Bool {
         let content = state.inputContent?.isEmpty == true ? nil : state.inputContent
         let updatedmemo = memo.with(originalRetrospectionText: content,
                                     emojiRetrospectionText: state.emojiString.getEmojiString())
@@ -157,8 +180,10 @@ extension RetrospectionStore {
         switch repository.save(memo: updatedmemo) {
         case .success:
             print("회고 저장 성공")
+            return true
         case .failure(let error):
             print("회고 저장 실패: \(error)")
+            return false
         }
     }
     
@@ -188,7 +213,7 @@ extension RetrospectionStore {
                 guard let self = self else { return }
                 var updatedState = self.state
                 updatedState.inputContent = content
-                self.saveRetrospection(updatedState)
+                self.state = self.handleAction(updatedState, .saveRetrospection)
             }
             .store(in: &cancellables)
     }
