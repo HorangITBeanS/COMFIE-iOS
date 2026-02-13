@@ -39,13 +39,13 @@ Examples:
 
 ### Rules
 - Keep `type` in **English**.
-- Write the subject/body in **Korean**.
+- Write the subject/body in **English**.
 - Keep the subject concise and clearly describe the intent of the change.
 
 Examples:
-- `feat: 프로필 수정 기능 추가`
-- `fix: 로그인 실패 시 누락된 에러 메시지 처리`
-- `refactor: 프로필 유효성 검사 로직 분리`
+- `feat: add profile edit`
+- `fix: handle missing error message on login failure`
+- `refactor: extract profile validation logic`
 
 ---
 
@@ -58,14 +58,42 @@ Examples:
 
 ### PR Writing Rules
 - Write the PR title and description in **Korean**.
-- Recommended: use the same format as commit messages for the PR title  
-  Example: `feat: 프로필 수정 기능 추가`
+- If `.github/pull_request_template.md` exists, use it as the default PR description format.
+- If the template file does not exist, use the lightweight format below.
+- Recommended: keep commit `type` in English and write the PR title as `<type>: <한글 요약>`  
+  Example: `refactor: 메인 홈 독서 흐름 MVVM 전환`
 
-### Must Include in PR Description
-- **Summary**: what changed and why (3–5 key lines)
-- **Test Plan**: how you verified it / results (local, simulator, unit tests, etc.)
-- **TODO / Follow-ups**: remaining work and next PR plan
+### Lightweight PR Description (Only when template is missing)
+- `## 작업 내용`
+  - 핵심 변경 사항
+  - 변경 이유
+- `## 테스트`
+  - 수행한 테스트와 결과
+- `## 후속 작업` (optional)
+- `## 리뷰 포인트` (optional)
+- `## 스크린샷` (optional)
 
 ### Branch Push Rule
 - For the first push of a new branch, set upstream:
   - `git push -u origin <branch-name>`
+
+---
+
+## 4) PR Review Convention
+
+### Rules
+- Write review comments in **Korean**.
+- Leave all code findings (bugs, regressions, risks) as **inline comments** on PR diff lines.
+- Do **not** leave only top-level PR comments for code findings.
+- Use one finding per comment with a priority tag: `[P0]`, `[P1]`, `[P2]`, `[P3]`.
+- If inline is impossible, leave a top-level comment and explicitly state why inline is not possible.
+
+### Required Inline Command (`gh`)
+```bash
+gh api -X POST repos/<org>/<repo>/pulls/<pr-number>/comments \
+  -f body='[P1] Finding...' \
+  -f commit_id=<head-commit-sha> \
+  -f path='path/to/file.swift' \
+  -F line=<line-number> \
+  -f side=RIGHT
+```
