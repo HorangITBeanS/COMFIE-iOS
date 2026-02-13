@@ -228,10 +228,13 @@ class MemoStore: IntentStore {
                 state = handleAction(state, .tutorial(.showTutorial))
             }
         case .backgroundTapped:
+            guard state.savePhase == .idle else { return }
             performUISideEffect(for: .resignInputFocusWithSyncInput)
         case .comfieZoneSettingButtonTapped:
+            guard state.savePhase == .idle else { return }
             state = handleAction(state, .navigation(.toComfieZoneSetting))
         case .moreButtonTapped:
+            guard state.savePhase == .idle else { return }
             state = handleAction(state, .navigation(.toMore))
         case .tutorialTapped:
             state = handleAction(state, .tutorial(.dismissTutorial))
@@ -259,6 +262,7 @@ extension MemoStore {
     private func handleMemoCellIntent(_ intent: Intent.MemoCellIntent) -> State {
         switch intent {
         case .deleteButtonTapped(let memo):
+            guard state.savePhase == .idle else { return state }
             return handleAction(state, .popup(.showDeletePopup(memo)))
         case .editButtonTapped(let memo):
             guard state.savePhase == .idle else { return state }
@@ -274,6 +278,7 @@ extension MemoStore {
             performUISideEffect(for: .resignInputFocusWithoutSync)
             return newState
         case .retrospectionButtonTapped(let memo):
+            guard state.savePhase == .idle else { return state }
             let newState = handleNavigationAction(state, .toRetrospection(memo))
             return newState
         }
@@ -324,6 +329,7 @@ extension MemoStore {
         case .cancelDeleteButtonTapped:
             return handleAction(state, .popup(.cancelDelete))
         case .confirmDeleteButtonTapped:
+            guard state.savePhase == .idle else { return state }
             return handleAction(state, .memo(.delete))
         }
     }
@@ -352,92 +358,113 @@ extension MemoStore {
     }
     
     private func handleInputAction(_ state: State, _ action: Action.InputAction) -> State {
-        var newState = state
         switch action {
         case .draftAvailabilityChangedWithRevision(let isEmpty, let revision):
-            newState.isInputEmpty = isEmpty
-            newState.inputSnapshotRevision = max(newState.inputSnapshotRevision, revision)
-            if case .awaitingFinalSync = newState.savePhase {
-                pendingFinalSyncDraftRevision = revision
-            }
-
-            if case .idle = newState.savePhase,
-               let timedOutContext = timedOutFinalSyncContext,
-               revision != timedOutContext.draftRevision {
-                timedOutFinalSyncContext = nil
-            }
-            return newState
+            return applyDraftAvailability(state, isEmpty: isEmpty, revision: revision)
         case .syncInputSnapshot(let snapshot):
-            if case .awaitingFinalSync = newState.savePhase {
-                pendingFinalSyncDraftRevision = snapshot.revision
-            }
-            if case .idle = newState.savePhase,
-               let timedOutContext = timedOutFinalSyncContext,
-               snapshot.revision != timedOutContext.draftRevision {
-                timedOutFinalSyncContext = nil
-            }
-            return applyInputSnapshot(newState, snapshot: snapshot)
+            return applySyncedSnapshot(state, snapshot: snapshot)
         case .finalSyncCompleted(let requestID, let snapshot):
-            let isAwaitingMatchedRequest: Bool
-            if case .awaitingFinalSync(let currentRequestID) = newState.savePhase {
-                isAwaitingMatchedRequest = (currentRequestID == requestID)
-            } else {
-                isAwaitingMatchedRequest = false
-            }
-
-            let isLateCompletionForTimedOutRequest: Bool
-            if case .idle = newState.savePhase,
-               let timedOutContext = timedOutFinalSyncContext {
-                isLateCompletionForTimedOutRequest =
-                    timedOutContext.requestID == requestID
-                    && timedOutContext.draftRevision == newState.inputSnapshotRevision
-                    && timedOutContext.draftRevision == snapshot.revision
-            } else {
-                isLateCompletionForTimedOutRequest = false
-            }
-
-            guard isAwaitingMatchedRequest || isLateCompletionForTimedOutRequest else {
-                return newState
-            }
-
-            cancelFinalSyncTimeout()
-            pendingFinalSyncDraftRevision = nil
-            timedOutFinalSyncContext = nil
-            newState = applyInputSnapshot(newState, snapshot: snapshot)
-            newState.savePhase = .persisting
-
-            if let editingMemo = newState.editingMemo {
-                return handleAction(newState, .memo(.update(editingMemo)))
-            } else {
-                let persistedState = handleAction(newState, .memo(.save))
-                performScrollEffect(for: .toBottom)
-                return persistedState
-            }
+            return handleFinalSyncCompleted(state, requestID: requestID, snapshot: snapshot)
         case .finalSyncTimedOut(let requestID):
-            guard case .awaitingFinalSync(let currentRequestID) = newState.savePhase else {
-                return newState
-            }
-            guard currentRequestID == requestID else {
-                return newState
-            }
-
-            newState.savePhase = .idle
-            let timedOutDraftRevision = pendingFinalSyncDraftRevision ?? newState.inputSnapshotRevision
-            timedOutFinalSyncContext = TimedOutFinalSyncContext(
-                requestID: requestID,
-                draftRevision: timedOutDraftRevision
-            )
-            pendingFinalSyncDraftRevision = nil
-            cancelFinalSyncTimeout()
-            return newState
+            return handleFinalSyncTimedOut(state, requestID: requestID)
         case .startEditing(let memo):
+            var newState = state
             // 작성되고 있던 메모 reset
             newState.resetEditingMemo()
             newState.setEditingMemo(memo)
+            return newState
         case .cancelEditing:
+            var newState = state
             newState.resetEditingMemo()
+            return newState
         }
-        
+    }
+
+    private func applyDraftAvailability(_ state: State, isEmpty: Bool, revision: Int) -> State {
+        var newState = state
+        newState.isInputEmpty = isEmpty
+        newState.inputSnapshotRevision = max(newState.inputSnapshotRevision, revision)
+        if case .awaitingFinalSync = newState.savePhase {
+            pendingFinalSyncDraftRevision = revision
+        }
+
+        if case .idle = newState.savePhase,
+           let timedOutContext = timedOutFinalSyncContext,
+           revision != timedOutContext.draftRevision {
+            timedOutFinalSyncContext = nil
+        }
+        return newState
+    }
+
+    private func applySyncedSnapshot(_ state: State, snapshot: MemoInputSnapshot) -> State {
+        var newState = state
+        if case .awaitingFinalSync = newState.savePhase {
+            pendingFinalSyncDraftRevision = snapshot.revision
+        }
+        if case .idle = newState.savePhase,
+           let timedOutContext = timedOutFinalSyncContext,
+           snapshot.revision != timedOutContext.draftRevision {
+            timedOutFinalSyncContext = nil
+        }
+        return applyInputSnapshot(newState, snapshot: snapshot)
+    }
+
+    private func handleFinalSyncCompleted(_ state: State, requestID: UUID, snapshot: MemoInputSnapshot) -> State {
+        var newState = state
+        let isAwaitingMatchedRequest: Bool
+        if case .awaitingFinalSync(let currentRequestID) = newState.savePhase {
+            isAwaitingMatchedRequest = (currentRequestID == requestID)
+        } else {
+            isAwaitingMatchedRequest = false
+        }
+
+        let isLateCompletionForTimedOutRequest: Bool
+        if case .idle = newState.savePhase,
+           let timedOutContext = timedOutFinalSyncContext {
+            isLateCompletionForTimedOutRequest =
+                timedOutContext.requestID == requestID
+                && timedOutContext.draftRevision == newState.inputSnapshotRevision
+                && timedOutContext.draftRevision == snapshot.revision
+        } else {
+            isLateCompletionForTimedOutRequest = false
+        }
+
+        guard isAwaitingMatchedRequest || isLateCompletionForTimedOutRequest else {
+            return newState
+        }
+
+        cancelFinalSyncTimeout()
+        pendingFinalSyncDraftRevision = nil
+        timedOutFinalSyncContext = nil
+        newState = applyInputSnapshot(newState, snapshot: snapshot)
+        newState.savePhase = .persisting
+
+        if let editingMemo = newState.editingMemo {
+            return handleAction(newState, .memo(.update(editingMemo)))
+        } else {
+            let persistedState = handleAction(newState, .memo(.save))
+            performScrollEffect(for: .toBottom)
+            return persistedState
+        }
+    }
+
+    private func handleFinalSyncTimedOut(_ state: State, requestID: UUID) -> State {
+        var newState = state
+        guard case .awaitingFinalSync(let currentRequestID) = newState.savePhase else {
+            return newState
+        }
+        guard currentRequestID == requestID else {
+            return newState
+        }
+
+        newState.savePhase = .idle
+        let timedOutDraftRevision = pendingFinalSyncDraftRevision ?? newState.inputSnapshotRevision
+        timedOutFinalSyncContext = TimedOutFinalSyncContext(
+            requestID: requestID,
+            draftRevision: timedOutDraftRevision
+        )
+        pendingFinalSyncDraftRevision = nil
+        cancelFinalSyncTimeout()
         return newState
     }
     

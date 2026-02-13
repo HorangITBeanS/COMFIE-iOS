@@ -71,10 +71,7 @@ extension MemoInputUITextView.Coordinator {
 
         let insertedRange = NSRange(location: start, length: convertedLength)
         tokenizeBeforeMarkedStart(textView, targetIndex: insertedRange.location - 1, marked: nil)
-
-        if insertedRange.length > 1 {
-            tokenizeRange(textView, range: insertedRange)
-        }
+        tokenizeRange(textView, range: insertedRange)
     }
 
     func deferPendingChangeIfNeeded() {
