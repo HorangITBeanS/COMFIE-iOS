@@ -99,6 +99,7 @@
 			A1F001A62F04000000ABC001 /* RetrospectionEmojiMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001A72F04000000ABC001 /* RetrospectionEmojiMappingTests.swift */; };
 			A1F001A82F04000000ABC001 /* MemoStoreSavePhaseNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001A92F04000000ABC001 /* MemoStoreSavePhaseNavigationTests.swift */; };
 			A1F001AA2F04000000ABC001 /* MemoInputIMEInsertionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001AB2F04000000ABC001 /* MemoInputIMEInsertionTests.swift */; };
+			A1F001AC2F04000000ABC001 /* MemoStoreComfieZoneMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F001AD2F04000000ABC001 /* MemoStoreComfieZoneMappingTests.swift */; };
 		B9134CA92E0BDD45001CE11A /* CFWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9134CA62E0BDD40001CE11A /* CFWebView.swift */; };
 		B95C98C12DAC9FEB0057C868 /* Memo+with.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95C98C02DAC9FE70057C868 /* Memo+with.swift */; };
 		B96CDB302DA235B5004EA2E9 /* RetrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */; };
@@ -236,6 +237,7 @@
 			A1F001A72F04000000ABC001 /* RetrospectionEmojiMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionEmojiMappingTests.swift; sourceTree = "<group>"; };
 			A1F001A92F04000000ABC001 /* MemoStoreSavePhaseNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoStoreSavePhaseNavigationTests.swift; sourceTree = "<group>"; };
 			A1F001AB2F04000000ABC001 /* MemoInputIMEInsertionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoInputIMEInsertionTests.swift; sourceTree = "<group>"; };
+			A1F001AD2F04000000ABC001 /* MemoStoreComfieZoneMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoStoreComfieZoneMappingTests.swift; sourceTree = "<group>"; };
 		B9134CA62E0BDD40001CE11A /* CFWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CFWebView.swift; sourceTree = "<group>"; };
 		B95C98C02DAC9FE70057C868 /* Memo+with.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+with.swift"; sourceTree = "<group>"; };
 		B96CDB2F2DA235B1004EA2E9 /* RetrospectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrospectionView.swift; sourceTree = "<group>"; };
@@ -421,6 +423,7 @@
 				A1F001A72F04000000ABC001 /* RetrospectionEmojiMappingTests.swift */,
 				A1F001A92F04000000ABC001 /* MemoStoreSavePhaseNavigationTests.swift */,
 				A1F001AB2F04000000ABC001 /* MemoInputIMEInsertionTests.swift */,
+				A1F001AD2F04000000ABC001 /* MemoStoreComfieZoneMappingTests.swift */,
 			);
 			path = COMFIETests;
 			sourceTree = "<group>";
@@ -1042,6 +1045,7 @@
 				A1F001A62F04000000ABC001 /* RetrospectionEmojiMappingTests.swift in Sources */,
 				A1F001A82F04000000ABC001 /* MemoStoreSavePhaseNavigationTests.swift in Sources */,
 				A1F001AA2F04000000ABC001 /* MemoInputIMEInsertionTests.swift in Sources */,
+				A1F001AC2F04000000ABC001 /* MemoStoreComfieZoneMappingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

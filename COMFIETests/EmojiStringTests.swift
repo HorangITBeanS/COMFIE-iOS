@@ -85,4 +85,24 @@ struct EmojiStringTests {
 
         #expect(merged == "😀😃x😄")
     }
+
+    @Test func mergedEmojiTextPreservingUnchangedSupportsMiddleDelete() {
+        let merged = EmojiString.mergedEmojiTextPreservingUnchanged(
+            previousOriginalText: "abc",
+            previousEmojiText: "😀😃😄",
+            newOriginalText: "ac"
+        )
+
+        #expect(merged == "😀😄")
+    }
+
+    @Test func mergedEmojiTextPreservingUnchangedSupportsMiddleReplace() {
+        let merged = EmojiString.mergedEmojiTextPreservingUnchanged(
+            previousOriginalText: "abc",
+            previousEmojiText: "😀😃😄",
+            newOriginalText: "axc"
+        )
+
+        #expect(merged == "😀x😄")
+    }
 }
