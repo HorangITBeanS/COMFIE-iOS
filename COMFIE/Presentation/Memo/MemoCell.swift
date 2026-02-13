@@ -122,6 +122,7 @@ struct MemoCell: View {
                 .resizable()
                 .frame(width: 19, height: 20)
         }
+        .accessibilityIdentifier("memo.cell.menuButton")
     }
 }
 

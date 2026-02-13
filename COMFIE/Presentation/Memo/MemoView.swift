@@ -88,6 +88,7 @@ struct MemoView: View {
                         .frame(width: 24, height: 24)
                 }
             }
+            .accessibilityIdentifier("memo.comfieZoneSettingButton")
             
             Spacer()
             
@@ -100,6 +101,7 @@ struct MemoView: View {
                     .symbolRenderingMode(.monochrome)
                     .tint(.cfBlack)
             }
+            .accessibilityIdentifier("memo.moreButton")
         }
         .padding(.horizontal, 19)
         .padding(.vertical, 16)
@@ -126,13 +128,14 @@ struct MemoView: View {
                     .frame(width: 24, height: 24)
                     .padding(8)
                     .background(
-                        intent.state.inputMemoText.isEmpty
+                        intent.state.isInputEmpty
                         ? .keyDeactivated
                         : .keyPrimary
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .disabled(intent.state.inputMemoText.isEmpty)
+            .accessibilityIdentifier("memo.sendButton")
+            .disabled(intent.state.isInputEmpty)
         }
         .padding(16)
         .background {
@@ -160,6 +163,7 @@ struct MemoView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 212))
                 .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 0)
         }
+        .accessibilityIdentifier("memo.editingCancelButton")
     }
 }
 

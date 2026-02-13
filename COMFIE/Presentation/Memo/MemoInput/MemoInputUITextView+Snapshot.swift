@@ -11,7 +11,7 @@ extension MemoInputUITextView.Coordinator {
     // MARK: - Snapshot/Rendering
 
     func normalizedOriginalText() -> String {
-        // inputOriginalText가 비어 있으면 기존 입력값으로 폴백한다.
+        // Store seed에 원문이 있으면 이를 우선 사용한다.
         if !intent.state.inputOriginalText.isEmpty {
             return intent.state.inputOriginalText
         }
@@ -19,7 +19,7 @@ extension MemoInputUITextView.Coordinator {
     }
 
     func normalizedEmojiText(with originalText: String) -> String {
-        // 이모지 스냅샷이 없으면 원문을 그대로 사용한다.
+        // Store seed에 emoji 스냅샷이 없으면 원문을 사용한다.
         if !intent.state.inputMemoText.isEmpty {
             return intent.state.inputMemoText
         }
@@ -33,12 +33,33 @@ extension MemoInputUITextView.Coordinator {
 
     func syncSnapshotToStore(_ textView: UITextView) {
         let currentSnapshot = snapshot(from: textView.textStorage)
-        let emojiText = isEmojiMode ? currentSnapshot.emoji : currentSnapshot.original
+        let emojiTextCandidate = isEmojiMode ? currentSnapshot.emoji : currentSnapshot.original
+
+        updateDraft(
+            originalText: currentSnapshot.original,
+            emojiTextCandidate: emojiTextCandidate
+        )
+        publishDraftAvailability()
+    }
+
+    func syncDraftFromFallbackIfNeeded() {
+        guard draftOriginalText.isEmpty && draftEmojiText.isEmpty else { return }
+
+        let originalText = normalizedOriginalText()
+        let emojiText = normalizedEmojiText(with: originalText)
+        syncDraftCache(
+            originalText: originalText,
+            emojiText: emojiText,
+            revision: intent.state.inputSnapshotRevision
+        )
+    }
+
+    func publishDraftAvailability() {
         intent.handleIntent(
             .memoInput(
-                .syncInputSnapshot(
-                    originalText: currentSnapshot.original,
-                    emojiText: emojiText
+                .draftAvailabilityChangedWithRevision(
+                    isEmpty: draftEmojiText.isEmpty,
+                    revision: draftRevision
                 )
             )
         )
@@ -62,6 +83,29 @@ extension MemoInputUITextView.Coordinator {
         }
 
         return (original, emoji)
+    }
+
+    func render(_ textView: UITextView, originalText: String, emojiText: String) {
+        let oldSelection = textView.selectedRange
+        isMutating = true
+
+        if isEmojiMode {
+            textView.attributedText = attributedText(
+                originalText: originalText,
+                emojiText: emojiText,
+                font: parent.comfieUIBodyFont
+            )
+        } else {
+            textView.text = originalText
+        }
+
+        textView.selectedRange = clampedSelection(oldSelection, maxLength: textView.textStorage.length)
+        isMutating = false
+
+        updatePlaceholderVisibility(textView)
+        updateTextViewHeight(textView)
+        lastTextLength = textView.textStorage.length
+        lastSelectionRange = textView.selectedRange
     }
 
     func attributedText(originalText: String, emojiText: String, font: UIFont) -> NSAttributedString {
@@ -114,5 +158,41 @@ extension MemoInputUITextView.Coordinator {
         let maxAvailableLength = max(0, maxLength - location)
         let length = min(max(0, selection.length), maxAvailableLength)
         return NSRange(location: location, length: length)
+    }
+
+    func updateDraft(originalText: String, emojiTextCandidate: String) {
+        let resolvedEmojiText: String
+        if isEmojiMode {
+            resolvedEmojiText = emojiTextCandidate
+        } else {
+            let seededPreviousEmojiText: String
+            if draftOriginalText.isEmpty,
+               draftEmojiText.isEmpty,
+               emojiTextCandidate.count == originalText.count {
+                seededPreviousEmojiText = emojiTextCandidate
+            } else {
+                seededPreviousEmojiText = draftEmojiText
+            }
+
+            resolvedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
+                previousOriginalText: draftOriginalText,
+                previousEmojiText: seededPreviousEmojiText,
+                newOriginalText: originalText
+            )
+        }
+
+        let hasDraftChanged = draftOriginalText != originalText || draftEmojiText != resolvedEmojiText
+        if hasDraftChanged {
+            draftRevision += 1
+        }
+
+        draftOriginalText = originalText
+        draftEmojiText = resolvedEmojiText
+    }
+
+    func syncDraftCache(originalText: String, emojiText: String, revision: Int) {
+        draftOriginalText = originalText
+        draftEmojiText = emojiText
+        draftRevision = max(draftRevision, revision)
     }
 }

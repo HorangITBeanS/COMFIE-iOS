@@ -87,6 +87,7 @@ struct MemoInputUITextView: UIViewRepresentable {
         textView.layer.cornerRadius = 12
         textView.clipsToBounds = true
         textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.accessibilityIdentifier = "memo.inputTextView"
         return textView
     }
 
