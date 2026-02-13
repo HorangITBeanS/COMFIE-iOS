@@ -6,9 +6,3 @@ Package.resolved
 *.plist
 *.xcprivacy
 .DS_Store
-
-.claude
-.codex
-docs/
-Tasks/
-AGENTS.md
