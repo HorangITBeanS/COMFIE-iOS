@@ -57,39 +57,39 @@ After this change, users should be able to type and edit in both emoji mode and 
 
 - Decision: Keep `MemoStore` as the owner of domain and save transaction state, but not as the owner of live editor draft text.
   Rationale: UIKit IME and cursor state are inherently local to `UITextView`; forcing full external control increases complexity and defect risk.
-  Date/Author: 2026-02-12 / Codex + user direction.
+  Date/Author: 2026-02-12 / zaehorang + user direction.
 
 - Decision: Use command/event boundaries instead of direct method calls between store and editor.
   Rationale: `Store -> Command` and `Editor -> Event` keeps ownership and ordering explicit, avoids tight coupling, and supports request ID matching.
-  Date/Author: 2026-02-12 / Codex + user direction.
+  Date/Author: 2026-02-12 / zaehorang + user direction.
 
 - Decision: Preserve existing behavior during migration by introducing compatibility layers first.
   Rationale: Current tests are strong and should remain green while ownership is shifted; this lowers rollout risk.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 - Decision: Use uniquely named revision-aware intents instead of overloading enum case names.
   Rationale: Swift pattern matching became ambiguous with overloaded case base names, while explicit names were stable and clearer in call sites.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 - Decision: Decouple button enablement from store draft text early via `isInputEmpty`, while preserving draft snapshot compatibility for now.
   Rationale: This provides immediate boundary cleanup with low risk and prepares Milestone 2/3 without a full behavior break.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 - Decision: Introduce `inputSeedVersion` separate from `inputSnapshotRevision`.
   Rationale: Seed-change detection and draft-revision tracking must be independent; otherwise availability revisions could trigger unintended store-driven text re-renders.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 - Decision: Keep legacy snapshot intents in `MemoStore` while moving coordinator typing flow off snapshot sync.
   Rationale: This preserves existing tests/callers during migration and allows incremental cleanup without breaking save/update transaction behavior.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 - Decision: Use availability+revision events to guard late timeout completion acceptance.
   Rationale: After removing per-keystroke text payload sync, revision is the minimal deterministic signal for stale-callback invalidation.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 - Decision: Keep `inputOriginalText`/`inputMemoText` as editor seed and persist sources for now, while removing only legacy intent compatibility paths.
   Rationale: Seed/reset and commit flows still require deterministic store-side values; dropping these fields in the same refactor would increase rollback risk without user-visible value.
-  Date/Author: 2026-02-12 / Codex.
+  Date/Author: 2026-02-12 / zaehorang.
 
 ## Outcomes & Retrospective
 
