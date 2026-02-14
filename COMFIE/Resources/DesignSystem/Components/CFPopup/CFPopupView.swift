@@ -37,6 +37,7 @@ private struct CFPopup: View {
     
     var body: some View {
         VStack(spacing: 0) {
+
             CFPopupContentView(type: type,
                                leftButtonType: leftButtonType,
                                leftButtonAction: leftButtonAction,
@@ -60,6 +61,7 @@ private struct CFPopupContentView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+
             Text(type.title)
                 .comfieFont(.systemSubtitle)
                 .foregroundStyle(.popupBlack)
@@ -79,6 +81,8 @@ private struct CFPopupContentView: View {
                                   description: type.leftButtonDescription)
                     
                 }
+                // 릴리즈에서는 no-op이고, Debug UITest 세션에서만 식별자를 부여한다.
+                .uiTestAccessibilityIdentifier(AccessibilityID.Popup.leftButton)
                 
                 Button {
                     rightButtonAction()
@@ -86,6 +90,8 @@ private struct CFPopupContentView: View {
                     CFPopupButton(type: rightButtonType,
                                   description: type.rightButtonDescription)
                 }
+
+                .uiTestAccessibilityIdentifier(AccessibilityID.Popup.rightButton)
             }
         }
     }

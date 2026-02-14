@@ -33,6 +33,8 @@ extension MemoInputUITextView.Coordinator {
             emojiTextCandidate: emojiTextCandidate
         )
         publishDraftAvailability()
+        // +Snapshot+UITest 확장에서 실제 동작하며, 그 외 빌드에서는 no-op이다.
+        publishDebugSnapshotIfNeeded(textView)
     }
 
     func syncDraftFromFallbackIfNeeded() {
@@ -92,6 +94,8 @@ extension MemoInputUITextView.Coordinator {
         updateTextViewHeight(textView)
         lastTextLength = textView.textStorage.length
         lastSelectionRange = textView.selectedRange
+        // +Snapshot+UITest 확장에서 실제 동작하며, 그 외 빌드에서는 no-op이다.
+        publishDebugSnapshotIfNeeded(textView)
     }
 
     func attributedText(originalText: String, emojiText: String, font: UIFont) -> NSAttributedString {

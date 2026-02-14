@@ -42,7 +42,7 @@ class LocationUseCase {
         if let comfieZone, let location {
             let comfieZoneLocation = CLLocation(latitude: comfieZone.latitude, longitude: comfieZone.longitude)
             let userComfieZoneDistance = location.distance(from: comfieZoneLocation)
-            let isInComfieZone = userComfieZoneDistance <= ComfieZoneConstant.comfieZoneRadius  // 컴피존 반경
+            let isInComfieZone = userComfieZoneDistance <= ComfieZoneConstant.comfieZoneRadius
             return isInComfieZone
         } else {
             return false
