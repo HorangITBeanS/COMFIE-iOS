@@ -143,20 +143,22 @@ struct MemoInputIMEInsertionTests {
 
 @MainActor
 private func makeIMECoordinator() -> (MemoInputUITextView.Coordinator, UITextView, UILabel) {
-    let store = MemoStore(
-        router: Router(),
-        memoRepository: MockMemoRepository(),
-        locationUseCase: StaticLocationUseCaseForIME()
-    )
-
     var dynamicHeight: CGFloat = 40
     let dynamicHeightBinding = Binding<CGFloat>(
         get: { dynamicHeight },
         set: { dynamicHeight = $0 }
     )
-    let intentBinding = Binding<MemoStore>(get: { store }, set: { _ in })
-    let parent = MemoInputUITextView("placeholder", dynamicHeight: dynamicHeightBinding, intent: intentBinding)
-    let coordinator = MemoInputUITextView.Coordinator(parent: parent, intent: intentBinding)
+    let parent = MemoInputUITextView(
+        "placeholder",
+        dynamicHeight: dynamicHeightBinding,
+        inputSeed: .empty,
+        isEmojiPresentationEnabled: true,
+        uiCommandEvent: nil,
+        onDraftAvailabilityChanged: { _, _ in },
+        onFinalSnapshotReady: { _, _ in },
+        onFinalSnapshotFailed: { _ in }
+    )
+    let coordinator = MemoInputUITextView.Coordinator(parent: parent)
 
     let textView = UITextView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
     textView.font = parent.comfieUIBodyFont

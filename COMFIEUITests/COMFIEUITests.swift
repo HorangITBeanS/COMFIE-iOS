@@ -77,7 +77,6 @@ final class COMFIEUITests: XCTestCase {
         }
         XCTAssertTrue(firstEnable)
 
-        // 커서 이동과 추가 입력 이후에도 입력 인터랙션이 유지되는지 확인한다.
         input.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)).tap()
         input.typeText("다")
 
