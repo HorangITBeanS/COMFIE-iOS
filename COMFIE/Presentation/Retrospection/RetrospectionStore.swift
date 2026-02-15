@@ -31,7 +31,6 @@ class RetrospectionStore: IntentStore {
     }
     
     struct State {
-        // 메모 관련 데이터
         var originalMemo: String = ""
         var inputContent: String?
         var createdDate: String = ""
@@ -50,12 +49,10 @@ class RetrospectionStore: IntentStore {
         case contentFieldTapped
         case updateRetrospection(String)
         
-        // 네비게이션바 내 버튼
         case backButtonTapped
         case deleteMenuButtonTapped
         case completeButtonTapped
         
-        // 삭제 팝업 내 버튼
         case deleteRetrospectionButtonTapped
         case cancelDeleteRetrospectionButtonTapped
     }
@@ -147,18 +144,11 @@ class RetrospectionStore: IntentStore {
 
     private func persistRetrospection(_ state: inout State) {
         let content = state.inputContent ?? ""
-        // 회고는 원문 텍스트만 입력되므로, 기존 이모지 매핑을 최대한 보존한 뒤 저장한다.
-        let previousOriginal = state.lastSavedOriginal ?? memo.originalRetrospectionText ?? ""
-        let previousEmojiRaw = state.lastSavedEmoji ?? memo.emojiRetrospectionText ?? previousOriginal
-        let normalizedPrevious = EmojiString.normalizedForPersist(
-            originalText: previousOriginal,
-            preferredEmojiText: previousEmojiRaw
-        )
-
-        let mergedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
-            previousOriginalText: previousOriginal,
-            previousEmojiText: normalizedPrevious.getEmojiString(),
-            newOriginalText: content
+        let baseline = resolveRetrospectionMergeBaseline(state)
+        let mergedEmojiText = mergedRetrospectionEmojiText(
+            baselineOriginal: baseline.original,
+            baselineEmoji: baseline.emoji,
+            newOriginal: content
         )
 
         state.emojiString = EmojiString.normalizedForPersist(
@@ -170,6 +160,28 @@ class RetrospectionStore: IntentStore {
             state.lastSavedOriginal = content
             state.lastSavedEmoji = state.emojiString.getEmojiString()
         }
+    }
+
+    private func resolveRetrospectionMergeBaseline(_ state: State) -> (original: String, emoji: String) {
+        let previousOriginal = state.lastSavedOriginal ?? memo.originalRetrospectionText ?? ""
+        let previousEmojiRaw = state.lastSavedEmoji ?? memo.emojiRetrospectionText ?? previousOriginal
+        let normalizedPrevious = EmojiString.normalizedForPersist(
+            originalText: previousOriginal,
+            preferredEmojiText: previousEmojiRaw
+        )
+        return (original: previousOriginal, emoji: normalizedPrevious.getEmojiString())
+    }
+
+    private func mergedRetrospectionEmojiText(
+        baselineOriginal: String,
+        baselineEmoji: String,
+        newOriginal: String
+    ) -> String {
+        EmojiString.mergedEmojiTextPreservingUnchanged(
+            previousOriginalText: baselineOriginal,
+            previousEmojiText: baselineEmoji,
+            newOriginalText: newOriginal
+        )
     }
 }
 
@@ -209,7 +221,6 @@ extension RetrospectionStore {
         sideEffectPublisher.send(action)
     }
     
-    // 입력 데이터를 실시간으로 저장해주는 함수 - 0.5초 후 저장
     private func setUpBindingContent() {
         inputContentSubject
             .removeDuplicates()

@@ -6,8 +6,6 @@
 //
 import Foundation
 
-/// 각 문자를 하나의 이모지와 매칭하는 구조입니다.
-/// 예: 'a' → 🐯, '한' → 🐯
 struct EmojiCharacter {
     var originalCharacter: Character
     var emojiCharacter: Character?
@@ -22,19 +20,29 @@ struct EmojiCharacter {
         }
     }
     
-    /// 이모지로 변환 가능한 입력 문자만 허용한다. (공백/줄바꿈/이미 이모지 제외)
     static func isEmojiConvertibleCharacter(_ char: Character) -> Bool {
-        if char == " " || char == "\n" || isEmoji(char) {
+        if isWhitespaceOrNewline(char) || isEmoji(char) {
             return false
         }
 
         let scalars = char.unicodeScalars
-        if !scalars.isEmpty, scalars.allSatisfy({ CharacterSet.letters.contains($0) }) {
+        if isLetterCharacter(scalars) {
             return true
         }
 
-        guard let scalar = scalars.first,
-              scalars.count == 1 else {
+        return isSingleASCIIDigitOrPunctuation(scalars)
+    }
+
+    private static func isWhitespaceOrNewline(_ char: Character) -> Bool {
+        char == " " || char == "\n"
+    }
+
+    private static func isLetterCharacter(_ scalars: String.UnicodeScalarView) -> Bool {
+        !scalars.isEmpty && scalars.allSatisfy { CharacterSet.letters.contains($0) }
+    }
+
+    private static func isSingleASCIIDigitOrPunctuation(_ scalars: String.UnicodeScalarView) -> Bool {
+        guard scalars.count == 1, let scalar = scalars.first else {
             return false
         }
 

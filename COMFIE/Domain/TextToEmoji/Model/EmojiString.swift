@@ -39,34 +39,21 @@ struct EmojiString {
         self = EmojiString(originalText: originalText, emojiText: emojiText)
     }
 
-    /// 저장 직전에 원문/이모지 길이를 정규화해 데이터 불일치를 방지합니다.
     static func normalizedForPersist(originalText: String, preferredEmojiText: String) -> EmojiString {
         if originalText.count == preferredEmojiText.count {
             return EmojiString(originalText: originalText, emojiText: preferredEmojiText)
         }
 
-        // 길이 불일치 시 원문 기준으로 재구성하고, 변환 가능한 문자만 이모지로 유지한다.
         var normalized = EmojiString(originalText: originalText, emojiText: originalText)
-        let originalCharacters = Array(originalText)
-        let preferredCharacters = Array(preferredEmojiText)
-        let commonCount = min(originalCharacters.count, preferredCharacters.count)
-
-        guard commonCount > 0 else { return normalized }
-
-        for index in 0..<commonCount {
-            let originalCharacter = originalCharacters[index]
-            let preferredCharacter = preferredCharacters[index]
-
-            guard preferredCharacter != originalCharacter else { continue }
-            guard EmojiCharacter.isEmojiConvertibleCharacter(originalCharacter) else { continue }
-
-            normalized.setEmojiCharacter(preferredCharacter, at: index)
-        }
+        applyPreferredEmojiToConvertibleCommonRange(
+            originalText: originalText,
+            preferredEmojiText: preferredEmojiText,
+            target: &normalized
+        )
 
         return normalized
     }
 
-    /// 원문 모드에서 텍스트가 바뀌어도 기존 이모지 매핑을 최대한 유지합니다.
     static func mergedEmojiTextPreservingUnchanged(
         previousOriginalText: String,
         previousEmojiText: String,
@@ -78,27 +65,115 @@ struct EmojiString {
 
         guard !newOriginal.isEmpty else { return "" }
 
-        // 원문 모드 초기 동기화에서는 이전 원문이 비어 있어도 전달된 이모지 스냅샷을 우선 유지한다.
-        if oldOriginal.isEmpty {
-            if oldEmoji.count == newOriginal.count {
-                return previousEmojiText
-            } else {
-                return newOriginalText
-            }
+        if let resolvedOnInitialSeed = resolveMergedEmojiForInitialSeed(
+            oldOriginal: oldOriginal,
+            oldEmoji: oldEmoji,
+            newOriginal: newOriginal,
+            previousEmojiText: previousEmojiText,
+            newOriginalText: newOriginalText
+        ) {
+            return resolvedOnInitialSeed
         }
 
-        let normalizedOldEmoji: [Character] = oldOriginal.enumerated().map { index, originalCharacter in
+        let normalizedOldEmoji = normalizedOldEmojiCharacters(oldOriginal: oldOriginal, oldEmoji: oldEmoji)
+
+        if previousOriginalText == newOriginalText {
+            return String(normalizedOldEmoji)
+        }
+
+        if let mergedFastPath = mergedEmojiByTailFastPath(
+            oldOriginal: oldOriginal,
+            normalizedOldEmoji: normalizedOldEmoji,
+            newOriginal: newOriginal
+        ) {
+            return mergedFastPath
+        }
+
+        return mergedEmojiByLCS(
+            oldOriginal: oldOriginal,
+            normalizedOldEmoji: normalizedOldEmoji,
+            newOriginal: newOriginal
+        )
+    }
+    
+    func getEmojiString() -> String {
+        emojiCharacters
+            .map { String($0.emojiCharacter ?? $0.originalCharacter) }
+            .joined()
+    }
+    
+    func getOriginalString() -> String {
+        emojiCharacters
+            .map { String($0.originalCharacter) }
+            .joined()
+    }
+    
+    mutating func setUnassignedEmojis() {
+        for i in emojiCharacters.indices {
+            emojiCharacters[i].setEmojiCharacter()
+        }
+    }
+    
+    private mutating func setEmojiCharacter(_ emoji: Character, at index: Int) {
+        guard emojiCharacters.indices.contains(index) else { return }
+        emojiCharacters[index].emojiCharacter = emoji
+    }
+
+    private static func applyPreferredEmojiToConvertibleCommonRange(
+        originalText: String,
+        preferredEmojiText: String,
+        target: inout EmojiString
+    ) {
+        let originalCharacters = Array(originalText)
+        let preferredCharacters = Array(preferredEmojiText)
+        let commonCount = min(originalCharacters.count, preferredCharacters.count)
+        guard commonCount > 0 else { return }
+
+        for index in 0..<commonCount {
+            let originalCharacter = originalCharacters[index]
+            let preferredCharacter = preferredCharacters[index]
+
+            guard preferredCharacter != originalCharacter else { continue }
+            guard EmojiCharacter.isEmojiConvertibleCharacter(originalCharacter) else { continue }
+
+            target.setEmojiCharacter(preferredCharacter, at: index)
+        }
+    }
+
+    private static func resolveMergedEmojiForInitialSeed(
+        oldOriginal: [Character],
+        oldEmoji: [Character],
+        newOriginal: [Character],
+        previousEmojiText: String,
+        newOriginalText: String
+    ) -> String? {
+        guard oldOriginal.isEmpty else { return nil }
+
+        if oldEmoji.count == newOriginal.count {
+            return previousEmojiText
+        }
+
+        return newOriginalText
+    }
+
+    private static func normalizedOldEmojiCharacters(
+        oldOriginal: [Character],
+        oldEmoji: [Character]
+    ) -> [Character] {
+        oldOriginal.enumerated().map { index, originalCharacter in
             if index < oldEmoji.count {
                 return oldEmoji[index]
             } else {
                 return originalCharacter
             }
         }
+    }
 
-        if previousOriginalText == newOriginalText {
-            return String(normalizedOldEmoji)
-        }
-
+    private static func mergedEmojiByTailFastPath(
+        oldOriginal: [Character],
+        normalizedOldEmoji: [Character],
+        newOriginal: [Character]
+    ) -> String? {
         // Fast path: append at tail
         if newOriginal.count == oldOriginal.count + 1,
            oldOriginal.elementsEqual(newOriginal.dropLast()) {
@@ -115,9 +190,17 @@ struct EmojiString {
             return String(normalizedOldEmoji.dropLast())
         }
 
-        // 공통 부분 수열(LCS)로 기존 매핑을 최대한 유지한다.
+        return nil
+    }
+
+    private static func mergedEmojiByLCS(
+        oldOriginal: [Character],
+        normalizedOldEmoji: [Character],
+        newOriginal: [Character]
+    ) -> String {
         var mergedEmoji = newOriginal
         let matchedIndexPairs = lcsMatchedIndexPairs(old: oldOriginal, new: newOriginal)
+
         for (oldIndex, newIndex) in matchedIndexPairs {
             guard oldIndex < normalizedOldEmoji.count, newIndex < mergedEmoji.count else { continue }
             mergedEmoji[newIndex] = normalizedOldEmoji[oldIndex]
@@ -125,35 +208,7 @@ struct EmojiString {
 
         return String(mergedEmoji)
     }
-    
-    /// 현재 이모지 적용 상태의 문자열을 반환합니다.
-    func getEmojiString() -> String {
-        emojiCharacters
-            .map { String($0.emojiCharacter ?? $0.originalCharacter) }
-            .joined()
-    }
-    
-    /// 원본 문자열을 반환합니다.
-    func getOriginalString() -> String {
-        emojiCharacters
-            .map { String($0.originalCharacter) }
-            .joined()
-    }
-    
-    /// 비워진 이모지를 전체 적용합니다.
-    mutating func setUnassignedEmojis() {
-        // 전체 채우기
-        for i in emojiCharacters.indices {
-            emojiCharacters[i].setEmojiCharacter()
-        }
-    }
-    
-    private mutating func setEmojiCharacter(_ emoji: Character, at index: Int) {
-        guard emojiCharacters.indices.contains(index) else { return }
-        emojiCharacters[index].emojiCharacter = emoji
-    }
 
-    /// LCS 기반으로 공통 문자 인덱스 쌍을 구합니다.
     private static func lcsMatchedIndexPairs(old: [Character], new: [Character]) -> [(Int, Int)] {
         guard !old.isEmpty, !new.isEmpty else { return [] }
 
