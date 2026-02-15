@@ -11,6 +11,7 @@ struct MemoView: View {
     private let strings = StringLiterals.Memo.self
 
     @State var intent: MemoStore
+    @State private var memoInputUIEvent: MemoInputUIEvent?
     var isUserInComfieZone: Bool {
         intent.state.isInComfieZone
     }
@@ -69,17 +70,18 @@ struct MemoView: View {
         .onAppear {
             intent(.onAppear)
         }
+        .onReceive(intent.uiSideEffectPublisher) { sideEffect in
+            memoInputUIEvent = MemoInputUIEvent(command: mapMemoInputUICommand(sideEffect))
+        }
     }
     
     // MARK: - View Property
     private var navigationBarView: some View {
         HStack(spacing: 0) {
             Button {
-                // 페이지 이동
                 intent(.comfieZoneSettingButtonTapped)
             } label: {
                 HStack(spacing: 8) {
-                    // 컴피존 상태에 따라 로고 변경
                     Image(isUserInComfieZone ? .icComfie : .icUncomfie)
                         .resizable()
                         .frame(width: isUserInComfieZone ? 84 : 115, height: 25)
@@ -116,7 +118,32 @@ struct MemoView: View {
         HStack(alignment: .top, spacing: 12) {
             MemoInputTextView(
                 strings.textfieldPlaceholder.localized,
-                memoStore: $intent
+                inputSeed: intent.state.inputSeed,
+                isEmojiPresentationEnabled: intent.state.isEmojiPresentationEnabled,
+                uiCommandEvent: memoInputUIEvent,
+                onDraftAvailabilityChanged: { isEmpty, revision in
+                    intent(
+                        .memoInput(
+                            .draftAvailabilityChangedWithRevision(
+                                isEmpty: isEmpty,
+                                revision: revision
+                            )
+                        )
+                    )
+                },
+                onFinalSnapshotReady: { requestID, snapshot in
+                    intent(
+                        .memoInput(
+                            .finalSyncCompletedWithRevision(
+                                requestID: requestID,
+                                snapshot: snapshot
+                            )
+                        )
+                    )
+                },
+                onFinalSnapshotFailed: { requestID in
+                    intent(.memoInput(.finalSyncFailed(requestID: requestID)))
+                }
             )
             
             Button {
@@ -164,6 +191,19 @@ struct MemoView: View {
                 .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 0)
         }
         .accessibilityIdentifier("memo.editingCancelButton")
+    }
+
+    private func mapMemoInputUICommand(_ sideEffect: MemoStore.SideEffect.MemoInput) -> MemoInputUICommand {
+        switch sideEffect {
+        case .resignInputFocusWithSyncInput:
+            return .resignWithSync
+        case .resignInputFocusWithoutSync:
+            return .resignWithoutSync
+        case .requestFinalSyncAndResign(let requestID):
+            return .requestFinalSyncAndResign(requestID: requestID)
+        case .setMemoInputFocus:
+            return .setFocus
+        }
     }
 }
 

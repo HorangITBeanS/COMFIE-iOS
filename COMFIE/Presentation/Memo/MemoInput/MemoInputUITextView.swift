@@ -11,8 +11,14 @@ import UIKit
 struct MemoInputUITextView: UIViewRepresentable {
     let placeholder: String
 
+    let inputSeed: MemoInputSeed
+    let isEmojiPresentationEnabled: Bool
+    let uiCommandEvent: MemoInputUIEvent?
+    let onDraftAvailabilityChanged: (Bool, Int) -> Void
+    let onFinalSnapshotReady: (UUID, MemoInputSnapshot) -> Void
+    let onFinalSnapshotFailed: (UUID) -> Void
+
     @Binding var dynamicHeight: CGFloat
-    @Binding private var intent: MemoStore
 
     let comfieUIBodyFont = UIFont(
         name: ComfieFontType.body.fontName.rawValue,
@@ -22,15 +28,25 @@ struct MemoInputUITextView: UIViewRepresentable {
     init(
         _ placeholder: String,
         dynamicHeight: Binding<CGFloat>,
-        intent: Binding<MemoStore>
+        inputSeed: MemoInputSeed,
+        isEmojiPresentationEnabled: Bool,
+        uiCommandEvent: MemoInputUIEvent?,
+        onDraftAvailabilityChanged: @escaping (Bool, Int) -> Void,
+        onFinalSnapshotReady: @escaping (UUID, MemoInputSnapshot) -> Void,
+        onFinalSnapshotFailed: @escaping (UUID) -> Void
     ) {
         self.placeholder = placeholder
         self._dynamicHeight = dynamicHeight
-        self._intent = intent
+        self.inputSeed = inputSeed
+        self.isEmojiPresentationEnabled = isEmojiPresentationEnabled
+        self.uiCommandEvent = uiCommandEvent
+        self.onDraftAvailabilityChanged = onDraftAvailabilityChanged
+        self.onFinalSnapshotReady = onFinalSnapshotReady
+        self.onFinalSnapshotFailed = onFinalSnapshotFailed
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self, intent: $intent)
+        Coordinator(parent: self)
     }
 
     func makeUIView(context: Context) -> UIView {
@@ -53,7 +69,6 @@ struct MemoInputUITextView: UIViewRepresentable {
         context.coordinator.textView = textView
         context.coordinator.placeholderLabel = placeholderLabel
         context.coordinator.textViewHeightConstraint = heightConstraint
-        context.coordinator.bindFocusControl()
         context.coordinator.applyStateToTextView(force: true)
 
         container.addSubview(textView)
@@ -66,7 +81,6 @@ struct MemoInputUITextView: UIViewRepresentable {
             textView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
 
             placeholderLabel.topAnchor.constraint(equalTo: textView.topAnchor, constant: 9),
-            // textView의 커서 위치와 플레이스홀더의 정렬을 맞추기 위해 오른쪽으로 5pt 추가
             placeholderLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: 17)
         ])
 
@@ -100,7 +114,6 @@ struct MemoInputUITextView: UIViewRepresentable {
         return placeholderLabel
     }
 
-    /// 텍스트뷰의 최대 줄 수에 따른 높이 제한 제약 생성
     private func createMaxHeightConstraint(for textView: UITextView) -> NSLayoutConstraint {
         let maxHeight = comfieUIBodyFont.lineHeight
             * maxLineCount

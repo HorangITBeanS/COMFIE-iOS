@@ -12,7 +12,6 @@ extension MemoInputUITextView.Coordinator {
 
     func handleMarkedRange(in textView: UITextView, marked: NSRange) {
         guard isEmojiMode else { return }
-        // 조합 중인 범위 바로 앞까지만 토큰화한다.
         tokenizeBeforeMarkedStart(textView, targetIndex: marked.location - 1, marked: marked)
     }
 
@@ -21,7 +20,6 @@ extension MemoInputUITextView.Coordinator {
         guard textView.markedTextRange == nil else { return }
         guard let change = deferredChange else { return }
 
-        // 조합 완료 후에 미뤄둔 변환을 처리한다.
         handleNonMarkedChange(in: textView, change: change)
         deferredChange = nil
         pendingChange = nil
@@ -70,9 +68,7 @@ extension MemoInputUITextView.Coordinator {
         guard convertedLength > 0 else { return }
 
         let insertedRange = NSRange(location: start, length: convertedLength)
-        // 단일 입력은 "현재 글자"를 보류하고, 직전 확정 글자까지만 변환한다.
         tokenizeBeforeMarkedStart(textView, targetIndex: insertedRange.location - 1, marked: nil)
-        // 붙여넣기/다글자 치환은 입력 직후 즉시 변환한다.
         if insertedRange.length > 1 {
             tokenizeRange(textView, range: insertedRange)
         }

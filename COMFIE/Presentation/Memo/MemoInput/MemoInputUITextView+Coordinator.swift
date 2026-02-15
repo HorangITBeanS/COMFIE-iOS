@@ -5,13 +5,11 @@
 //  Created by zaehorang on 2/5/26.
 //
 
-import Combine
 import SwiftUI
 import UIKit
 
 extension MemoInputUITextView {
     final class Coordinator: NSObject, UITextViewDelegate {
-        // IME 조합 중 변경 범위를 추적하기 위한 구조체
         struct PendingChange {
             let range: NSRange
             let replacementLength: Int
@@ -24,108 +22,46 @@ extension MemoInputUITextView {
 
         var parent: MemoInputUITextView
 
-        @Binding var intent: MemoStore
-
         weak var textView: UITextView!
         weak var placeholderLabel: UILabel!
 
         var textViewHeightConstraint: NSLayoutConstraint?
 
-        private var cancellables = Set<AnyCancellable>()
-
         var isMutating = false
-        // shouldChangeTextIn에서 잡은 변경을 textViewDidChange에서 처리한다.
         var pendingChange: PendingChange?
-        // IME 조합 완료 시점까지 미뤄야 하는 변경을 보관한다.
         var deferredChange: PendingChange?
         var lastSelectionRange = NSRange(location: 0, length: 0)
         var lastTextChangeTime: TimeInterval = 0
         var lastTextLength = 0
         var lastEmojiMode: Bool?
-        var lastAppliedInputSeedVersion = 0
+        var lastAppliedInputSeedToken = 0
+        var lastHandledUICommandID: UUID?
+
         private var endEditingSyncPolicy: EndEditingSyncPolicy = .sync
+
         var draftOriginalText = ""
         var draftEmojiText = ""
         var draftRevision = 0
 
         var isEmojiMode: Bool {
-            !intent.state.isInComfieZone
+            parent.isEmojiPresentationEnabled
         }
 
-        init(parent: MemoInputUITextView, intent: Binding<MemoStore>) {
+        init(parent: MemoInputUITextView) {
             self.parent = parent
-            self._intent = intent
-            self.draftOriginalText = intent.wrappedValue.state.inputOriginalText
-            self.draftEmojiText = intent.wrappedValue.state.inputMemoText
-            self.draftRevision = intent.wrappedValue.state.inputSnapshotRevision
-            self.lastAppliedInputSeedVersion = intent.wrappedValue.state.inputSeedVersion
-        }
-
-        /// MemoStore에서 전달된 sideEffect를 감지하여 포커스를 제어하거나, 상태 기반으로 입력 뷰를 갱신합니다.
-        func bindFocusControl() {
-            intent.uiSideEffectPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] sideEffect in
-                    guard let self else { return }
-                    switch sideEffect {
-                    case .resignInputFocusWithSyncInput:
-                        if let textView {
-                            flushPendingConversionBeforeSync(in: textView)
-                            syncSnapshotToStore(textView)
-                        } else {
-                            syncSnapshotToStoreIfPossible()
-                        }
-                        endEditingSyncPolicy = .sync
-                        if let textView {
-                            unfocusTextView(textView)
-                        }
-                    case .resignInputFocusWithoutSync:
-                        endEditingSyncPolicy = .skipOnce
-                        if let textView {
-                            unfocusTextView(textView)
-                        }
-                    case .requestFinalSyncAndResign(let requestID):
-                        endEditingSyncPolicy = .skipOnce
-                        if let textView {
-                            flushPendingConversionBeforeSync(in: textView)
-                            syncSnapshotToStore(textView)
-                        } else {
-                            syncDraftFromFallbackIfNeeded()
-                        }
-                        let inputSnapshot = MemoStore.MemoInputSnapshot(
-                            originalText: draftOriginalText,
-                            emojiText: draftEmojiText,
-                            revision: draftRevision
-                        )
-
-                        intent.handleIntent(
-                            .memoInput(
-                                .finalSyncCompletedWithRevision(
-                                    requestID: requestID,
-                                    snapshot: inputSnapshot
-                                )
-                            )
-                        )
-                        if let textView {
-                            unfocusTextView(textView)
-                        }
-                    case .setMemoInputFocus:
-                        endEditingSyncPolicy = .sync
-                        if let textView {
-                            focusTextView(textView)
-                        }
-                    }
-                }
-                .store(in: &cancellables)
+            self.draftOriginalText = parent.inputSeed.originalText
+            self.draftEmojiText = parent.inputSeed.emojiText
+            self.lastAppliedInputSeedToken = parent.inputSeed.token
         }
 
         func applyStateToTextView(force: Bool) {
+            handleUICommandIfNeeded()
             guard let textView else { return }
 
             let modeChanged = lastEmojiMode != isEmojiMode
-            let seedVersionChanged = lastAppliedInputSeedVersion != intent.state.inputSeedVersion
+            let seedTokenChanged = lastAppliedInputSeedToken != parent.inputSeed.token
 
-            if force || seedVersionChanged {
+            if force || seedTokenChanged {
                 let seededOriginal = normalizedOriginalText()
                 let seededEmoji = normalizedEmojiText(with: seededOriginal)
                 render(
@@ -133,17 +69,17 @@ extension MemoInputUITextView {
                     originalText: seededOriginal,
                     emojiText: seededEmoji
                 )
+                let isSeedChanged = draftOriginalText != seededOriginal || draftEmojiText != seededEmoji
                 syncDraftCache(
                     originalText: seededOriginal,
                     emojiText: seededEmoji,
-                    revision: intent.state.inputSnapshotRevision
+                    revision: isSeedChanged ? draftRevision + 1 : draftRevision
                 )
-                // Seed 기반 재렌더 시 이전 입력 사이클의 IME 임시 상태를 제거한다.
+                publishDraftAvailability()
                 pendingChange = nil
                 deferredChange = nil
-                lastAppliedInputSeedVersion = intent.state.inputSeedVersion
+                lastAppliedInputSeedToken = parent.inputSeed.token
                 lastEmojiMode = isEmojiMode
-                return
             }
 
             guard modeChanged else {
@@ -158,6 +94,13 @@ extension MemoInputUITextView {
                 emojiText: draftEmojiText
             )
             lastEmojiMode = isEmojiMode
+            publishDraftAvailability()
+        }
+
+        private func flushAndSyncIfPossible(_ textView: UITextView?) {
+            guard let textView else { return }
+            flushPendingConversionBeforeSync(in: textView)
+            syncSnapshotToStore(textView)
         }
 
         // MARK: - UITextViewDelegate
@@ -183,7 +126,6 @@ extension MemoInputUITextView {
             }
 
             if isEmojiMode {
-                // IME 조합 여부에 따라 변환 시점을 분리한다.
                 let isComposing = (textView.markedTextRange != nil)
                 if isComposing, let markedTextRange = textView.markedTextRange {
                     let marked = textView.memoIME_nsRange(from: markedTextRange)
@@ -207,14 +149,12 @@ extension MemoInputUITextView {
             lastEmojiMode = isEmojiMode
         }
 
-        /// 편집 종료 시 최종 snapshot 동기화 수행
         func textViewDidEndEditing(_ textView: UITextView) {
             if endEditingSyncPolicy == .skipOnce {
                 endEditingSyncPolicy = .sync
                 return
             }
-            flushPendingConversionBeforeSync(in: textView)
-            syncSnapshotToStore(textView)
+            flushAndSyncIfPossible(textView)
         }
 
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -242,6 +182,68 @@ extension MemoInputUITextView {
             guard now - lastTextChangeTime > 0.05 else { return }
 
             flushPendingConversionOnCursorMove(in: textView)
+        }
+    }
+}
+
+// MARK: - UI Command
+extension MemoInputUITextView.Coordinator {
+    private func handleUICommandIfNeeded() {
+        guard let commandEvent = parent.uiCommandEvent else { return }
+        guard commandEvent.id != lastHandledUICommandID else { return }
+        lastHandledUICommandID = commandEvent.id
+        handleUICommand(commandEvent.command)
+    }
+
+    private func handleUICommand(_ command: MemoInputUICommand) {
+        switch command {
+        case .resignWithSync:
+            if let textView {
+                flushAndSyncIfPossible(textView)
+                unfocusTextView(textView)
+            } else {
+                syncDraftFromFallbackIfNeeded()
+            }
+            endEditingSyncPolicy = .sync
+
+        case .resignWithoutSync:
+            endEditingSyncPolicy = .skipOnce
+            if let textView {
+                unfocusTextView(textView)
+            }
+
+        case .requestFinalSyncAndResign(let requestID):
+            endEditingSyncPolicy = .skipOnce
+            if let textView {
+                flushAndSyncIfPossible(textView)
+            } else {
+                syncDraftFromFallbackIfNeeded()
+            }
+
+            if draftOriginalText.isEmpty,
+               draftEmojiText.isEmpty,
+               parent.inputSeed.originalText.isEmpty,
+               parent.inputSeed.emojiText.isEmpty {
+                parent.onFinalSnapshotFailed(requestID)
+                return
+            }
+
+            let inputSnapshot = MemoInputSnapshot(
+                originalText: draftOriginalText,
+                emojiText: draftEmojiText,
+                revision: draftRevision
+            )
+            parent.onFinalSnapshotReady(requestID, inputSnapshot)
+
+            if let textView {
+                unfocusTextView(textView)
+            }
+
+        case .setFocus:
+            endEditingSyncPolicy = .sync
+            if let textView {
+                focusTextView(textView)
+            }
         }
     }
 }

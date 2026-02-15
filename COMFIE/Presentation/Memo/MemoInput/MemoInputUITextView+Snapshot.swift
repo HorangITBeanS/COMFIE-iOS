@@ -11,24 +11,17 @@ extension MemoInputUITextView.Coordinator {
     // MARK: - Snapshot/Rendering
 
     func normalizedOriginalText() -> String {
-        // Store seed에 원문이 있으면 이를 우선 사용한다.
-        if !intent.state.inputOriginalText.isEmpty {
-            return intent.state.inputOriginalText
+        if !parent.inputSeed.originalText.isEmpty {
+            return parent.inputSeed.originalText
         }
-        return intent.state.inputMemoText
+        return parent.inputSeed.emojiText
     }
 
     func normalizedEmojiText(with originalText: String) -> String {
-        // Store seed에 emoji 스냅샷이 없으면 원문을 사용한다.
-        if !intent.state.inputMemoText.isEmpty {
-            return intent.state.inputMemoText
+        if !parent.inputSeed.emojiText.isEmpty {
+            return parent.inputSeed.emojiText
         }
         return originalText
-    }
-
-    func syncSnapshotToStoreIfPossible() {
-        guard let textView else { return }
-        syncSnapshotToStore(textView)
     }
 
     func syncSnapshotToStore(_ textView: UITextView) {
@@ -43,25 +36,22 @@ extension MemoInputUITextView.Coordinator {
     }
 
     func syncDraftFromFallbackIfNeeded() {
-        // textView 인스턴스가 없으면 로컬 draft 캐시가 stale일 수 있어 Store seed를 우선 신뢰한다.
         let originalText = normalizedOriginalText()
         let emojiText = normalizedEmojiText(with: originalText)
+        let revision = (draftOriginalText == originalText && draftEmojiText == emojiText)
+            ? draftRevision
+            : draftRevision + 1
+
         syncDraftCache(
             originalText: originalText,
             emojiText: emojiText,
-            revision: intent.state.inputSnapshotRevision
+            revision: revision
         )
+        publishDraftAvailability()
     }
 
     func publishDraftAvailability() {
-        intent.handleIntent(
-            .memoInput(
-                .draftAvailabilityChangedWithRevision(
-                    isEmpty: draftEmojiText.isEmpty,
-                    revision: draftRevision
-                )
-            )
-        )
+        parent.onDraftAvailabilityChanged(draftEmojiText.isEmpty, draftRevision)
     }
 
     func snapshot(from storage: NSAttributedString) -> (original: String, emoji: String) {
@@ -69,7 +59,6 @@ extension MemoInputUITextView.Coordinator {
         var emoji = ""
         let fullRange = NSRange(location: 0, length: storage.length)
 
-        // attachment 토큰은 원문/이모지를 각각 복원한다.
         storage.enumerateAttributes(in: fullRange, options: []) { attributes, range, _ in
             if let token = attributes[.attachment] as? MemoEmojiTokenAttachment {
                 original.append(token.original)
@@ -118,7 +107,6 @@ extension MemoInputUITextView.Coordinator {
             return NSAttributedString(string: originalText, attributes: [.font: font])
         }
 
-        // 원문과 이모지가 다른 지점만 토큰 attachment로 치환한다.
         for index in 0..<count {
             let originalCharacter = originalCharacters[index]
             let emojiCharacter = emojiCharacters[index]
@@ -160,30 +148,11 @@ extension MemoInputUITextView.Coordinator {
     }
 
     func updateDraft(originalText: String, emojiTextCandidate: String) {
-        let resolvedEmojiText: String
-        if isEmojiMode {
-            resolvedEmojiText = emojiTextCandidate
-        } else {
-            let seededPreviousEmojiText: String
-            if draftOriginalText.isEmpty,
-               draftEmojiText.isEmpty,
-               emojiTextCandidate.count == originalText.count {
-                seededPreviousEmojiText = emojiTextCandidate
-            } else {
-                seededPreviousEmojiText = draftEmojiText
-            }
-
-            resolvedEmojiText = EmojiString.mergedEmojiTextPreservingUnchanged(
-                previousOriginalText: draftOriginalText,
-                previousEmojiText: seededPreviousEmojiText,
-                newOriginalText: originalText
-            )
-        }
-
-        let hasDraftChanged = draftOriginalText != originalText || draftEmojiText != resolvedEmojiText
-        if hasDraftChanged {
-            draftRevision += 1
-        }
+        let resolvedEmojiText = resolveDraftEmojiText(
+            originalText: originalText,
+            emojiTextCandidate: emojiTextCandidate
+        )
+        bumpDraftRevisionIfNeeded(originalText: originalText, resolvedEmojiText: resolvedEmojiText)
 
         draftOriginalText = originalText
         draftEmojiText = resolvedEmojiText
@@ -193,5 +162,38 @@ extension MemoInputUITextView.Coordinator {
         draftOriginalText = originalText
         draftEmojiText = emojiText
         draftRevision = max(draftRevision, revision)
+    }
+
+    private func resolveDraftEmojiText(originalText: String, emojiTextCandidate: String) -> String {
+        if isEmojiMode {
+            return emojiTextCandidate
+        }
+
+        let seededPreviousEmojiText = seededPreviousEmojiTextForPlainMode(
+            originalText: originalText,
+            emojiTextCandidate: emojiTextCandidate
+        )
+        return EmojiString.mergedEmojiTextPreservingUnchanged(
+            previousOriginalText: draftOriginalText,
+            previousEmojiText: seededPreviousEmojiText,
+            newOriginalText: originalText
+        )
+    }
+
+    private func seededPreviousEmojiTextForPlainMode(originalText: String, emojiTextCandidate: String) -> String {
+        if draftOriginalText.isEmpty,
+           draftEmojiText.isEmpty,
+           emojiTextCandidate.count == originalText.count {
+            return emojiTextCandidate
+        }
+
+        return draftEmojiText
+    }
+
+    private func bumpDraftRevisionIfNeeded(originalText: String, resolvedEmojiText: String) {
+        let hasDraftChanged = draftOriginalText != originalText || draftEmojiText != resolvedEmojiText
+        if hasDraftChanged {
+            draftRevision += 1
+        }
     }
 }

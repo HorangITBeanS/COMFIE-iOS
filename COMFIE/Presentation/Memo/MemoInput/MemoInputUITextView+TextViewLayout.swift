@@ -14,7 +14,6 @@ extension MemoInputUITextView.Coordinator {
         placeholderLabel.isHidden = !textView.textStorage.string.isEmpty
     }
 
-    /// 텍스트 내용에 따라 높이를 계산하고 제한된 높이까지 설정
     func updateTextViewHeight(_ textView: UITextView) {
         let width = textView.bounds.width
         guard width > 0 else { return }
