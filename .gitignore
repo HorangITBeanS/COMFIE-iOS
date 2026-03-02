@@ -12,3 +12,6 @@ docs/
 
 # Local agent instruction file
 AGENTS.md
+
+# Local architecture note
+ARCHITECTURE.md
