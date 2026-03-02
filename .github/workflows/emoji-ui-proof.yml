@@ -1,0 +1,466 @@
+name: Emoji UI Proof
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+    paths:
+      - "COMFIE/Presentation/**"
+      - "COMFIE/App/**"
+      - "COMFIE/Domain/TextToEmoji/**"
+      - "COMFIEUITests/**"
+      - "COMFIETests/**"
+      - "COMFIE.xcodeproj/**"
+      - ".github/workflows/emoji-ui-proof.yml"
+  workflow_dispatch:
+    inputs:
+      test_scope:
+        description: "focused: proof test 1개, all: COMFIEUITests 전체"
+        required: false
+        default: focused
+        type: choice
+        options:
+          - focused
+          - all
+
+concurrency:
+  group: emoji-ui-proof-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  emoji-ui-proof:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      # 프로젝트/테스트 기본 설정
+      PROJECT_PATH: COMFIE.xcodeproj
+      SCHEME: COMFIE
+      TEST_IDENTIFIER: COMFIEUITests/COMFIEUITests/testHangulJamoTypingShowsStepByStepProgress
+      FULL_UI_TEST_TARGET: COMFIEUITests
+      # 러너 임시 산출물 경로 (작업 종료 후 cleanup step에서 삭제됨)
+      RESULT_BUNDLE_PATH: ${{ runner.temp }}/emoji-ui-proof.xcresult
+      ATTACHMENTS_PATH: ${{ runner.temp }}/emoji-ui-proof-attachments
+      VIDEO_PATH: ${{ runner.temp }}/emoji-ui-proof.mov
+      GIF_PATH: ${{ runner.temp }}/emoji-ui-proof.gif
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve simulator destination
+        id: destination
+        run: |
+          set -euo pipefail
+
+          python3 <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+
+          raw = subprocess.check_output(
+              ["xcrun", "simctl", "list", "devices", "available", "-j"],
+              text=True,
+          )
+          payload = json.loads(raw)
+
+          candidates = []
+          for runtime, devices in payload.get("devices", {}).items():
+              if "iOS" not in runtime:
+                  continue
+              for device in devices:
+                  if not device.get("isAvailable"):
+                      continue
+                  name = device.get("name", "")
+                  if not name.startswith("iPhone"):
+                      continue
+                  candidates.append((name, device.get("udid", ""), runtime))
+
+          if not candidates:
+              print("No available iOS iPhone simulator was found.", file=sys.stderr)
+              sys.exit(1)
+
+          preferred_order = [
+              "iPhone 16 Pro",
+              "iPhone 16",
+              "iPhone 15 Pro",
+              "iPhone 15",
+              "iPhone 14 Pro",
+              "iPhone 14",
+          ]
+
+          selected = None
+          for preferred in preferred_order:
+              for candidate in candidates:
+                  if candidate[0] == preferred:
+                      selected = candidate
+                      break
+              if selected is not None:
+                  break
+
+          if selected is None:
+              selected = candidates[0]
+
+          sim_name, sim_udid, runtime = selected
+          print(f"Selected simulator: {sim_name} ({runtime}) [{sim_udid}]")
+
+          output_path = os.environ["GITHUB_OUTPUT"]
+          with open(output_path, "a", encoding="utf-8") as handle:
+              handle.write(f"sim_name={sim_name}\n")
+              handle.write(f"sim_udid={sim_udid}\n")
+          PY
+
+      - name: Boot simulator
+        run: |
+          set -euo pipefail
+          xcrun simctl boot "${{ steps.destination.outputs.sim_udid }}" || true
+          xcrun simctl bootstatus "${{ steps.destination.outputs.sim_udid }}" -b
+
+      - name: Resolve test scope
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_SCOPE: ${{ github.event.inputs.test_scope || '' }}
+          PR_LABELS_JSON: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -euo pipefail
+
+          scope="focused"
+
+          if [ "${EVENT_NAME}" = "pull_request" ]; then
+            if echo "${PR_LABELS_JSON}" | grep -q '"ui-proof:all"'; then
+              scope="all"
+            fi
+          fi
+
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ] && [ -n "${DISPATCH_SCOPE}" ]; then
+            scope="${DISPATCH_SCOPE}"
+          fi
+
+          case "${scope}" in
+            focused)
+              echo "selector=-only-testing:${TEST_IDENTIFIER}" >> "$GITHUB_OUTPUT"
+              echo "scope_label=focused" >> "$GITHUB_OUTPUT"
+              ;;
+            all)
+              echo "selector=-only-testing:${FULL_UI_TEST_TARGET}" >> "$GITHUB_OUTPUT"
+              echo "scope_label=all" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unsupported scope: ${scope}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "resolved_scope=${scope}" >> "$GITHUB_OUTPUT"
+
+      - name: Run UI tests with recording
+        id: run_ui_test
+        run: |
+          set +e
+          set -o pipefail
+
+          xcrun simctl io "${{ steps.destination.outputs.sim_udid }}" recordVideo --codec=h264 --force "${VIDEO_PATH}" \
+            > "${RUNNER_TEMP}/emoji-ui-proof-record.log" 2>&1 &
+          video_pid=$!
+
+          xcodebuild test \
+            -project "${PROJECT_PATH}" \
+            -scheme "${SCHEME}" \
+            -destination "id=${{ steps.destination.outputs.sim_udid }}" \
+            -parallel-testing-enabled NO \
+            "${{ steps.scope.outputs.selector }}" \
+            -resultBundlePath "${RESULT_BUNDLE_PATH}" \
+            | tee "${RUNNER_TEMP}/emoji-ui-proof.log"
+          test_exit=${PIPESTATUS[0]}
+
+          kill -INT "${video_pid}" > /dev/null 2>&1 || true
+          wait "${video_pid}" > /dev/null 2>&1 || true
+
+          if [ ! -s "${VIDEO_PATH}" ]; then
+            echo "Video file missing or empty. Continuing with screenshot attachments." \
+              | tee -a "${RUNNER_TEMP}/emoji-ui-proof.log"
+          fi
+
+          echo "exit_code=${test_exit}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Export xcresult attachments
+        id: export_attachments
+        if: always()
+        run: |
+          set -euo pipefail
+
+          mkdir -p "${ATTACHMENTS_PATH}"
+          if [ -d "${RESULT_BUNDLE_PATH}" ]; then
+            xcrun xcresulttool export attachments \
+              --path "${RESULT_BUNDLE_PATH}" \
+              --output-path "${ATTACHMENTS_PATH}" || true
+          fi
+
+          attachment_count="$(find "${ATTACHMENTS_PATH}" -type f | wc -l | tr -d ' ')"
+          echo "attachment_count=${attachment_count}" >> "$GITHUB_OUTPUT"
+
+      - name: Build animated GIF from proof screenshots
+        id: build_gif
+        if: always()
+        run: |
+          set -euo pipefail
+
+          swift - <<'SWIFT'
+          import Foundation
+          import CoreGraphics
+          import ImageIO
+          import UniformTypeIdentifiers
+
+          let environment = ProcessInfo.processInfo.environment
+          guard let attachmentsPath = environment["ATTACHMENTS_PATH"],
+                let gifPath = environment["GIF_PATH"] else {
+              fputs("Required environment variables are missing.\n", stderr)
+              exit(1)
+          }
+
+          let attachmentsURL = URL(fileURLWithPath: attachmentsPath)
+          let gifURL = URL(fileURLWithPath: gifPath)
+          let fileManager = FileManager.default
+
+          struct ExportManifestEntry: Decodable {
+              let exportedFileName: String
+              let suggestedHumanReadableName: String?
+              let timestamp: Double?
+          }
+
+          struct ExportManifestGroup: Decodable {
+              let attachments: [ExportManifestEntry]
+          }
+
+          func collectPNGFiles(root: URL) -> [URL] {
+              guard let enumerator = fileManager.enumerator(
+                  at: root,
+                  includingPropertiesForKeys: [.isRegularFileKey],
+                  options: [.skipsHiddenFiles]
+              ) else {
+                  return []
+              }
+
+              var files: [URL] = []
+              for case let fileURL as URL in enumerator {
+                  guard fileURL.pathExtension.lowercased() == "png" else { continue }
+                  files.append(fileURL)
+              }
+              return files
+          }
+
+          let pngFiles = collectPNGFiles(root: attachmentsURL)
+
+          func orderedFramesFromManifest(root: URL) -> [URL] {
+              let manifestURL = root.appendingPathComponent("manifest.json")
+              guard fileManager.fileExists(atPath: manifestURL.path),
+                    let data = try? Data(contentsOf: manifestURL),
+                    let groups = try? JSONDecoder().decode([ExportManifestGroup].self, from: data) else {
+                  return []
+              }
+
+              let attachments = groups.flatMap(\.attachments)
+                  .filter { $0.exportedFileName.lowercased().hasSuffix(".png") }
+                  .sorted { lhs, rhs in
+                      let leftTimestamp = lhs.timestamp ?? 0
+                      let rightTimestamp = rhs.timestamp ?? 0
+                      if leftTimestamp == rightTimestamp {
+                          return lhs.exportedFileName < rhs.exportedFileName
+                      }
+                      return leftTimestamp < rightTimestamp
+                  }
+
+              return attachments.compactMap { attachment in
+                  let fileURL = root.appendingPathComponent(attachment.exportedFileName)
+                  return fileManager.fileExists(atPath: fileURL.path) ? fileURL : nil
+              }
+          }
+
+          var orderedFrames = orderedFramesFromManifest(root: attachmentsURL)
+
+          if orderedFrames.isEmpty {
+              orderedFrames = pngFiles.sorted { lhs, rhs in
+                  let leftDate = (try? lhs.resourceValues(forKeys: [.contentModificationDateKey]))
+                      .flatMap(\.contentModificationDate) ?? .distantPast
+                  let rightDate = (try? rhs.resourceValues(forKeys: [.contentModificationDateKey]))
+                      .flatMap(\.contentModificationDate) ?? .distantPast
+                  if leftDate == rightDate {
+                      return lhs.lastPathComponent < rhs.lastPathComponent
+                  }
+                  return leftDate < rightDate
+              }
+          }
+
+          if orderedFrames.isEmpty {
+              fputs("No emoji-proof PNG frames were found. GIF generation skipped.\n", stderr)
+              exit(0)
+          }
+
+          let maxFrameCount = 240
+          if orderedFrames.count > maxFrameCount {
+              orderedFrames = Array(orderedFrames.prefix(maxFrameCount))
+          }
+
+          try? fileManager.removeItem(at: gifURL)
+          guard let destination = CGImageDestinationCreateWithURL(
+              gifURL as CFURL,
+              UTType.gif.identifier as CFString,
+              orderedFrames.count,
+              nil
+          ) else {
+              fputs("Failed to create GIF destination.\n", stderr)
+              exit(1)
+          }
+
+          let gifProperties = [
+              kCGImagePropertyGIFDictionary as String: [
+                  kCGImagePropertyGIFLoopCount as String: 0
+              ]
+          ] as CFDictionary
+          CGImageDestinationSetProperties(destination, gifProperties)
+
+          var addedFrameCount = 0
+          for (index, frameURL) in orderedFrames.enumerated() {
+              guard let source = CGImageSourceCreateWithURL(frameURL as CFURL, nil),
+                    let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
+                  continue
+              }
+
+              let delay = index == orderedFrames.count - 1 ? 1.2 : 0.4
+              let frameProperties = [
+                  kCGImagePropertyGIFDictionary as String: [
+                      kCGImagePropertyGIFDelayTime as String: delay
+                  ]
+              ] as CFDictionary
+
+              CGImageDestinationAddImage(destination, image, frameProperties)
+              addedFrameCount += 1
+          }
+
+          guard addedFrameCount > 0 else {
+              fputs("No valid PNG frames were decoded. GIF generation skipped.\n", stderr)
+              exit(0)
+          }
+
+          guard CGImageDestinationFinalize(destination) else {
+              fputs("Failed to finalize GIF output.\n", stderr)
+              exit(1)
+          }
+
+          print("Generated GIF at \(gifURL.path)")
+          print("Frame count: \(addedFrameCount)")
+          SWIFT
+
+          if [ -s "${GIF_PATH}" ]; then
+            echo "gif_created=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gif_created=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload visual proof artifacts
+        id: upload_artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emoji-ui-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/emoji-ui-proof.log
+            ${{ runner.temp }}/emoji-ui-proof-record.log
+            ${{ runner.temp }}/emoji-ui-proof.mov
+            ${{ runner.temp }}/emoji-ui-proof.gif
+            ${{ runner.temp }}/emoji-ui-proof.xcresult
+            ${{ runner.temp }}/emoji-ui-proof-attachments
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Create or update PR comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = "<!-- emoji-ui-proof-comment -->";
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const testPassed = "${{ steps.run_ui_test.outputs.exit_code }}" === "0";
+            const statusText = testPassed ? "✅ PASSED" : "❌ FAILED";
+            const artifactUrl = "${{ steps.upload_artifact.outputs.artifact-url }}";
+            const attachmentCount = "${{ steps.export_attachments.outputs.attachment_count }}";
+            const simulatorName = "${{ steps.destination.outputs.sim_name }}";
+            const gifCreated = "${{ steps.build_gif.outputs.gif_created }}" === "true";
+            const scopeLabel = "${{ steps.scope.outputs.scope_label }}";
+            const selectedTest = scopeLabel === "all"
+              ? "${{ env.FULL_UI_TEST_TARGET }}"
+              : "${{ env.TEST_IDENTIFIER }}";
+
+            const body = `${marker}
+            ## Emoji UI Visual Proof
+            - Status: ${statusText}
+            - Simulator: \`${simulatorName}\`
+            - Test scope: \`${scopeLabel}\`
+            - Selected test target: \`${selectedTest}\`
+            - Full-suite trigger: add PR label \`ui-proof:all\` or run \`workflow_dispatch(test_scope=all)\`
+            - Screenshot attachments exported: **${attachmentCount}**
+            - Animated GIF: ${gifCreated ? "Included in uploaded artifact (`emoji-ui-proof.gif`)" : "Not generated"}
+            - Workflow run: ${runUrl}
+            - Artifacts: ${artifactUrl || "Unavailable"}`;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) => {
+              return comment.user?.type === "Bot" && comment.body?.includes(marker);
+            });
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+              });
+            }
+
+      - name: Cleanup generated proof files on runner
+        if: always()
+        run: |
+          set +e
+          # Artifact 업로드는 이미 끝난 상태라 러너 임시 파일은 모두 지워도 된다.
+          rm -rf \
+            "${ATTACHMENTS_PATH}" \
+            "${RESULT_BUNDLE_PATH}" \
+            "${VIDEO_PATH}" \
+            "${GIF_PATH}" \
+            "${RUNNER_TEMP}/emoji-ui-proof.log" \
+            "${RUNNER_TEMP}/emoji-ui-proof-record.log"
+
+      - name: Fail if focused UI test failed
+        if: steps.run_ui_test.outputs.exit_code != '0'
+        run: |
+          echo "Focused emoji UI test failed."
+          exit 1
