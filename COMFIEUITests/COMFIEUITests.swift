@@ -59,7 +59,25 @@ final class COMFIEUITests: XCTestCase {
         let rawInput = "가나다라마바사"
 
         resetMemoInputIfNeeded(in: app, input: input)
+        guard ensureKeyboardVisible(
+            in: app,
+            input: input,
+            timeout: 3,
+            failureContext: "hangul-sequence-initial-focus",
+            failureAttachmentTag: "before-key-hangul-sequence-initial"
+        ) else {
+            return
+        }
         attachScreenshot(app, named: "hangul-emoji-step-0-empty")
+        guard ensureKeyboardVisible(
+            in: app,
+            input: input,
+            timeout: 3,
+            failureContext: "hangul-sequence-before-first-jamo",
+            failureAttachmentTag: "before-key-hangul-first-jamo"
+        ) else {
+            return
+        }
 
         let jamoKeys = ["ㄱ", "ㅏ", "ㄴ", "ㅏ", "ㄷ", "ㅏ", "ㄹ", "ㅏ", "ㅁ", "ㅏ", "ㅂ", "ㅏ", "ㅅ", "ㅏ"]
         let expectedAfterEachSyllable = ["가", "가나", "가나다", "가나다라", "가나다라마", "가나다라마바", "가나다라마바사"]

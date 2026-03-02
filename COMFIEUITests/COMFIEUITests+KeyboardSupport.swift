@@ -10,9 +10,17 @@ import XCTest
 extension COMFIEUITests {
     @MainActor
     func tapKeyboardKey(in app: XCUIApplication, key: String, timeout: TimeInterval = 3) {
+        guard ensureKeyboardVisible(
+            in: app,
+            timeout: timeout,
+            failureContext: "before-key-\(key)",
+            failureAttachmentTag: "before-key-\(key)"
+        ) else {
+            return
+        }
+
         // 시뮬레이터 실행마다 키보드 레이아웃이 달라질 수 있어 토글을 포함해 재시도한다.
         let keyboard = app.keyboards.firstMatch
-        XCTAssertTrue(keyboard.waitForExistence(timeout: timeout))
 
         let normalizedKey: String
         if key.range(of: "^[a-z]$", options: .regularExpression) != nil {
@@ -42,6 +50,7 @@ extension COMFIEUITests {
 
         XCTFail(
             "Keyboard key not found after layout switches: \(key). " +
+                inputDebugSummary(in: app) + " " +
                 keyboardDebugSummary(in: app) +
                 " Hint: turn off Simulator > I/O > Keyboard > Connect Hardware Keyboard."
         )
@@ -49,8 +58,16 @@ extension COMFIEUITests {
 
     @MainActor
     func tapDeleteKey(in app: XCUIApplication) {
+        guard ensureKeyboardVisible(
+            in: app,
+            timeout: 3,
+            failureContext: "before-delete-key",
+            failureAttachmentTag: "before-delete-key"
+        ) else {
+            return
+        }
+
         let keyboard = app.keyboards.firstMatch
-        XCTAssertTrue(keyboard.waitForExistence(timeout: 3))
 
         let candidateLabels = [
             XCUIKeyboardKey.delete.rawValue,
@@ -72,7 +89,50 @@ extension COMFIEUITests {
         if tapPreferredElement(in: app, query: fallbackQuery) {
             return
         }
-        XCTFail("Delete key not found on current keyboard")
+        XCTFail("Delete key not found on current keyboard. " + inputDebugSummary(in: app) + " " + keyboardDebugSummary(in: app))
+    }
+
+    @MainActor
+    func ensureKeyboardVisible(
+        in app: XCUIApplication,
+        input: XCUIElement? = nil,
+        timeout: TimeInterval = 3,
+        refocusAttempts: Int = 3,
+        failureContext: String,
+        failureAttachmentTag: String
+    ) -> Bool {
+        let keyboard = app.keyboards.firstMatch
+        if keyboard.waitForExistence(timeout: timeout) {
+            return true
+        }
+
+        let targetInput = input ?? app.textViews[AccessibilityID.Memo.inputTextView]
+        var attemptedRefocus = 0
+        let retryWait = min(timeout, 0.6)
+        for attempt in 1...refocusAttempts {
+            attemptedRefocus = attempt
+            refocusInputIfPossible(in: app, input: targetInput)
+            RunLoop.current.run(until: Date().addingTimeInterval(0.12))
+
+            if keyboard.waitForExistence(timeout: retryWait) {
+                return true
+            }
+        }
+
+        let details = """
+        context=\(failureContext)
+        attemptedRefocus=\(attemptedRefocus)
+        \(inputDebugSummary(in: app, input: targetInput))
+        \(keyboardDebugSummary(in: app))
+        """
+        attachKeyboardMissingDiagnostics(in: app, attachmentTag: failureAttachmentTag, details: details)
+
+        XCTFail(
+            "Keyboard does not exist after refocus retries. " +
+                "context=\(failureContext), refocusAttempts=\(attemptedRefocus). " +
+                details
+        )
+        return false
     }
 
     @MainActor
@@ -255,6 +315,45 @@ extension COMFIEUITests {
             }
             .joined(separator: ",")
         return "keys=[\(keyLabels)] buttons=[\(buttonLabels)]"
+    }
+
+    @MainActor
+    private func inputDebugSummary(in app: XCUIApplication, input: XCUIElement? = nil) -> String {
+        let targetInput = input ?? app.textViews[AccessibilityID.Memo.inputTextView]
+        guard targetInput.exists else {
+            return "input=[exists:false]"
+        }
+
+        let frame = targetInput.frame
+        return "input=[exists:true,hittable:\(targetInput.isHittable),frame:\(Int(frame.minX)),\(Int(frame.minY)),\(Int(frame.width))x\(Int(frame.height))]"
+    }
+
+    @MainActor
+    private func refocusInputIfPossible(in app: XCUIApplication, input: XCUIElement) {
+        if input.exists {
+            if input.isHittable {
+                input.tap()
+                return
+            }
+
+            if isElementWithinVisibleWindow(input, in: app) {
+                input.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+                return
+            }
+        }
+
+        let inputQuery = app.textViews.matching(identifier: AccessibilityID.Memo.inputTextView)
+        _ = tapPreferredElement(in: app, query: inputQuery)
+    }
+
+    @MainActor
+    private func attachKeyboardMissingDiagnostics(in app: XCUIApplication, attachmentTag: String, details: String) {
+        attachScreenshot(app, named: "keyboard-missing-\(attachmentTag)")
+
+        let textAttachment = XCTAttachment(string: details)
+        textAttachment.name = "keyboardDebugSummary-\(attachmentTag)"
+        textAttachment.lifetime = .keepAlways
+        add(textAttachment)
     }
 
     @MainActor
