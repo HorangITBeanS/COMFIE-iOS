@@ -14,6 +14,7 @@ struct COMFIEApp: App {
     
     init() {
         let router = Router()
+        UITestBootstrap.applyIfNeeded(router: router)
         self.router = router
         self.diContainer = DIContainer(router: router)
     }
