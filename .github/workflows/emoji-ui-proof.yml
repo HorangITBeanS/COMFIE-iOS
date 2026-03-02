@@ -49,11 +49,11 @@ jobs:
       FULL_UI_TEST_TARGET: COMFIEUITests
       PUBLISH_BRANCH: ui-proof-media
       PUBLISH_PREFIX: emoji-ui-proof
-      # 러너 임시 산출물 경로 (작업 종료 후 cleanup step에서 삭제됨)
-      RESULT_BUNDLE_PATH: ${{ runner.temp }}/emoji-ui-proof.xcresult
-      ATTACHMENTS_PATH: ${{ runner.temp }}/emoji-ui-proof-attachments
-      VIDEO_PATH: ${{ runner.temp }}/emoji-ui-proof.mov
-      GIF_PATH: ${{ runner.temp }}/emoji-ui-proof.gif
+      # 러너 산출물 경로 (repo 내 임시 디렉터리, .gitignore로 제외)
+      RESULT_BUNDLE_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.xcresult
+      ATTACHMENTS_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof-attachments
+      VIDEO_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.mov
+      GIF_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.gif
 
     steps:
       - name: Checkout
