@@ -5,7 +5,10 @@
 //  Created by zaehorang on 4/15/25.
 //
 
+// 앱 전체에서 재사용하는 랜덤 이모지 후보 풀입니다.
 struct EmojiPool {
+    // 변환 가능한 글자를 이모지로 치환할 때 뽑아 쓰는 원본 배열입니다.
+    // 이 배열의 순서 자체에는 의미가 없고, 랜덤 선택만 사용합니다.
     static let emojiPool: [Character] = [
         "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "🥹",
         "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘",
@@ -123,8 +126,10 @@ struct EmojiPool {
         "💭", "🗯", "💬",
         "🕐"
     ]
-    
+
+    // 이모지 풀에서 임의의 글자 1개를 뽑습니다.
     static func getRandomEmoji() -> Character {
+        // 배열이 비어 있는 예외 상황에서도 앱이 멈추지 않도록 기본값을 둡니다.
         emojiPool.randomElement() ?? "🐯"
     }
 }
