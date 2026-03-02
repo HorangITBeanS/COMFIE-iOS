@@ -19,20 +19,20 @@ on:
   workflow_dispatch:
     inputs:
       test_scope:
-        description: "focused: proof test 1개, all: COMFIEUITests 전체"
+        description: "all: COMFIEUITests 전체, focused: proof test 1개"
         required: false
-        default: focused
+        default: all
         type: choice
         options:
-          - focused
           - all
+          - focused
 
 concurrency:
   group: emoji-ui-proof-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
 
@@ -47,6 +47,8 @@ jobs:
       SCHEME: COMFIE
       TEST_IDENTIFIER: COMFIEUITests/COMFIEUITests/testHangulJamoTypingShowsStepByStepProgress
       FULL_UI_TEST_TARGET: COMFIEUITests
+      PUBLISH_BRANCH: ui-proof-media
+      PUBLISH_PREFIX: emoji-ui-proof
       # 러너 임시 산출물 경로 (작업 종료 후 cleanup step에서 삭제됨)
       RESULT_BUNDLE_PATH: ${{ runner.temp }}/emoji-ui-proof.xcresult
       ATTACHMENTS_PATH: ${{ runner.temp }}/emoji-ui-proof-attachments
@@ -135,11 +137,11 @@ jobs:
         run: |
           set -euo pipefail
 
-          scope="focused"
+          scope="all"
 
           if [ "${EVENT_NAME}" = "pull_request" ]; then
-            if echo "${PR_LABELS_JSON}" | grep -q '"ui-proof:all"'; then
-              scope="all"
+            if echo "${PR_LABELS_JSON}" | grep -q '"ui-proof:focused"'; then
+              scope="focused"
             fi
           fi
 
@@ -369,6 +371,49 @@ jobs:
             echo "gif_created=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Publish GIF for inline PR preview
+        id: publish_inline
+        if: always() && steps.build_gif.outputs.gif_created == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
+        env:
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number || 'manual' }}
+          SCOPE_LABEL: ${{ steps.scope.outputs.scope_label }}
+        run: |
+          set -euo pipefail
+
+          publish_root="${RUNNER_TEMP}/emoji-ui-proof-media"
+          rm -rf "${publish_root}"
+          mkdir -p "${publish_root}"
+          cd "${publish_root}"
+
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin "${PUBLISH_BRANCH}" > /dev/null 2>&1; then
+            git fetch --depth=1 origin "${PUBLISH_BRANCH}"
+            git checkout -B "${PUBLISH_BRANCH}" "origin/${PUBLISH_BRANCH}"
+          else
+            git checkout --orphan "${PUBLISH_BRANCH}"
+            find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          fi
+
+          relative_path="${PUBLISH_PREFIX}/pr-${PR_NUMBER}/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/${SCOPE_LABEL}/emoji-ui-proof.gif"
+          mkdir -p "$(dirname "${relative_path}")"
+          cp "${GIF_PATH}" "${relative_path}"
+
+          git add "${relative_path}"
+          if git diff --cached --quiet; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "chore: add emoji ui proof gif for run ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+            git push origin "${PUBLISH_BRANCH}"
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "inline_url=https://raw.githubusercontent.com/${REPOSITORY}/${PUBLISH_BRANCH}/${relative_path}" >> "$GITHUB_OUTPUT"
+
       - name: Upload visual proof artifacts
         id: upload_artifact
         if: always()
@@ -402,10 +447,14 @@ jobs:
             const attachmentCount = "${{ steps.export_attachments.outputs.attachment_count }}";
             const simulatorName = "${{ steps.destination.outputs.sim_name }}";
             const gifCreated = "${{ steps.build_gif.outputs.gif_created }}" === "true";
+            const inlineGifUrl = "${{ steps.publish_inline.outputs.inline_url }}";
             const scopeLabel = "${{ steps.scope.outputs.scope_label }}";
             const selectedTest = scopeLabel === "all"
               ? "${{ env.FULL_UI_TEST_TARGET }}"
               : "${{ env.TEST_IDENTIFIER }}";
+            const inlinePreviewText = inlineGifUrl
+              ? `![emoji-ui-proof-inline](${inlineGifUrl})`
+              : "_Inline GIF unavailable (fork PR or GIF generation skipped)._";
 
             const body = `${marker}
             ## Emoji UI Visual Proof
@@ -413,11 +462,16 @@ jobs:
             - Simulator: \`${simulatorName}\`
             - Test scope: \`${scopeLabel}\`
             - Selected test target: \`${selectedTest}\`
-            - Full-suite trigger: add PR label \`ui-proof:all\` or run \`workflow_dispatch(test_scope=all)\`
+            - Default scope: \`all\`
+            - Focused trigger: add PR label \`ui-proof:focused\` or run \`workflow_dispatch(test_scope=focused)\`
             - Screenshot attachments exported: **${attachmentCount}**
-            - Animated GIF: ${gifCreated ? "Included in uploaded artifact (`emoji-ui-proof.gif`)" : "Not generated"}
+            - Animated GIF artifact: ${gifCreated ? "Included (`emoji-ui-proof.gif`)" : "Not generated"}
+            - Inline GIF URL: ${inlineGifUrl || "Unavailable"}
             - Workflow run: ${runUrl}
-            - Artifacts: ${artifactUrl || "Unavailable"}`;
+            - Artifacts: ${artifactUrl || "Unavailable"}
+
+            ### Inline Preview
+            ${inlinePreviewText}`;
 
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner,
@@ -459,8 +513,8 @@ jobs:
             "${RUNNER_TEMP}/emoji-ui-proof.log" \
             "${RUNNER_TEMP}/emoji-ui-proof-record.log"
 
-      - name: Fail if focused UI test failed
+      - name: Fail if UI tests failed
         if: steps.run_ui_test.outputs.exit_code != '0'
         run: |
-          echo "Focused emoji UI test failed."
+          echo "Emoji UI proof tests failed."
           exit 1
