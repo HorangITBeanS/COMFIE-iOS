@@ -59,6 +59,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Ensure Info.plist exists in CI workspace
+        run: |
+          set -euo pipefail
+          if [ -f "COMFIE/Info.plist" ]; then
+            exit 0
+          fi
+
+          cat > "COMFIE/Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>UIAppFonts</key>
+            <array>
+              <string>Pretendard-Bold.otf</string>
+              <string>Pretendard-Medium.otf</string>
+              <string>Pretendard-Regular.otf</string>
+            </array>
+            <key>UIBackgroundModes</key>
+            <array>
+              <string>remote-notification</string>
+            </array>
+          </dict>
+          </plist>
+          PLIST
+
       - name: Resolve simulator destination
         id: destination
         run: |
