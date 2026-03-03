@@ -54,6 +54,7 @@ jobs:
       ATTACHMENTS_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof-attachments
       VIDEO_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.mov
       GIF_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.gif
+      GIF_DIR: ${{ github.workspace }}/.local-ci/emoji-ui-proof-gifs
 
     steps:
       - name: Checkout
@@ -253,13 +254,13 @@ jobs:
 
           let environment = ProcessInfo.processInfo.environment
           guard let attachmentsPath = environment["ATTACHMENTS_PATH"],
-                let gifPath = environment["GIF_PATH"] else {
+                let gifDirPath = environment["GIF_DIR"] else {
               fputs("Required environment variables are missing.\n", stderr)
               exit(1)
           }
 
           let attachmentsURL = URL(fileURLWithPath: attachmentsPath)
-          let gifURL = URL(fileURLWithPath: gifPath)
+          let gifDirURL = URL(fileURLWithPath: gifDirPath)
           let fileManager = FileManager.default
 
           struct ExportManifestEntry: Decodable {
@@ -272,7 +273,13 @@ jobs:
               let attachments: [ExportManifestEntry]
           }
 
-          func collectPNGFiles(root: URL) -> [URL] {
+          struct FrameInfo {
+              let fileURL: URL
+              let displayName: String
+              let timestamp: Double
+          }
+
+          func collectPNGFiles(root: URL) -> [FrameInfo] {
               guard let enumerator = fileManager.enumerator(
                   at: root,
                   includingPropertiesForKeys: [.isRegularFileKey],
@@ -281,17 +288,99 @@ jobs:
                   return []
               }
 
-              var files: [URL] = []
+              var files: [FrameInfo] = []
               for case let fileURL as URL in enumerator {
                   guard fileURL.pathExtension.lowercased() == "png" else { continue }
-                  files.append(fileURL)
+                  let modified = (try? fileURL.resourceValues(forKeys: [.contentModificationDateKey]))
+                      .flatMap(\.contentModificationDate)?.timeIntervalSince1970 ?? 0
+                  files.append(
+                      FrameInfo(
+                          fileURL: fileURL,
+                          displayName: fileURL.deletingPathExtension().lastPathComponent,
+                          timestamp: modified
+                      )
+                  )
               }
               return files
           }
 
-          let pngFiles = collectPNGFiles(root: attachmentsURL)
+          func inferGroupKey(from rawName: String) -> String {
+              let normalized = rawName
+                  .lowercased()
+                  .replacingOccurrences(of: ".png", with: "")
+                  .replacingOccurrences(of: " ", with: "-")
+              let markers = [
+                  "-step-",
+                  "-after-",
+                  "-before-",
+                  "-key-",
+                  "-syllable-",
+                  "-debugsummary-",
+                  "-missing-"
+              ]
+              for marker in markers {
+                  if let range = normalized.range(of: marker) {
+                      return String(normalized[..<range.lowerBound])
+                  }
+              }
 
-          func orderedFramesFromManifest(root: URL) -> [URL] {
+              let parts = normalized.split(separator: "-").filter { !$0.isEmpty }
+              if parts.count >= 2 {
+                  return "\(parts[0])-\(parts[1])"
+              }
+              return normalized.isEmpty ? "proof" : normalized
+          }
+
+          func sanitizeFileName(_ value: String) -> String {
+              let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
+              let scalarView = value.unicodeScalars.map { scalar -> Character in
+                  allowed.contains(scalar) ? Character(scalar) : "-"
+              }
+              var normalized = String(scalarView)
+              while normalized.contains("--") {
+                  normalized = normalized.replacingOccurrences(of: "--", with: "-")
+              }
+              normalized = normalized.trimmingCharacters(in: CharacterSet(charactersIn: "-_"))
+              return normalized.isEmpty ? "proof" : normalized
+          }
+
+          func evenlySample<T>(_ values: [T], maxCount: Int) -> [T] {
+              guard values.count > maxCount, maxCount > 1 else { return values }
+              let lastIndex = values.count - 1
+              let step = Double(lastIndex) / Double(maxCount - 1)
+              var sampled: [T] = []
+              sampled.reserveCapacity(maxCount)
+              for index in 0..<maxCount {
+                  let raw = Int(round(Double(index) * step))
+                  sampled.append(values[min(raw, lastIndex)])
+              }
+              return sampled
+          }
+
+          func resizedIfNeeded(_ image: CGImage, maxWidth: Int) -> CGImage {
+              guard image.width > maxWidth else { return image }
+              let ratio = Double(maxWidth) / Double(image.width)
+              let targetHeight = max(1, Int((Double(image.height) * ratio).rounded()))
+              guard let colorSpace = image.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB) else {
+                  return image
+              }
+              guard let context = CGContext(
+                  data: nil,
+                  width: maxWidth,
+                  height: targetHeight,
+                  bitsPerComponent: 8,
+                  bytesPerRow: 0,
+                  space: colorSpace,
+                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+              ) else {
+                  return image
+              }
+              context.interpolationQuality = .medium
+              context.draw(image, in: CGRect(x: 0, y: 0, width: maxWidth, height: targetHeight))
+              return context.makeImage() ?? image
+          }
+
+          func orderedFramesFromManifest(root: URL) -> [FrameInfo] {
               let manifestURL = root.appendingPathComponent("manifest.json")
               guard fileManager.fileExists(atPath: manifestURL.path),
                     let data = try? Data(contentsOf: manifestURL),
@@ -299,102 +388,148 @@ jobs:
                   return []
               }
 
-              let attachments = groups.flatMap(\.attachments)
+              return groups.flatMap(\.attachments)
                   .filter { $0.exportedFileName.lowercased().hasSuffix(".png") }
-                  .sorted { lhs, rhs in
-                      let leftTimestamp = lhs.timestamp ?? 0
-                      let rightTimestamp = rhs.timestamp ?? 0
-                      if leftTimestamp == rightTimestamp {
-                          return lhs.exportedFileName < rhs.exportedFileName
-                      }
-                      return leftTimestamp < rightTimestamp
+                  .compactMap { attachment in
+                      let fileURL = root.appendingPathComponent(attachment.exportedFileName)
+                      guard fileManager.fileExists(atPath: fileURL.path) else { return nil }
+                      return FrameInfo(
+                          fileURL: fileURL,
+                          displayName: attachment.suggestedHumanReadableName ?? attachment.exportedFileName,
+                          timestamp: attachment.timestamp ?? 0
+                      )
                   }
+                  .sorted { lhs, rhs in
+                      if lhs.timestamp == rhs.timestamp {
+                          return lhs.displayName < rhs.displayName
+                      }
+                      return lhs.timestamp < rhs.timestamp
+                  }
+          }
 
-              return attachments.compactMap { attachment in
-                  let fileURL = root.appendingPathComponent(attachment.exportedFileName)
-                  return fileManager.fileExists(atPath: fileURL.path) ? fileURL : nil
+          func buildGIF(frames: [FrameInfo], to outputURL: URL) -> Int {
+              guard !frames.isEmpty else { return 0 }
+              try? fileManager.removeItem(at: outputURL)
+
+              guard let destination = CGImageDestinationCreateWithURL(
+                  outputURL as CFURL,
+                  UTType.gif.identifier as CFString,
+                  frames.count,
+                  nil
+              ) else {
+                  return 0
               }
+
+              let gifProperties = [
+                  kCGImagePropertyGIFDictionary as String: [
+                      kCGImagePropertyGIFLoopCount as String: 0
+                  ]
+              ] as CFDictionary
+              CGImageDestinationSetProperties(destination, gifProperties)
+
+              var addedFrameCount = 0
+              for (index, frame) in frames.enumerated() {
+                  guard let source = CGImageSourceCreateWithURL(frame.fileURL as CFURL, nil),
+                        let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
+                      continue
+                  }
+                  let resized = resizedIfNeeded(image, maxWidth: 420)
+                  let delay = index == frames.count - 1 ? 0.8 : 0.18
+                  let frameProperties = [
+                      kCGImagePropertyGIFDictionary as String: [
+                          kCGImagePropertyGIFDelayTime as String: delay
+                      ]
+                  ] as CFDictionary
+                  CGImageDestinationAddImage(destination, resized, frameProperties)
+                  addedFrameCount += 1
+              }
+
+              guard addedFrameCount > 0 else { return 0 }
+              guard CGImageDestinationFinalize(destination) else { return 0 }
+              return addedFrameCount
           }
 
           var orderedFrames = orderedFramesFromManifest(root: attachmentsURL)
-
           if orderedFrames.isEmpty {
-              orderedFrames = pngFiles.sorted { lhs, rhs in
-                  let leftDate = (try? lhs.resourceValues(forKeys: [.contentModificationDateKey]))
-                      .flatMap(\.contentModificationDate) ?? .distantPast
-                  let rightDate = (try? rhs.resourceValues(forKeys: [.contentModificationDateKey]))
-                      .flatMap(\.contentModificationDate) ?? .distantPast
-                  if leftDate == rightDate {
-                      return lhs.lastPathComponent < rhs.lastPathComponent
+              orderedFrames = collectPNGFiles(root: attachmentsURL).sorted { lhs, rhs in
+                  if lhs.timestamp == rhs.timestamp {
+                      return lhs.displayName < rhs.displayName
                   }
-                  return leftDate < rightDate
+                  return lhs.timestamp < rhs.timestamp
               }
           }
 
           if orderedFrames.isEmpty {
-              fputs("No emoji-proof PNG frames were found. GIF generation skipped.\n", stderr)
+              fputs("No PNG frames were found. GIF generation skipped.\n", stderr)
               exit(0)
           }
 
-          let maxFrameCount = 240
-          if orderedFrames.count > maxFrameCount {
-              orderedFrames = Array(orderedFrames.prefix(maxFrameCount))
+          try? fileManager.removeItem(at: gifDirURL)
+          try? fileManager.createDirectory(at: gifDirURL, withIntermediateDirectories: true)
+
+          var grouped: [String: [FrameInfo]] = [:]
+          for frame in orderedFrames {
+              let key = inferGroupKey(from: frame.displayName)
+              grouped[key, default: []].append(frame)
           }
 
-          try? fileManager.removeItem(at: gifURL)
-          guard let destination = CGImageDestinationCreateWithURL(
-              gifURL as CFURL,
-              UTType.gif.identifier as CFString,
-              orderedFrames.count,
-              nil
-          ) else {
-              fputs("Failed to create GIF destination.\n", stderr)
-              exit(1)
+          let groupOrder = grouped.keys.sorted { lhs, rhs in
+              let leftTimestamp = grouped[lhs]?.map(\.timestamp).min() ?? 0
+              let rightTimestamp = grouped[rhs]?.map(\.timestamp).min() ?? 0
+              if leftTimestamp == rightTimestamp { return lhs < rhs }
+              return leftTimestamp < rightTimestamp
           }
 
-          let gifProperties = [
-              kCGImagePropertyGIFDictionary as String: [
-                  kCGImagePropertyGIFLoopCount as String: 0
-              ]
-          ] as CFDictionary
-          CGImageDestinationSetProperties(destination, gifProperties)
-
-          var addedFrameCount = 0
-          for (index, frameURL) in orderedFrames.enumerated() {
-              guard let source = CGImageSourceCreateWithURL(frameURL as CFURL, nil),
-                    let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
-                  continue
+          let maxGroupCount = 8
+          let maxFramesPerGIF = 64
+          var generatedCount = 0
+          for key in groupOrder.prefix(maxGroupCount) {
+              guard var frames = grouped[key], !frames.isEmpty else { continue }
+              frames.sort { lhs, rhs in
+                  if lhs.timestamp == rhs.timestamp {
+                      return lhs.displayName < rhs.displayName
+                  }
+                  return lhs.timestamp < rhs.timestamp
               }
-
-              let delay = index == orderedFrames.count - 1 ? 1.2 : 0.4
-              let frameProperties = [
-                  kCGImagePropertyGIFDictionary as String: [
-                      kCGImagePropertyGIFDelayTime as String: delay
-                  ]
-              ] as CFDictionary
-
-              CGImageDestinationAddImage(destination, image, frameProperties)
-              addedFrameCount += 1
+              let sampled = evenlySample(frames, maxCount: maxFramesPerGIF)
+              let fileName = "\(sanitizeFileName(key)).gif"
+              let outputURL = gifDirURL.appendingPathComponent(fileName)
+              let added = buildGIF(frames: sampled, to: outputURL)
+              if added > 0 {
+                  generatedCount += 1
+                  print("Generated \(fileName) with \(added) frames.")
+              }
           }
 
-          guard addedFrameCount > 0 else {
-              fputs("No valid PNG frames were decoded. GIF generation skipped.\n", stderr)
+          if generatedCount == 0 {
+              fputs("No valid GIF files were generated.\n", stderr)
               exit(0)
           }
-
-          guard CGImageDestinationFinalize(destination) else {
-              fputs("Failed to finalize GIF output.\n", stderr)
-              exit(1)
-          }
-
-          print("Generated GIF at \(gifURL.path)")
-          print("Frame count: \(addedFrameCount)")
           SWIFT
 
-          if [ -s "${GIF_PATH}" ]; then
+          mapfile -t generated_gifs < <(find "${GIF_DIR}" -maxdepth 1 -type f -name '*.gif' -print | sort)
+          if [ "${#generated_gifs[@]}" -gt 0 ]; then
+            primary_gif="${generated_gifs[0]}"
+            for preferred in "hangul-emoji" "emoji-proof" "memo-send" "memo-compose" "memo-edit-delete"; do
+              for candidate in "${generated_gifs[@]}"; do
+                if [[ "$(basename "${candidate}")" == *"${preferred}"* ]]; then
+                  primary_gif="${candidate}"
+                  break 2
+                fi
+              done
+            done
+
+            cp "${primary_gif}" "${GIF_PATH}"
+            gif_names_csv="$(printf '%s\n' "${generated_gifs[@]}" | xargs -n1 basename | paste -sd, -)"
             echo "gif_created=true" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_count=${#generated_gifs[@]}" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_names=${gif_names_csv}" >> "$GITHUB_OUTPUT"
+            echo "primary_gif_name=$(basename "${primary_gif}")" >> "$GITHUB_OUTPUT"
           else
             echo "gif_created=false" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_count=0" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_names=" >> "$GITHUB_OUTPUT"
+            echo "primary_gif_name=" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Publish GIF for inline PR preview
@@ -406,6 +541,8 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number || 'manual' }}
           SCOPE_LABEL: ${{ steps.scope.outputs.scope_label }}
           GITHUB_TOKEN: ${{ github.token }}
+          GENERATED_GIF_NAMES: ${{ steps.build_gif.outputs.generated_gif_names }}
+          PRIMARY_GIF_NAME: ${{ steps.build_gif.outputs.primary_gif_name }}
         run: |
           set -euo pipefail
 
@@ -427,21 +564,65 @@ jobs:
             find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
           fi
 
-          relative_path="${PUBLISH_PREFIX}/pr-${PR_NUMBER}/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/${SCOPE_LABEL}/emoji-ui-proof.gif"
-          mkdir -p "$(dirname "${relative_path}")"
-          cp "${GIF_PATH}" "${relative_path}"
+          relative_root="${PUBLISH_PREFIX}/pr-${PR_NUMBER}/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/${SCOPE_LABEL}"
+          IFS=',' read -r -a gif_names <<< "${GENERATED_GIF_NAMES:-}"
 
-          git add "${relative_path}"
+          if [ "${#gif_names[@]}" -eq 0 ] || [ -z "${gif_names[0]:-}" ]; then
+            gif_names=("$(basename "${GIF_PATH}")")
+          fi
+
+          urls=()
+          primary_url=""
+          for gif_name in "${gif_names[@]}"; do
+            [ -n "${gif_name}" ] || continue
+            source_path="${GIF_DIR}/${gif_name}"
+            if [ ! -f "${source_path}" ] && [ "${gif_name}" = "$(basename "${GIF_PATH}")" ] && [ -f "${GIF_PATH}" ]; then
+              source_path="${GIF_PATH}"
+            fi
+            if [ ! -f "${source_path}" ]; then
+              continue
+            fi
+
+            target_path="${relative_root}/${gif_name}"
+            mkdir -p "$(dirname "${target_path}")"
+            cp "${source_path}" "${target_path}"
+            git add "${target_path}"
+
+            url="https://raw.githubusercontent.com/${REPOSITORY}/${PUBLISH_BRANCH}/${target_path}"
+            urls+=("${url}")
+            if [ -n "${PRIMARY_GIF_NAME}" ] && [ "${gif_name}" = "${PRIMARY_GIF_NAME}" ]; then
+              primary_url="${url}"
+            fi
+          done
+
+          if [ "${#urls[@]}" -eq 0 ]; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "published_gif_count=0" >> "$GITHUB_OUTPUT"
+            echo "all_urls=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ -z "${primary_url}" ]; then
+            primary_url="${urls[0]}"
+          fi
+          urls_csv="$(printf '%s\n' "${urls[@]}" | paste -sd, -)"
+
           if git diff --cached --quiet; then
             echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "published_gif_count=${#urls[@]}" >> "$GITHUB_OUTPUT"
+            echo "all_urls=${urls_csv}" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore: add emoji ui proof gif for run ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
             if git push origin "${PUBLISH_BRANCH}"; then
               echo "published=true" >> "$GITHUB_OUTPUT"
-              echo "inline_url=https://raw.githubusercontent.com/${REPOSITORY}/${PUBLISH_BRANCH}/${relative_path}" >> "$GITHUB_OUTPUT"
+              echo "inline_url=${primary_url}" >> "$GITHUB_OUTPUT"
+              echo "published_gif_count=${#urls[@]}" >> "$GITHUB_OUTPUT"
+              echo "all_urls=${urls_csv}" >> "$GITHUB_OUTPUT"
             else
               echo "Publish skipped: unable to push ${PUBLISH_BRANCH} (branch protection or token permission)." >&2
               echo "published=false" >> "$GITHUB_OUTPUT"
+              echo "published_gif_count=0" >> "$GITHUB_OUTPUT"
+              echo "all_urls=" >> "$GITHUB_OUTPUT"
             fi
           fi
 
@@ -456,6 +637,7 @@ jobs:
             ${{ runner.temp }}/emoji-ui-proof-record.log
             ${{ env.VIDEO_PATH }}
             ${{ env.GIF_PATH }}
+            ${{ env.GIF_DIR }}
             ${{ env.RESULT_BUNDLE_PATH }}
             ${{ env.ATTACHMENTS_PATH }}
           if-no-files-found: warn
@@ -478,16 +660,31 @@ jobs:
             const attachmentCount = "${{ steps.export_attachments.outputs.attachment_count }}";
             const simulatorName = "${{ steps.destination.outputs.sim_name }}";
             const gifCreated = "${{ steps.build_gif.outputs.gif_created }}" === "true";
+            const generatedGifCount = Number("${{ steps.build_gif.outputs.generated_gif_count || '0' }}");
             const inlineGifUrl = "${{ steps.publish_inline.outputs.inline_url }}";
+            const allGifUrlsRaw = "${{ steps.publish_inline.outputs.all_urls }}";
+            const publishedGifCount = Number("${{ steps.publish_inline.outputs.published_gif_count || '0' }}");
             const scopeLabel = "${{ steps.scope.outputs.scope_label }}";
             const selectedTest = scopeLabel === "all"
               ? "${{ env.FULL_UI_TEST_TARGET }}"
               : "${{ env.TEST_IDENTIFIER }}";
+            const allGifUrls = allGifUrlsRaw
+              ? allGifUrlsRaw.split(",").map((url) => url.trim()).filter(Boolean)
+              : [];
             const inlinePreviewText = inlineGifUrl
               ? `![emoji-ui-proof-inline](${inlineGifUrl})`
               : gifCreated
                 ? "_Inline GIF unavailable (media branch publish blocked by branch protection or token permission). Check artifact link._"
                 : "_Inline GIF unavailable (fork PR or GIF generation skipped)._";
+            const galleryText = allGifUrls.length > 0
+              ? allGifUrls.map((url, index) => `- [GIF ${index + 1}](${url})`).join("\n")
+              : "_Published GIF URLs unavailable._";
+            const extraPreviewText = allGifUrls.length > 1
+              ? allGifUrls
+                  .slice(1, 4)
+                  .map((url, index) => `![emoji-ui-proof-inline-${index + 2}](${url})`)
+                  .join("\n")
+              : "_No additional GIF previews._";
 
             const body = `${marker}
             ## Emoji UI Visual Proof
@@ -498,13 +695,21 @@ jobs:
             - Default scope: \`all\`
             - Focused trigger: add PR label \`ui-proof:focused\` or run \`workflow_dispatch(test_scope=focused)\`
             - Screenshot attachments exported: **${attachmentCount}**
-            - Animated GIF artifact: ${gifCreated ? "Included (`emoji-ui-proof.gif`)" : "Not generated"}
+            - Generated GIF files: **${generatedGifCount}**
+            - Published GIF files: **${publishedGifCount}**
+            - Animated GIF artifact: ${gifCreated ? "Included (`emoji-ui-proof.gif` + grouped GIFs)" : "Not generated"}
             - Inline GIF URL: ${inlineGifUrl || "Unavailable"}
             - Workflow run: ${runUrl}
             - Artifacts: ${artifactUrl || "Unavailable"}
 
             ### Inline Preview
-            ${inlinePreviewText}`;
+            ${inlinePreviewText}
+
+            ### GIF Gallery
+            ${galleryText}
+
+            ### Additional Previews
+            ${extraPreviewText}`;
 
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner,
@@ -543,6 +748,7 @@ jobs:
             "${RESULT_BUNDLE_PATH}" \
             "${VIDEO_PATH}" \
             "${GIF_PATH}" \
+            "${GIF_DIR}" \
             "${RUNNER_TEMP}/emoji-ui-proof.log" \
             "${RUNNER_TEMP}/emoji-ui-proof-record.log"
 
