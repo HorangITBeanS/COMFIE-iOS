@@ -507,7 +507,10 @@ jobs:
           }
           SWIFT
 
-          mapfile -t generated_gifs < <(find "${GIF_DIR}" -maxdepth 1 -type f -name '*.gif' -print | sort)
+          generated_gifs=()
+          while IFS= read -r gif_file; do
+            generated_gifs+=("${gif_file}")
+          done < <(find "${GIF_DIR}" -maxdepth 1 -type f -name '*.gif' -print | sort)
           if [ "${#generated_gifs[@]}" -gt 0 ]; then
             primary_gif="${generated_gifs[0]}"
             for preferred in "hangul-emoji" "emoji-proof" "memo-send" "memo-compose" "memo-edit-delete"; do
