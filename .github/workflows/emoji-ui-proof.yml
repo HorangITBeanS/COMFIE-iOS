@@ -434,11 +434,14 @@ jobs:
             echo "published=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore: add emoji ui proof gif for run ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-            git push origin "${PUBLISH_BRANCH}"
-            echo "published=true" >> "$GITHUB_OUTPUT"
+            if git push origin "${PUBLISH_BRANCH}"; then
+              echo "published=true" >> "$GITHUB_OUTPUT"
+              echo "inline_url=https://raw.githubusercontent.com/${REPOSITORY}/${PUBLISH_BRANCH}/${relative_path}" >> "$GITHUB_OUTPUT"
+            else
+              echo "Publish skipped: unable to push ${PUBLISH_BRANCH} (branch protection or token permission)." >&2
+              echo "published=false" >> "$GITHUB_OUTPUT"
+            fi
           fi
-
-          echo "inline_url=https://raw.githubusercontent.com/${REPOSITORY}/${PUBLISH_BRANCH}/${relative_path}" >> "$GITHUB_OUTPUT"
 
       - name: Upload visual proof artifacts
         id: upload_artifact
@@ -449,10 +452,10 @@ jobs:
           path: |
             ${{ runner.temp }}/emoji-ui-proof.log
             ${{ runner.temp }}/emoji-ui-proof-record.log
-            ${{ runner.temp }}/emoji-ui-proof.mov
-            ${{ runner.temp }}/emoji-ui-proof.gif
-            ${{ runner.temp }}/emoji-ui-proof.xcresult
-            ${{ runner.temp }}/emoji-ui-proof-attachments
+            ${{ env.VIDEO_PATH }}
+            ${{ env.GIF_PATH }}
+            ${{ env.RESULT_BUNDLE_PATH }}
+            ${{ env.ATTACHMENTS_PATH }}
           if-no-files-found: warn
           retention-days: 14
 
@@ -480,7 +483,9 @@ jobs:
               : "${{ env.TEST_IDENTIFIER }}";
             const inlinePreviewText = inlineGifUrl
               ? `![emoji-ui-proof-inline](${inlineGifUrl})`
-              : "_Inline GIF unavailable (fork PR or GIF generation skipped)._";
+              : gifCreated
+                ? "_Inline GIF unavailable (media branch publish blocked by branch protection or token permission). Check artifact link._"
+                : "_Inline GIF unavailable (fork PR or GIF generation skipped)._";
 
             const body = `${marker}
             ## Emoji UI Visual Proof
