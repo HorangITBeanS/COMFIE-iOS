@@ -400,6 +400,7 @@ jobs:
       - name: Publish GIF for inline PR preview
         id: publish_inline
         if: always() && steps.build_gif.outputs.gif_created == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
+        continue-on-error: true
         env:
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number || 'manual' }}
