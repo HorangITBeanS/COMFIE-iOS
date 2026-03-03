@@ -180,44 +180,49 @@ extension COMFIEUITests {
         in app: XCUIApplication,
         input: XCUIElement,
         jamoKeys: [String],
-        expectedAfterEachSyllable: [String]
+        checkpointByInputIndex: [Int: String]
     ) {
         var previousRevision = readDraftDebug(from: input)?.revision ?? 0
         for (index, key) in jamoKeys.enumerated() {
-            tapKeyboardKey(in: app, key: key)
+            if key == " " {
+                tapSpaceKey(in: app, input: input)
+            } else {
+                tapKeyboardKey(in: app, key: key)
+            }
             XCTAssertTrue(
                 waitForDraftSnapshot(in: input) { snapshot in
                     snapshot.revision > previousRevision
                 }
             )
             previousRevision = readDraftDebug(from: input)?.revision ?? previousRevision
-            attachScreenshot(app, named: "hangul-emoji-key-\(String(format: "%02d", index + 1))-\(key)")
-            captureHangulSyllableProofIfNeeded(
+            let displayKey = key == " " ? "space" : key
+            attachScreenshot(app, named: "hangul-emoji-key-\(String(format: "%02d", index + 1))-\(displayKey)")
+            captureHangulCheckpointProofIfNeeded(
                 in: app,
                 input: input,
-                index: index,
-                expectedAfterEachSyllable: expectedAfterEachSyllable
+                keyIndex: index + 1,
+                checkpointByInputIndex: checkpointByInputIndex
             )
         }
     }
 
     @MainActor
-    private func captureHangulSyllableProofIfNeeded(
+    private func captureHangulCheckpointProofIfNeeded(
         in app: XCUIApplication,
         input: XCUIElement,
-        index: Int,
-        expectedAfterEachSyllable: [String]
+        keyIndex: Int,
+        checkpointByInputIndex: [Int: String]
     ) {
-        guard index % 2 == 1 else { return }
-
-        let syllableIndex = index / 2
-        let expectedOriginal = expectedAfterEachSyllable[syllableIndex]
+        guard let expectedOriginal = checkpointByInputIndex[keyIndex] else { return }
         XCTAssertTrue(
             waitForDraftSnapshot(in: input) { snapshot in
                 self.hangulSyllableSnapshotMatches(snapshot, expectedOriginal: expectedOriginal)
             }
         )
-        attachScreenshot(app, named: "hangul-emoji-syllable-\(syllableIndex + 1)-\(expectedOriginal)")
+
+        let checkpointOrder = checkpointByInputIndex.keys.filter { $0 <= keyIndex }.count
+        let attachmentToken = expectedOriginal.replacingOccurrences(of: " ", with: "_")
+        attachScreenshot(app, named: "hangul-emoji-syllable-\(String(format: "%02d", checkpointOrder))-\(attachmentToken)")
     }
 
     private func hangulSyllableSnapshotMatches(
@@ -233,15 +238,25 @@ extension COMFIEUITests {
         }
 
         let currentIndex = originalChars.count - 1
-        guard emojiChars[currentIndex] == originalChars[currentIndex] else {
-            return false
+        if requiresHangulConversionCheck(originalChars[currentIndex]) {
+            guard emojiChars[currentIndex] == originalChars[currentIndex] else {
+                return false
+            }
         }
 
-        if currentIndex == 0 {
-            return true
-        }
         return (0..<currentIndex).allSatisfy { previousIndex in
-            emojiChars[previousIndex] != originalChars[previousIndex]
+            guard requiresHangulConversionCheck(originalChars[previousIndex]) else {
+                return true
+            }
+            return emojiChars[previousIndex] != originalChars[previousIndex]
         }
+    }
+
+    private func requiresHangulConversionCheck(_ character: Character) -> Bool {
+        guard character.unicodeScalars.count == 1,
+              let scalar = character.unicodeScalars.first else {
+            return false
+        }
+        return (0xAC00...0xD7A3).contains(scalar.value)
     }
 }
