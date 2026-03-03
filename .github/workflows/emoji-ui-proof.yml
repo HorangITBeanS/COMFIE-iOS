@@ -405,6 +405,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number || 'manual' }}
           SCOPE_LABEL: ${{ steps.scope.outputs.scope_label }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
