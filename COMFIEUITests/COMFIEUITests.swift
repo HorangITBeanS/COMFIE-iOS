@@ -56,7 +56,7 @@ final class COMFIEUITests: XCTestCase {
         let (input, sendButton) = memoComposerElements(in: app)
         let memoContentTexts = app.staticTexts.matching(identifier: AccessibilityID.Memo.cellContentText)
         let beforeCount = currentMemoCount(in: app)
-        let rawInput = "가나다라마바사"
+        let rawInput = "이게 정말 되는 건가 정말로 리얼로 이게 되는건가"
 
         resetMemoInputIfNeeded(in: app, input: input)
         guard ensureKeyboardVisible(
@@ -79,13 +79,43 @@ final class COMFIEUITests: XCTestCase {
             return
         }
 
-        let jamoKeys = ["ㄱ", "ㅏ", "ㄴ", "ㅏ", "ㄷ", "ㅏ", "ㄹ", "ㅏ", "ㅁ", "ㅏ", "ㅂ", "ㅏ", "ㅅ", "ㅏ"]
-        let expectedAfterEachSyllable = ["가", "가나", "가나다", "가나다라", "가나다라마", "가나다라마바", "가나다라마바사"]
+        let jamoKeys = [
+            "ㅇ", "ㅣ", "ㄱ", "ㅔ", " ",
+            "ㅈ", "ㅓ", "ㅇ", "ㅁ", "ㅏ", "ㄹ", " ",
+            "ㄷ", "ㅗ", "ㅣ", "ㄴ", "ㅡ", "ㄴ", " ",
+            "ㄱ", "ㅓ", "ㄴ", "ㄱ", "ㅏ", " ",
+            "ㅈ", "ㅓ", "ㅇ", "ㅁ", "ㅏ", "ㄹ", "ㄹ", "ㅗ", " ",
+            "ㄹ", "ㅣ", "ㅇ", "ㅓ", "ㄹ", "ㄹ", "ㅗ", " ",
+            "ㅇ", "ㅣ", "ㄱ", "ㅔ", " ",
+            "ㄷ", "ㅗ", "ㅣ", "ㄴ", "ㅡ", "ㄴ", "ㄱ", "ㅓ", "ㄴ", "ㄱ", "ㅏ"
+        ]
+        let checkpointByInputIndex: [Int: String] = [
+            2: "이",
+            4: "이게",
+            8: "이게 정",
+            11: "이게 정말",
+            15: "이게 정말 되",
+            18: "이게 정말 되는",
+            22: "이게 정말 되는 건",
+            24: "이게 정말 되는 건가",
+            28: "이게 정말 되는 건가 정",
+            31: "이게 정말 되는 건가 정말",
+            33: "이게 정말 되는 건가 정말로",
+            36: "이게 정말 되는 건가 정말로 리",
+            39: "이게 정말 되는 건가 정말로 리얼",
+            41: "이게 정말 되는 건가 정말로 리얼로",
+            44: "이게 정말 되는 건가 정말로 리얼로 이",
+            46: "이게 정말 되는 건가 정말로 리얼로 이게",
+            50: "이게 정말 되는 건가 정말로 리얼로 이게 되",
+            53: "이게 정말 되는 건가 정말로 리얼로 이게 되는",
+            56: "이게 정말 되는 건가 정말로 리얼로 이게 되는건",
+            58: "이게 정말 되는 건가 정말로 리얼로 이게 되는건가"
+        ]
         typeHangulJamoSequence(
             in: app,
             input: input,
             jamoKeys: jamoKeys,
-            expectedAfterEachSyllable: expectedAfterEachSyllable
+            checkpointByInputIndex: checkpointByInputIndex
         )
 
         XCTAssertTrue(

@@ -93,6 +93,48 @@ extension COMFIEUITests {
     }
 
     @MainActor
+    func tapSpaceKey(in app: XCUIApplication, input: XCUIElement? = nil, timeout: TimeInterval = 3) {
+        guard ensureKeyboardVisible(
+            in: app,
+            input: input,
+            timeout: timeout,
+            failureContext: "before-space-key",
+            failureAttachmentTag: "before-space-key"
+        ) else {
+            return
+        }
+
+        let keyboard = app.keyboards.firstMatch
+        let candidateLabels = [
+            XCUIKeyboardKey.space.rawValue,
+            "space",
+            "Space",
+            "띄어쓰기",
+            "공백"
+        ]
+
+        for label in candidateLabels {
+            let keyQuery = keyboard.keys.matching(NSPredicate(format: "label == %@", label))
+            if tapPreferredElement(in: app, query: keyQuery) {
+                return
+            }
+
+            let buttonQuery = keyboard.buttons.matching(NSPredicate(format: "label == %@", label))
+            if tapPreferredElement(in: app, query: buttonQuery) {
+                return
+            }
+        }
+
+        let targetInput = input ?? app.textViews[AccessibilityID.Memo.inputTextView]
+        if targetInput.exists {
+            targetInput.typeText(" ")
+            return
+        }
+
+        XCTFail("Space key not found on current keyboard. " + inputDebugSummary(in: app, input: targetInput) + " " + keyboardDebugSummary(in: app))
+    }
+
+    @MainActor
     func ensureKeyboardVisible(
         in app: XCUIApplication,
         input: XCUIElement? = nil,
