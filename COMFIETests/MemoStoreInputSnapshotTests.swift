@@ -380,6 +380,40 @@ struct MemoStoreInputSnapshotTests {
         #expect(store.state.inputSeed.emojiText == secondMemo.emojiText)
     }
 
+    // 시나리오: setFocusWithSeedRefreshPlacesCursorAtTextEndWhenEditingMemo 동작을 검증합니다.
+    @Test func setFocusWithSeedRefreshPlacesCursorAtTextEndWhenEditingMemo() throws {
+        let repository = MemoRepositorySpy()
+        let harness = makeMemoInputCoordinator(repository: repository)
+        let store = harness.store
+        let textView = harness.textView
+        let memo = Memo(
+            id: UUID(),
+            createdAt: .now,
+            originalText: "ab",
+            emojiText: "😀😃"
+        )
+
+        var cancellables = Set<AnyCancellable>()
+        var latestCommand: MemoInputUICommand?
+        store.uiSideEffectPublisher
+            .sink { sideEffect in
+                latestCommand = mapMemoInputCommand(sideEffect)
+            }
+            .store(in: &cancellables)
+
+        textView.selectedRange = NSRange(location: 0, length: 0)
+        store.handleIntent(.memoCell(.editButtonTapped(memo)))
+
+        let command = try #require(latestCommand)
+        #expect(command == .setFocus)
+
+        applyMemoInputCommand(harness, command: command)
+
+        #expect(textView.selectedRange.location == textView.textStorage.length)
+        #expect(textView.selectedRange.length == 0)
+        _ = cancellables
+    }
+
     // 시나리오: requestFinalSyncWithNilTextViewUsesSeedFallback 동작을 검증합니다.
     @Test func requestFinalSyncWithNilTextViewUsesSeedFallback() async throws {
         let repository = MemoRepositorySpy()
