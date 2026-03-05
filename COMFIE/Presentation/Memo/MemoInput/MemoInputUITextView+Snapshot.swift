@@ -24,6 +24,7 @@ extension MemoInputUITextView.Coordinator {
         return originalText
     }
 
+    // 현재 textStorage를 draft로 동기화하고 Store에 입력 가능 상태를 알립니다.
     func syncSnapshotToStore(_ textView: UITextView) {
         let currentSnapshot = snapshot(from: textView.textStorage)
         let emojiTextCandidate = isEmojiMode ? currentSnapshot.emoji : currentSnapshot.original
@@ -33,13 +34,12 @@ extension MemoInputUITextView.Coordinator {
             emojiTextCandidate: emojiTextCandidate
         )
         publishDraftAvailability()
-        // +Snapshot+UITest 확장에서 실제 동작하며, 그 외 빌드에서는 no-op이다.
+        // +Snapshot+UITest 확장에서만 동작하고 그 외 빌드에서는 no-op입니다.
         publishDebugSnapshotIfNeeded(textView)
     }
 
+    // textView가 없는 생명주기 경계에서도 seed 기반 draft를 복구해 savePhase 고착을 막습니다.
     func syncDraftFromFallbackIfNeeded() {
-        // 주로 생명주기 경계(textView=nil)에서 final sync 요청이 들어왔을 때 사용됩니다.
-        // 이때도 seed 기준으로 일관된 스냅샷을 만들 수 있어 savePhase 고착을 막을 수 있습니다.
         let originalText = normalizedOriginalText()
         let emojiText = normalizedEmojiText(with: originalText)
 
@@ -73,6 +73,7 @@ extension MemoInputUITextView.Coordinator {
         return (original, emoji)
     }
 
+    // 원문/이모지 스냅샷을 현재 모드(UIText/Attachment)에 맞춰 UITextView에 렌더링합니다.
     func render(_ textView: UITextView, originalText: String, emojiText: String) {
         let oldSelection = textView.selectedRange
         isMutating = true
@@ -94,7 +95,7 @@ extension MemoInputUITextView.Coordinator {
         updateTextViewHeight(textView)
         lastTextLength = textView.textStorage.length
         lastSelectionRange = textView.selectedRange
-        // +Snapshot+UITest 확장에서 실제 동작하며, 그 외 빌드에서는 no-op이다.
+        // +Snapshot+UITest 확장에서만 동작하고 그 외 빌드에서는 no-op입니다.
         publishDebugSnapshotIfNeeded(textView)
     }
 

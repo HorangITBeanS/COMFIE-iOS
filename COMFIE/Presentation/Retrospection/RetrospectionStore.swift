@@ -127,7 +127,7 @@ class RetrospectionStore: IntentStore {
         case .saveRetrospection:
             persistRetrospection(&newState)
         case .deleteRetrospection:
-            deleteRetrospection(newState)
+            deleteRetrospection()
 
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
@@ -200,7 +200,7 @@ extension RetrospectionStore {
         }
     }
 
-    private func deleteRetrospection(_ state: State) {
+    private func deleteRetrospection() {
         switch repository.delete(memo: memo) {
         case .success:
             print("회고 삭제 성공")

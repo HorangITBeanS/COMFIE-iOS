@@ -14,6 +14,7 @@ extension MemoInputUITextView.Coordinator {
         placeholderLabel.isHidden = !textView.textStorage.string.isEmpty
     }
 
+    // 텍스트 높이를 최대 4줄 범위로 계산하고 스크롤/SwiftUI 높이를 함께 동기화합니다.
     func updateTextViewHeight(_ textView: UITextView) {
         let width = textView.bounds.width
         guard width > 0 else { return }
