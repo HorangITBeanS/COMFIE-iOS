@@ -685,8 +685,8 @@ jobs:
                 testName: "testEmojiInputConvertsPerCharacterRealtimeAndAttachesVisualProof",
               },
               "memo-compose": {
-                title: "메모 작성 플로우",
-                description: "멀티라인/커서 이동 포함 작성 시나리오를 검증합니다.",
+                title: "메모 작성 패턴 플로우",
+                description: "단일라인/멀티라인/커서 이동+추가입력으로 3개 메모 작성이 정상 동작하는지 검증합니다.",
                 testName: "testMemoComposeFlowCoversMultipleWritingPatterns",
               },
               "memo-edit-delete": {
@@ -705,8 +705,8 @@ jobs:
                 testName: "testMemoInputSendCreatesNewMemoCell",
               },
               "memo-cancel-flow": {
-                title: "메모 취소 플로우",
-                description: "작성 중 취소 시 입력 상태/UI 전환을 검증합니다.",
+                title: "삭제 팝업 취소 플로우",
+                description: "삭제 확인 팝업에서 취소를 눌렀을 때 메모와 입력 UI가 유지되는지 검증합니다.",
                 testName: "testMemoEditingCancelInteractionFlow",
               },
             };
@@ -755,8 +755,8 @@ jobs:
             const previewNumberMappingText = [
               "- 1. `emoji-proof` → `testEmojiInputConvertsPerCharacterRealtimeAndAttachesVisualProof`",
               "- 2. `hangul-emoji` → `testHangulJamoTypingShowsStepByStepProgress`",
-              "- 3. `memo-cancel-flow` → `testMemoEditingCancelInteractionFlow`",
-              "- 4. `memo-compose` → `testMemoComposeFlowCoversMultipleWritingPatterns`",
+              "- 3. `memo-cancel-flow` (삭제 확인 팝업에서 취소) → `testMemoEditingCancelInteractionFlow`",
+              "- 4. `memo-compose` (단일/멀티라인/커서 이동 작성 패턴) → `testMemoComposeFlowCoversMultipleWritingPatterns`",
               "- 5. `memo-edit-delete` → `testMemoEditUpdateAndDeleteLifecycle`",
               "- 6. `memo-send-typing` → `testMemoInputSendCreatesNewMemoCell`",
               "- 7. `memo-send` → `testMemoInputSendCreatesNewMemoCell`",
