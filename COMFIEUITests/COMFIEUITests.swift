@@ -186,7 +186,7 @@ final class COMFIEUITests: XCTestCase {
 
     @MainActor
     func testMemoComposeFlowCoversMultipleWritingPatterns() throws {
-        let app = launchAppForMemoScenario()
+        let app = launchAppForMemoScenario(forceKoreanLocale: true)
         let (input, sendButton) = memoComposerElements(in: app)
 
         let beforeCount = currentMemoCount(in: app)
@@ -257,7 +257,7 @@ final class COMFIEUITests: XCTestCase {
 
     @MainActor
     func testMemoEditUpdateAndDeleteLifecycle() throws {
-        let app = launchAppForMemoScenario(forceOutsideComfieZone: true)
+        let app = launchAppForMemoScenario(forceOutsideComfieZone: true, forceKoreanLocale: true)
         let (input, sendButton) = memoComposerElements(in: app)
         let editingCancelButton = app.buttons[AccessibilityID.Memo.editingCancelButton]
 
