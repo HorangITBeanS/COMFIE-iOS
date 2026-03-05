@@ -305,6 +305,17 @@ jobs:
           }
 
           func inferGroupKey(from rawName: String) -> String {
+              func canonicalScenarioKey(_ key: String) -> String {
+                  if key.hasPrefix("emoji-proof-") { return "emoji-proof" }
+                  if key.hasPrefix("hangul-emoji-") { return "hangul-emoji" }
+                  if key.hasPrefix("memo-cancel-flow-") { return "memo-cancel-flow" }
+                  if key.hasPrefix("memo-compose-") { return "memo-compose" }
+                  if key.hasPrefix("memo-edit-delete-") { return "memo-edit-delete" }
+                  if key.hasPrefix("memo-send-typing-") { return "memo-send-typing" }
+                  if key.hasPrefix("memo-send-") { return "memo-send" }
+                  return key
+              }
+
               let normalized = rawName
                   .lowercased()
                   .replacingOccurrences(of: ".png", with: "")
@@ -320,15 +331,18 @@ jobs:
               ]
               for marker in markers {
                   if let range = normalized.range(of: marker) {
-                      return String(normalized[..<range.lowerBound])
+                      let key = String(normalized[..<range.lowerBound])
+                      return canonicalScenarioKey(key)
                   }
               }
 
               let parts = normalized.split(separator: "-").filter { !$0.isEmpty }
               if parts.count >= 2 {
-                  return "\(parts[0])-\(parts[1])"
+                  let key = "\(parts[0])-\(parts[1])"
+                  return canonicalScenarioKey(key)
               }
-              return normalized.isEmpty ? "proof" : normalized
+              let fallback = normalized.isEmpty ? "proof" : normalized
+              return canonicalScenarioKey(fallback)
           }
 
           func sanitizeFileName(_ value: String) -> String {
@@ -484,10 +498,20 @@ jobs:
               if leftTimestamp == rightTimestamp { return lhs < rhs }
               return leftTimestamp < rightTimestamp
           }
+          let allowedGroupKeys: Set<String> = [
+              "emoji-proof",
+              "hangul-emoji",
+              "memo-cancel-flow",
+              "memo-compose",
+              "memo-edit-delete",
+              "memo-send-typing",
+              "memo-send"
+          ]
 
           let maxFramesPerGIF = 108
           var generatedCount = 0
           for key in groupOrder {
+              guard allowedGroupKeys.contains(key) else { continue }
               guard var frames = grouped[key], !frames.isEmpty else { continue }
               frames.sort { lhs, rhs in
                   if lhs.timestamp == rhs.timestamp {
