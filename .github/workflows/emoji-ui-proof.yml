@@ -306,13 +306,17 @@ jobs:
 
           func inferGroupKey(from rawName: String) -> String {
               func canonicalScenarioKey(_ key: String) -> String {
-                  if key.hasPrefix("emoji-proof-") { return "emoji-proof" }
-                  if key.hasPrefix("hangul-emoji-") { return "hangul-emoji" }
-                  if key.hasPrefix("memo-cancel-flow-") { return "memo-cancel-flow" }
-                  if key.hasPrefix("memo-compose-") { return "memo-compose" }
-                  if key.hasPrefix("memo-edit-delete-") { return "memo-edit-delete" }
-                  if key.hasPrefix("memo-send-typing-") { return "memo-send-typing" }
-                  if key.hasPrefix("memo-send-") { return "memo-send" }
+                  func matchesScenarioKey(_ base: String, in value: String) -> Bool {
+                      value == base || value.hasPrefix(base + "-")
+                  }
+
+                  if matchesScenarioKey("emoji-proof", in: key) { return "emoji-proof" }
+                  if matchesScenarioKey("hangul-emoji", in: key) { return "hangul-emoji" }
+                  if matchesScenarioKey("memo-cancel-flow", in: key) { return "memo-cancel-flow" }
+                  if matchesScenarioKey("memo-compose", in: key) { return "memo-compose" }
+                  if matchesScenarioKey("memo-edit-delete", in: key) { return "memo-edit-delete" }
+                  if matchesScenarioKey("memo-send-typing", in: key) { return "memo-send-typing" }
+                  if matchesScenarioKey("memo-send", in: key) { return "memo-send" }
                   return key
               }
 
@@ -572,6 +576,23 @@ jobs:
             echo "generated_gif_count=0" >> "$GITHUB_OUTPUT"
             echo "generated_gif_names=" >> "$GITHUB_OUTPUT"
             echo "primary_gif_name=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate required GIF keys for all scope
+        if: always() && steps.scope.outputs.scope_label == 'all'
+        run: |
+          set -euo pipefail
+
+          IFS=',' read -r -a gif_names <<< "${{ steps.build_gif.outputs.generated_gif_names }}"
+          missing=()
+
+          if ! printf '%s\n' "${gif_names[@]}" | grep -qx "memo-send-typing.gif"; then
+            missing+=("memo-send-typing.gif")
+          fi
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Missing required GIF keys for all scope: ${missing[*]}" >&2
+            exit 1
           fi
 
       - name: Publish GIF for inline PR preview
