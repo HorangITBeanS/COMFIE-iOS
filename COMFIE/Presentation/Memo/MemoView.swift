@@ -11,18 +11,19 @@ struct MemoView: View {
     private let strings = StringLiterals.Memo.self
 
     @State var intent: MemoStore
+    @State private var memoInputUIEvent: MemoInputUIEvent?
     var isUserInComfieZone: Bool {
         intent.state.isInComfieZone
     }
-    
+
     private var isEditingMemo: Bool {
         intent.state.editingMemo != nil
     }
-    
+
     var body: some View {
         ZStack {
             Color.keyBackground.ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
                     MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
@@ -30,7 +31,7 @@ struct MemoView: View {
                             intent(.backgroundTapped)
                         }
                         .padding(.top, 56)
-                    
+
                     if isEditingMemo {
                         VStack {
                             Spacer()
@@ -38,17 +39,17 @@ struct MemoView: View {
                                 .padding(.bottom, 10)
                         }
                     }
-                    
+
                     navigationBarView
                         .onTapGesture {
                             intent(.backgroundTapped)
                         }
                 }
-                
+
                 memoInputView
                     .ignoresSafeArea(.keyboard, edges: .bottom)
             }
-            
+
             if intent.state.showTutorial {
                 Image(.tutorial)
                     .resizable()
@@ -57,7 +58,7 @@ struct MemoView: View {
                         intent(.tutorialTapped)
                     }
             }
-            
+
             if intent.state.deletingMemo != nil {
                 CFPopupView(type: .deleteMemo) {
                     intent(.deletePopup(.confirmDeleteButtonTapped))
@@ -69,17 +70,18 @@ struct MemoView: View {
         .onAppear {
             intent(.onAppear)
         }
+        .onReceive(intent.uiSideEffectPublisher) { sideEffect in
+            memoInputUIEvent = MemoInputUIEvent(command: mapMemoInputUICommand(sideEffect))
+        }
     }
-    
+
     // MARK: - View Property
     private var navigationBarView: some View {
         HStack(spacing: 0) {
             Button {
-                // 페이지 이동
                 intent(.comfieZoneSettingButtonTapped)
             } label: {
                 HStack(spacing: 8) {
-                    // 컴피존 상태에 따라 로고 변경
                     Image(isUserInComfieZone ? .icComfie : .icUncomfie)
                         .resizable()
                         .frame(width: isUserInComfieZone ? 84 : 115, height: 25)
@@ -88,9 +90,10 @@ struct MemoView: View {
                         .frame(width: 24, height: 24)
                 }
             }
-            
+            .accessibilityIdentifier("memo.comfieZoneSettingButton")
+
             Spacer()
-            
+
             Button {
                 intent(.moreButtonTapped)
             } label: {
@@ -100,6 +103,7 @@ struct MemoView: View {
                     .symbolRenderingMode(.monochrome)
                     .tint(.cfBlack)
             }
+            .accessibilityIdentifier("memo.moreButton")
         }
         .padding(.horizontal, 19)
         .padding(.vertical, 16)
@@ -109,15 +113,21 @@ struct MemoView: View {
                 x: 0,
                 y: 8)
     }
-    
+
     private var memoInputView: some View {
         HStack(alignment: .top, spacing: 12) {
             MemoInputTextView(
                 strings.textfieldPlaceholder.localized,
-                memoStore: $intent
+                inputSeed: intent.state.inputSeed,
+                isEmojiPresentationEnabled: intent.state.isEmojiPresentationEnabled,
+                uiCommandEvent: memoInputUIEvent,
+                onOutputEvent: { outputEvent in
+                    intent(.memoInput(mapMemoInputOutputEvent(outputEvent)))
+                }
             )
-            
+
             Button {
+                // 저장/수정 버튼 탭을 Store로 전달하면, Store가 final sync 트랜잭션을 시작합니다.
                 intent(.memoInput(.memoInputButtonTapped))
             } label: {
                 Image(isEditingMemo ? .icCheck : .icSend)
@@ -126,13 +136,14 @@ struct MemoView: View {
                     .frame(width: 24, height: 24)
                     .padding(8)
                     .background(
-                        intent.state.inputMemoText.isEmpty
+                        intent.state.isInputEmpty
                         ? .keyDeactivated
                         : .keyPrimary
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .disabled(intent.state.inputMemoText.isEmpty)
+            .accessibilityIdentifier("memo.sendButton")
+            .disabled(intent.state.isInputEmpty)
         }
         .padding(16)
         .background {
@@ -146,7 +157,7 @@ struct MemoView: View {
             .ignoresSafeArea()
         }
     }
-    
+
     private var editingCancelButton: some View {
         Button {
             intent(.memoCell(.editingCancelButtonTapped))
@@ -159,6 +170,31 @@ struct MemoView: View {
                 .background(.cfWhite)
                 .clipShape(RoundedRectangle(cornerRadius: 212))
                 .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 0)
+        }
+        .accessibilityIdentifier("memo.editingCancelButton")
+    }
+
+    private func mapMemoInputUICommand(_ sideEffect: MemoStore.SideEffect.MemoInput) -> MemoInputUICommand {
+        switch sideEffect {
+        case .resignInputFocusWithSyncInput:
+            return .resignWithSync
+        case .resignInputFocusWithoutSync:
+            return .resignWithoutSync
+        case .requestFinalSyncAndResign(let requestID):
+            return .requestFinalSyncAndResign(requestID: requestID)
+        case .setMemoInputFocus:
+            return .setFocus
+        }
+    }
+
+    private func mapMemoInputOutputEvent(_ outputEvent: MemoInputOutputEvent) -> MemoStore.Intent.MemoInputIntent {
+        switch outputEvent {
+        case .draftAvailabilityChanged(let isEmpty):
+            return .draftAvailabilityChanged(isEmpty: isEmpty)
+        case .finalSnapshotReady(let requestID, let snapshot):
+            return .finalSyncCompleted(requestID: requestID, snapshot: snapshot)
+        case .finalSnapshotFailed(let requestID):
+            return .finalSyncFailed(requestID: requestID)
         }
     }
 }

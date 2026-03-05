@@ -6,3 +6,12 @@ Package.resolved
 *.plist
 *.xcprivacy
 .DS_Store
+
+# Documentation artifacts
+docs/
+
+# Local agent instruction file
+AGENTS.md
+
+# Local architecture note
+ARCHITECTURE.md

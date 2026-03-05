@@ -11,84 +11,80 @@ import SwiftUI
 @Observable
 class RetrospectionStore: IntentStore {
     private(set) var state: State = .init()
-    
+
     let sideEffectPublisher = PassthroughSubject<SideEffect, Never>()
-    
+
     private let router: Router
     private let repository: RetrospectionRepositoryProtocol
-    
+
     let memo: Memo
-    
+
     private var cancellables = Set<AnyCancellable>()
-    private let inputContentSubject = CurrentValueSubject<String, Never>("")
-    
+    private let inputContentSubject = PassthroughSubject<String, Never>()
+
     init(router: Router, repository: RetrospectionRepositoryProtocol, memo: Memo) {
         self.router = router
         self.repository = repository
         self.memo = memo
-        
+
         setUpBindingContent()
     }
-    
+
     struct State {
-        // 메모 관련 데이터
         var originalMemo: String = ""
         var inputContent: String?
         var createdDate: String = ""
-        
+
         var emojiString: EmojiString = .init()
-        
+        var lastSavedOriginal: String?
+        var lastSavedEmoji: String?
+
         var showCompleteButton: Bool = false
         var showDeletePopupView: Bool = false
     }
-    
+
     enum Intent {
         case onAppear
         case backgroundTapped
         case contentFieldTapped
         case updateRetrospection(String)
-        
-        // 네비게이션바 내 버튼
+
         case backButtonTapped
         case deleteMenuButtonTapped
         case completeButtonTapped
-        
-        // 삭제 팝업 내 버튼
+
         case deleteRetrospectionButtonTapped
         case cancelDeleteRetrospectionButtonTapped
     }
-    
+
     // MARK: - Action
-    
+
     enum Action {
-        // retrospection CRUD
         case fetchMemo
         case updateRetrospection(String)
         case saveRetrospection
         case deleteRetrospection
-        
-        // complete Button
+
         case showCompleteButton
         case hideCompleteButton
-        
-        // delete-Popup view
+
         case showDeletePopupView
         case hideDeletePopupView
-        
+
         case popToLast
     }
-    
+
     // MARK: - Side Effect
-    
+
     enum SideEffect {
         case ui(UI)
-        
+
         enum UI {
             case setContentFieldFocus
             case removeContentFieldFocus
         }
     }
-    
+
     func handleIntent(_ intent: Intent) {
         switch intent {
         case .onAppear:
@@ -111,14 +107,14 @@ class RetrospectionStore: IntentStore {
             performSideEffect(for: .ui(.removeContentFieldFocus))
             state = handleAction(state, .hideCompleteButton)
             state = handleAction(state, .saveRetrospection)
-            
+
         case .deleteRetrospectionButtonTapped:
             state = handleAction(state, .deleteRetrospection)
             _ = handleAction(state, .popToLast)
         case .cancelDeleteRetrospectionButtonTapped: state = handleAction(state, .hideDeletePopupView)
         }
     }
-    
+
     private func handleAction(_ state: State, _ action: Action) -> State {
         var newState = state
         switch action {
@@ -129,40 +125,82 @@ class RetrospectionStore: IntentStore {
         case .updateRetrospection(let text):
             newState.inputContent = text
         case .saveRetrospection:
-            newState.emojiString.syncWithNewString(newState.inputContent ?? "")
-            newState.emojiString.setUnassignedEmojis()
-            saveRetrospection(newState)
+            persistRetrospection(&newState)
         case .deleteRetrospection:
-            deleteRetrospection(newState)
-            
+            deleteRetrospection()
+
         case .showCompleteButton: newState.showCompleteButton = true
         case .hideCompleteButton: newState.showCompleteButton = false
-         
+
         case .showDeletePopupView: newState.showDeletePopupView = true
         case .hideDeletePopupView: newState.showDeletePopupView = false
         case .popToLast: router.pop()
         }
         return newState
     }
+
+    private func persistRetrospection(_ state: inout State) {
+        let content = state.inputContent ?? ""
+        let baseline = resolveRetrospectionMergeBaseline(state)
+        let mergedEmojiText = mergedRetrospectionEmojiText(
+            baselineOriginal: baseline.original,
+            baselineEmoji: baseline.emoji,
+            newOriginal: content
+        )
+
+        state.emojiString = EmojiString.finalizedForPersist(
+            originalText: content,
+            preferredEmojiText: mergedEmojiText
+        )
+        if saveRetrospection(state) {
+            state.lastSavedOriginal = content
+            state.lastSavedEmoji = state.emojiString.getEmojiString()
+        }
+    }
+
+    private func resolveRetrospectionMergeBaseline(_ state: State) -> (original: String, emoji: String) {
+        let previousOriginal = state.lastSavedOriginal ?? memo.originalRetrospectionText ?? ""
+        let previousEmojiRaw = state.lastSavedEmoji ?? memo.emojiRetrospectionText ?? previousOriginal
+        let normalizedPrevious = EmojiString.normalizedForPersist(
+            originalText: previousOriginal,
+            preferredEmojiText: previousEmojiRaw
+        )
+        return (original: previousOriginal, emoji: normalizedPrevious.getEmojiString())
+    }
+
+    private func mergedRetrospectionEmojiText(
+        baselineOriginal: String,
+        baselineEmoji: String,
+        newOriginal: String
+    ) -> String {
+        EmojiString.mergedEmojiTextPreservingUnchanged(
+            previousOriginalText: baselineOriginal,
+            previousEmojiText: baselineEmoji,
+            newOriginalText: newOriginal
+        )
+    }
 }
 
 // MARK: - Helper Methods
 
 extension RetrospectionStore {
-    private func saveRetrospection(_ state: State) {
+    private func saveRetrospection(_ state: State) -> Bool {
         let content = state.inputContent?.isEmpty == true ? nil : state.inputContent
-        let updatedmemo = memo.with(originalRetrospectionText: content,
-                                    emojiRetrospectionText: state.emojiString.getEmojiString())
-        
-        switch repository.save(memo: updatedmemo) {
+        let emojiContent = content == nil ? nil : state.emojiString.getEmojiString()
+        let updatedMemo = memo.with(originalRetrospectionText: content,
+                                    emojiRetrospectionText: emojiContent)
+
+        switch repository.save(memo: updatedMemo) {
         case .success:
             print("회고 저장 성공")
+            return true
         case .failure(let error):
             print("회고 저장 실패: \(error)")
+            return false
         }
     }
-    
-    private func deleteRetrospection(_ state: State) {
+
+    private func deleteRetrospection() {
         switch repository.delete(memo: memo) {
         case .success:
             print("회고 삭제 성공")
@@ -178,8 +216,7 @@ extension RetrospectionStore {
     private func performSideEffect(for action: SideEffect) {
         sideEffectPublisher.send(action)
     }
-    
-    // 입력 데이터를 실시간으로 저장해주는 함수 - 0.5초 후 저장
+
     private func setUpBindingContent() {
         inputContentSubject
             .removeDuplicates()
@@ -188,7 +225,7 @@ extension RetrospectionStore {
                 guard let self = self else { return }
                 var updatedState = self.state
                 updatedState.inputContent = content
-                self.saveRetrospection(updatedState)
+                self.state = self.handleAction(updatedState, .saveRetrospection)
             }
             .store(in: &cancellables)
     }
