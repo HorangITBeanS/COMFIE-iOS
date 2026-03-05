@@ -33,6 +33,16 @@ extension COMFIEUITests {
         }
 
         let keyCandidates = [normalizedKey]
+        let targetInput = app.textViews[AccessibilityID.Memo.inputTextView]
+        if shouldDirectTypeImmediately(
+            key: normalizedKey,
+            in: app,
+            keyboard: keyboard
+        ), targetInput.exists {
+            targetInput.typeText(normalizedKey)
+            return
+        }
+
         for attempt in 0...4 {
             for candidate in keyCandidates {
                 let keyQuery = keyboard.keys.matching(NSPredicate(format: "label == %@", candidate))
@@ -46,6 +56,11 @@ extension COMFIEUITests {
                 guard switchKeyboardForKeyIfPossible(in: app, key: key) else { break }
                 RunLoop.current.run(until: Date().addingTimeInterval(0.15))
             }
+        }
+
+        if shouldAllowDirectTypeFallback(key: normalizedKey), targetInput.exists {
+            targetInput.typeText(normalizedKey)
+            return
         }
 
         XCTFail(
@@ -135,6 +150,49 @@ extension COMFIEUITests {
     }
 
     @MainActor
+    func tapReturnKey(in app: XCUIApplication, input: XCUIElement? = nil, timeout: TimeInterval = 3) {
+        guard ensureKeyboardVisible(
+            in: app,
+            input: input,
+            timeout: timeout,
+            failureContext: "before-return-key",
+            failureAttachmentTag: "before-return-key"
+        ) else {
+            return
+        }
+
+        let keyboard = app.keyboards.firstMatch
+        let candidateLabels = [
+            XCUIKeyboardKey.return.rawValue,
+            "return",
+            "Return",
+            "입력",
+            "완료",
+            "줄바꿈"
+        ]
+
+        for label in candidateLabels {
+            let keyQuery = keyboard.keys.matching(NSPredicate(format: "label == %@", label))
+            if tapPreferredElement(in: app, query: keyQuery) {
+                return
+            }
+
+            let buttonQuery = keyboard.buttons.matching(NSPredicate(format: "label == %@", label))
+            if tapPreferredElement(in: app, query: buttonQuery) {
+                return
+            }
+        }
+
+        let targetInput = input ?? app.textViews[AccessibilityID.Memo.inputTextView]
+        if targetInput.exists {
+            targetInput.typeText("\n")
+            return
+        }
+
+        XCTFail("Return key not found on current keyboard. " + inputDebugSummary(in: app, input: targetInput) + " " + keyboardDebugSummary(in: app))
+    }
+
+    @MainActor
     func ensureKeyboardVisible(
         in app: XCUIApplication,
         input: XCUIElement? = nil,
@@ -199,6 +257,9 @@ extension COMFIEUITests {
         if switchAlphabetModeIfNeeded(in: app, key: key) {
             return true
         }
+        if switchNumberModeIfNeeded(in: app, key: key) {
+            return true
+        }
         if switchKoreanModeIfNeeded(in: app, key: key) {
             return true
         }
@@ -257,6 +318,35 @@ extension COMFIEUITests {
             let refreshedKeyboard = app.keyboards.firstMatch
             if doesKeyboardContainAnyKey(in: app, keyboard: refreshedKeyboard, candidates: [key]) {
                 return true
+            }
+        }
+
+        return false
+    }
+
+    @MainActor
+    private func switchNumberModeIfNeeded(in app: XCUIApplication, key: String) -> Bool {
+        guard key.range(of: "^[0-9]$", options: .regularExpression) != nil else {
+            return false
+        }
+
+        let keyboard = app.keyboards.firstMatch
+        guard keyboard.exists else { return false }
+        if doesKeyboardContainAnyKey(in: app, keyboard: keyboard, candidates: [key]) { return true }
+
+        let toggleAttempts = [
+            ["numbers", "123", "숫자", "more", "#+=", "문자", "ABC", "abc", "가나다", "한글"],
+            ["123", "numbers", "숫자", "more", "#+="],
+            ["more", "123", "numbers", "숫자", "#+="]
+        ]
+
+        for labels in toggleAttempts {
+            for label in labels where tapKeyboardToggle(in: app, label: label) {
+                RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+                let refreshedKeyboard = app.keyboards.firstMatch
+                if doesKeyboardContainAnyKey(in: app, keyboard: refreshedKeyboard, candidates: [key]) {
+                    return true
+                }
             }
         }
 
@@ -433,5 +523,38 @@ extension COMFIEUITests {
         }
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         return true
+    }
+
+    private func shouldAllowDirectTypeFallback(key: String) -> Bool {
+        key.range(of: "^[A-Za-z0-9]$", options: .regularExpression) != nil
+    }
+
+    @MainActor
+    private func shouldDirectTypeImmediately(
+        key: String,
+        in app: XCUIApplication,
+        keyboard: XCUIElement
+    ) -> Bool {
+        guard shouldAllowDirectTypeFallback(key: key) else { return false }
+        let candidates = [key, key.lowercased(), key.uppercased()]
+        if doesKeyboardContainAnyKey(in: app, keyboard: keyboard, candidates: candidates) {
+            return false
+        }
+        return isLikelyKoreanJamoKeyboard(in: app, keyboard: keyboard)
+    }
+
+    @MainActor
+    private func isLikelyKoreanJamoKeyboard(in app: XCUIApplication, keyboard: XCUIElement) -> Bool {
+        let jamoClusterA = doesKeyboardContainAnyKey(
+            in: app,
+            keyboard: keyboard,
+            candidates: ["ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ"]
+        )
+        let jamoClusterB = doesKeyboardContainAnyKey(
+            in: app,
+            keyboard: keyboard,
+            candidates: ["ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ"]
+        )
+        return jamoClusterA && jamoClusterB
     }
 }

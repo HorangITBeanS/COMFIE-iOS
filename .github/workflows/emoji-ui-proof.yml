@@ -702,22 +702,22 @@ jobs:
               },
               "memo-compose": {
                 title: "메모 작성 패턴 플로우",
-                description: "단일라인/멀티라인/커서 이동+추가입력으로 3개 메모 작성이 정상 동작하는지 검증합니다.",
+                description: "단일라인/멀티라인/커서 이동+추가입력을 키보드 단계 입력 증적으로 검증합니다.",
                 testName: "testMemoComposeFlowCoversMultipleWritingPatterns",
               },
               "memo-edit-delete": {
                 title: "메모 수정/삭제 플로우",
-                description: "수정 저장과 삭제 동작이 정상 동작하는지 검증합니다.",
+                description: "수정 문구 단계 입력 후 저장/삭제 동작이 정상 동작하는지 검증합니다.",
                 testName: "testMemoEditUpdateAndDeleteLifecycle",
               },
               "memo-send": {
                 title: "메모 전송 플로우",
-                description: "입력 후 전송으로 신규 메모가 생성되는지 검증합니다.",
+                description: "6번 타이핑 증적 이후 전송 완료 결과를 검증합니다.",
                 testName: "testMemoInputSendCreatesNewMemoCell",
               },
               "memo-send-typing": {
                 title: "메모 타이핑 증적",
-                description: "전송 전 타이핑 단계의 시각 증적을 검증합니다.",
+                description: "전송 전 키보드 타이핑 단계의 시각 증적을 검증합니다.",
                 testName: "testMemoInputSendCreatesNewMemoCell",
               },
               "memo-cancel-flow": {
@@ -773,9 +773,9 @@ jobs:
               "- 2. `hangul-emoji` → `testHangulJamoTypingShowsStepByStepProgress`",
               "- 3. `memo-cancel-flow` (삭제 확인 팝업에서 취소) → `testMemoEditingCancelInteractionFlow`",
               "- 4. `memo-compose` (단일/멀티라인/커서 이동 작성 패턴) → `testMemoComposeFlowCoversMultipleWritingPatterns`",
-              "- 5. `memo-edit-delete` → `testMemoEditUpdateAndDeleteLifecycle`",
+              "- 5. `memo-edit-delete` (수정 문구 단계 입력 + 저장/삭제) → `testMemoEditUpdateAndDeleteLifecycle`",
               "- 6. `memo-send-typing` → `testMemoInputSendCreatesNewMemoCell`",
-              "- 7. `memo-send` → `testMemoInputSendCreatesNewMemoCell`",
+              "- 7. `memo-send` (6번 타이핑 이후 전송 완료) → `testMemoInputSendCreatesNewMemoCell`",
             ].join("\n");
 
             const inlinePreviewText = allGifUrls.length > 0

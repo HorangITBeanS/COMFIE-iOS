@@ -43,11 +43,14 @@ final class COMFIEUITests: XCTestCase {
             RunLoop.current.run(until: Date().addingTimeInterval(0.22))
         }
 
-        attachScreenshot(app, named: "memo-send-before-send")
-
-        tapSendWhenEnabled(sendButton)
+        attachScreenshot(app, named: "memo-send-step-01-input-ready")
+        assertSendButtonEnabled(sendButton)
+        attachScreenshot(app, named: "memo-send-step-02-before-send-tap")
+        sendButton.tap()
+        attachScreenshot(app, named: "memo-send-step-03-after-send-tap")
         XCTAssertTrue(waitForMemoCountAtLeast(in: app, minimumCount: beforeCount + 1))
-        attachScreenshot(app, named: "memo-send-after-save")
+        XCTAssertTrue(waitUntil { !sendButton.isEnabled })
+        attachScreenshot(app, named: "memo-send-step-04-after-save")
     }
 
     @MainActor
@@ -189,39 +192,67 @@ final class COMFIEUITests: XCTestCase {
         let beforeCount = currentMemoCount(in: app)
 
         input.tap()
-        input.typeText(
-            "STEP-COMPOSE-1 |\(Int(Date().timeIntervalSince1970))| " +
-            "첫 작성: 한글/영문 혼합 텍스트 1234567890"
+        let stage1Sequence = keyboardSequence(from: "step compose one first write 1234567890")
+        typeKeyboardSequenceWithSnapshots(
+            in: app,
+            input: input,
+            sequence: stage1Sequence,
+            snapshotPrefix: "memo-compose-stage1-typing",
+            checkpointIndexes: checkpointIndexes(totalCount: stage1Sequence.count, fractions: [0.34, 0.67, 1.0])
         )
-        attachScreenshot(app, named: "memo-compose-step-1-first-typed")
+        attachScreenshot(app, named: "memo-compose-step-1-stage1-before-send")
         tapSendWhenEnabled(sendButton)
 
         XCTAssertTrue(waitForMemoCountAtLeast(in: app, minimumCount: beforeCount + 1))
         XCTAssertTrue(waitUntil { !sendButton.isEnabled })
-        attachScreenshot(app, named: "memo-compose-step-2-first-sent")
+        attachScreenshot(app, named: "memo-compose-step-2-stage1-sent")
 
         input.tap()
-        input.typeText(
-            "STEP-COMPOSE-2 line-1: 멀티라인 첫 줄\n" +
-            "STEP-COMPOSE-2 line-2: second line 1234567890"
+        let stage2BodySequence = keyboardSequence(from: "step compose two line one")
+            + ["\n"]
+            + keyboardSequence(from: "step compose two line two 1234567890")
+        typeKeyboardSequenceWithSnapshots(
+            in: app,
+            input: input,
+            sequence: stage2BodySequence,
+            snapshotPrefix: "memo-compose-stage2-body",
+            checkpointIndexes: checkpointIndexes(totalCount: stage2BodySequence.count, fractions: [0.4, 0.8, 1.0])
         )
+        attachScreenshot(app, named: "memo-compose-step-3-stage2-multiline-ready")
         input.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)).tap()
-        input.typeText(" + STEP-COMPOSE-2-Tail")
-        attachScreenshot(app, named: "memo-compose-step-3-multiline-cursor")
+        attachScreenshot(app, named: "memo-compose-step-4-stage2-cursor-moved")
+        let stage2TailSequence = keyboardSequence(from: " tail typed")
+        typeKeyboardSequenceWithSnapshots(
+            in: app,
+            input: input,
+            sequence: stage2TailSequence,
+            snapshotPrefix: "memo-compose-stage2-tail",
+            checkpointIndexes: checkpointIndexes(totalCount: stage2TailSequence.count, fractions: [0.5, 1.0])
+        )
+        attachScreenshot(app, named: "memo-compose-step-5-stage2-tail-before-send")
         tapSendWhenEnabled(sendButton)
 
         XCTAssertTrue(waitForMemoCountAtLeast(in: app, minimumCount: beforeCount + 2))
         XCTAssertTrue(waitUntil { !sendButton.isEnabled })
-        attachScreenshot(app, named: "memo-compose-step-4-second-sent")
+        attachScreenshot(app, named: "memo-compose-step-6-stage2-sent")
 
         input.tap()
-        input.typeText("STEP-COMPOSE-3: 마지막 입력. 한글 English 1234567890.")
-        attachScreenshot(app, named: "memo-compose-step-5-mixed-typed")
+        let stage3MixedSequence = keyboardSequence(from: "step compose three mix ")
+            + ["ㅎ", "ㅏ", "ㄴ", "ㄱ", "ㅡ", "ㄹ", "ㅇ", "ㅣ", "ㅂ", "ㄹ", "ㅕ", "ㄱ", "ㅌ", "ㅔ", "ㅅ", "ㅡ", "ㅌ", "ㅡ"]
+            + keyboardSequence(from: " 1234")
+        typeKeyboardSequenceWithSnapshots(
+            in: app,
+            input: input,
+            sequence: stage3MixedSequence,
+            snapshotPrefix: "memo-compose-stage3-mixed",
+            checkpointIndexes: checkpointIndexes(totalCount: stage3MixedSequence.count, fractions: [0.33, 0.66, 1.0])
+        )
+        attachScreenshot(app, named: "memo-compose-step-7-stage3-before-send")
         tapSendWhenEnabled(sendButton)
 
         XCTAssertTrue(waitForMemoCountAtLeast(in: app, minimumCount: beforeCount + 3))
         XCTAssertFalse(sendButton.isEnabled)
-        attachScreenshot(app, named: "memo-compose-step-6-third-sent")
+        attachScreenshot(app, named: "memo-compose-step-8-stage3-sent")
     }
 
     @MainActor
@@ -252,7 +283,15 @@ final class COMFIEUITests: XCTestCase {
         attachScreenshot(app, named: "memo-edit-delete-step-3-enter-edit")
 
         input.tap()
-        input.typeText(" + 수정흐름2 최종수정")
+        tapSpaceKey(in: app, input: input)
+        let editJamoSequence = ["ㅅ", "ㅜ", "ㅈ", "ㅓ", "ㅇ", "ㅎ", "ㅏ", "ㄴ", "ㅂ", "ㅓ", "ㄴ", "ㅎ", "ㅐ", "ㅂ", "ㅗ", "ㄹ", "ㄹ", "ㅐ", "ㅇ", "ㅛ", "ㅇ", "ㅗ", "ㅇ", "ㅗ", "ㅇ", "ㅗ"]
+        typeKeyboardSequenceWithSnapshots(
+            in: app,
+            input: input,
+            sequence: editJamoSequence,
+            snapshotPrefix: "memo-edit-delete-editing",
+            checkpointIndexes: checkpointIndexes(totalCount: editJamoSequence.count, fractions: [0.25, 0.5, 0.75, 1.0])
+        )
         assertSendButtonEnabled(sendButton)
         attachScreenshot(app, named: "memo-edit-delete-step-4-edited-before-save")
 

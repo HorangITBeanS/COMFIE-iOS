@@ -175,6 +175,62 @@ extension COMFIEUITests {
         }
     }
 
+    func keyboardSequence(from text: String) -> [String] {
+        text.map { String($0) }
+    }
+
+    func checkpointIndexes(totalCount: Int, fractions: [Double]) -> Set<Int> {
+        guard totalCount > 0 else { return [] }
+        var indexes: Set<Int> = [totalCount]
+        for fraction in fractions {
+            let clamped = min(max(fraction, 0), 1)
+            let computed = Int((Double(totalCount) * clamped).rounded())
+            let normalized = max(1, min(totalCount, computed))
+            indexes.insert(normalized)
+        }
+        return indexes
+    }
+
+    @MainActor
+    func typeKeyboardSequenceWithSnapshots(
+        in app: XCUIApplication,
+        input: XCUIElement,
+        sequence: [String],
+        snapshotPrefix: String,
+        checkpointIndexes: Set<Int>,
+        perKeyDelay: TimeInterval = 0.06
+    ) {
+        guard !sequence.isEmpty else { return }
+        var previousRevision = readDraftDebug(from: input)?.revision ?? 0
+
+        for (index, key) in sequence.enumerated() {
+            if key == " " {
+                tapSpaceKey(in: app, input: input)
+            } else if key == "\n" {
+                tapReturnKey(in: app, input: input)
+            } else {
+                tapKeyboardKey(in: app, key: key)
+            }
+
+            XCTAssertTrue(
+                waitForDraftSnapshot(in: input) { snapshot in
+                    snapshot.revision > previousRevision
+                }
+            )
+            previousRevision = readDraftDebug(from: input)?.revision ?? previousRevision
+
+            let step = index + 1
+            if checkpointIndexes.contains(step) {
+                attachScreenshot(
+                    app,
+                    named: "\(snapshotPrefix)-step-\(String(format: "%02d", step))"
+                )
+            }
+
+            RunLoop.current.run(until: Date().addingTimeInterval(perKeyDelay))
+        }
+    }
+
     @MainActor
     func typeHangulJamoSequence(
         in app: XCUIApplication,
