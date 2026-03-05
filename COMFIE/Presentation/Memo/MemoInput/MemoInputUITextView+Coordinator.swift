@@ -110,7 +110,7 @@ extension MemoInputUITextView {
 
         // seed/모드/명령 이벤트를 합쳐 현재 UITextView 상태를 일관되게 재적용합니다.
         func applyStateToTextView(force: Bool) {
-            handleUICommandIfNeeded()
+            let handledUICommand = handleUICommandIfNeeded()
             guard let textView else { return }
 
             let modeChanged = lastEmojiMode != isEmojiMode
@@ -124,6 +124,9 @@ extension MemoInputUITextView {
                     originalText: seededOriginal,
                     emojiText: seededEmoji
                 )
+                if seedTokenChanged, handledUICommand == .setFocus {
+                    placeCursorAtTextEnd(textView)
+                }
                 syncDraftCache(
                     originalText: seededOriginal,
                     emojiText: seededEmoji
@@ -245,11 +248,19 @@ extension MemoInputUITextView {
 
 // MARK: - UI Command
 extension MemoInputUITextView.Coordinator {
-    private func handleUICommandIfNeeded() {
-        guard let commandEvent = parent.uiCommandEvent else { return }
-        guard commandEvent.id != lastHandledUICommandID else { return }
+    @discardableResult
+    private func handleUICommandIfNeeded() -> MemoInputUICommand? {
+        guard let commandEvent = parent.uiCommandEvent else { return nil }
+        guard commandEvent.id != lastHandledUICommandID else { return nil }
         lastHandledUICommandID = commandEvent.id
         handleUICommand(commandEvent.command)
+        return commandEvent.command
+    }
+
+    private func placeCursorAtTextEnd(_ textView: UITextView) {
+        let cursorRange = NSRange(location: textView.textStorage.length, length: 0)
+        textView.selectedRange = cursorRange
+        lastSelectionRange = cursorRange
     }
 
     // Store에서 내려온 입력 명령을 한 번만 실행하고 sync 정책을 함께 조정합니다.
