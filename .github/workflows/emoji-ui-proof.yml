@@ -407,7 +407,12 @@ jobs:
                   }
           }
 
-          func buildGIF(frames: [FrameInfo], to outputURL: URL) -> Int {
+          func buildGIF(
+              frames: [FrameInfo],
+              to outputURL: URL,
+              frameDelay: Double,
+              lastFrameDelay: Double
+          ) -> Int {
               guard !frames.isEmpty else { return 0 }
               try? fileManager.removeItem(at: outputURL)
 
@@ -434,7 +439,7 @@ jobs:
                       continue
                   }
                   let resized = resizedIfNeeded(image, maxWidth: 420)
-                  let delay = index == frames.count - 1 ? 0.8 : 0.18
+                  let delay = index == frames.count - 1 ? lastFrameDelay : frameDelay
                   let frameProperties = [
                       kCGImagePropertyGIFDictionary as String: [
                           kCGImagePropertyGIFDelayTime as String: delay
@@ -493,7 +498,18 @@ jobs:
               let sampled = evenlySample(frames, maxCount: maxFramesPerGIF)
               let fileName = "\(sanitizeFileName(key)).gif"
               let outputURL = gifDirURL.appendingPathComponent(fileName)
-              let added = buildGIF(frames: sampled, to: outputURL)
+              var frameDelay = 0.18
+              var lastFrameDelay = 0.8
+              if key == "memo-compose" {
+                  frameDelay = 0.5
+                  lastFrameDelay = 1.4
+              }
+              let added = buildGIF(
+                  frames: sampled,
+                  to: outputURL,
+                  frameDelay: frameDelay,
+                  lastFrameDelay: lastFrameDelay
+              )
               if added > 0 {
                   generatedCount += 1
                   print("Generated \(fileName) with \(added) frames.")
