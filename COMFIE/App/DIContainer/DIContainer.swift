@@ -23,12 +23,19 @@ class DIContainer {
     lazy var makeLocationService: LocationService = { LocationService() }()
     
     // MARK: - UseCase
-    private func makeLocationUseCase() -> LocationUseCase {
+    func makeReleaseLocationUseCase() -> LocationUseCase {
+        // 릴리즈 기준 기본 LocationUseCase 생성 경로를 분리해 둔다.
         LocationUseCase(
             locationService: makeLocationService,
             comfiZoneRepository: comfieZoneRepository
         )
     }
+
+#if !DEBUG
+    func makeLocationUseCase() -> LocationUseCase {
+        makeReleaseLocationUseCase()
+    }
+#endif
     
     // MARK: - Intent
     private func makeOnboardingIntent() -> OnboardingStore {

@@ -43,6 +43,7 @@ extension MemoInputUITextView {
 
         private(set) var draftOriginalText = ""
         private(set) var draftEmojiText = ""
+        private(set) var draftRevision = 0
 
         var isEmojiMode: Bool {
             parent.isEmojiPresentationEnabled
@@ -56,6 +57,10 @@ extension MemoInputUITextView {
         }
 
         func replaceDraft(original: String, emoji: String) {
+            let hasChanged = draftOriginalText != original || draftEmojiText != emoji
+            if hasChanged {
+                draftRevision += 1
+            }
             draftOriginalText = original
             draftEmojiText = emoji
         }

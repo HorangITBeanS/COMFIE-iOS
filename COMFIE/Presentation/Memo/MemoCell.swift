@@ -19,6 +19,7 @@ struct MemoCell: View {
     let isUserInComfieZone: Bool
     
     private var isEditing: Bool {
+
         intent.state.isEditingMemo(memo)
     }
     
@@ -35,6 +36,7 @@ struct MemoCell: View {
             HStack(spacing: 0) {
                 
                 Button {
+
                     withAnimation(.easeIn(duration: 0.2)) {
                         isMemoHidden.toggle()
                     }
@@ -57,7 +59,6 @@ struct MemoCell: View {
                 .disabled(!hasRetrospection)
                 
                 Spacer()
-                
                 menuButton
             }
             .padding(.bottom, 4)
@@ -66,6 +67,8 @@ struct MemoCell: View {
                 Text(isUserInComfieZone ? memo.originalText : memo.emojiText)
                     .comfieFont(.body)
                     .foregroundStyle(Color.textBlack)
+                    // 릴리즈에서는 no-op이고, Debug UITest 세션에서만 식별자를 부여한다.
+                    .uiTestAccessibilityIdentifier(AccessibilityID.Memo.cellContentText)
             }
             
             if let originalRetrospectionText = memo.originalRetrospectionText,
@@ -96,6 +99,7 @@ struct MemoCell: View {
                 } label: {
                     Label(strings.editButtonTitle.localized, systemImage: "pencil")
                 }
+                .uiTestAccessibilityIdentifier(AccessibilityID.Memo.cellMenuEditButton)
             } else {
                 Button {
                     intent(.memoCell(.retrospectionButtonTapped(memo)))
@@ -103,6 +107,7 @@ struct MemoCell: View {
                     Label(strings.retrospectionButtonTitle.localized, systemImage: "ellipsis.message")
                         .foregroundStyle(.red)
                 }
+                .uiTestAccessibilityIdentifier(AccessibilityID.Memo.cellMenuRetrospectionButton)
             }
             
             Button(role: .destructive) {
@@ -110,13 +115,14 @@ struct MemoCell: View {
             } label: {
                 Label(strings.deleteButtonTitle.localized, systemImage: "trash")
             }
+            .uiTestAccessibilityIdentifier(AccessibilityID.Memo.cellMenuDeleteButton)
             
         } label: {
             Image(.icEllipsis)
                 .resizable()
                 .frame(width: 19, height: 20)
         }
-        .accessibilityIdentifier("memo.cell.menuButton")
+        .uiTestAccessibilityIdentifier(AccessibilityID.Memo.cellMenuButton)
     }
 }
 

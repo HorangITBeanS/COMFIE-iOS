@@ -6,6 +6,8 @@ Package.resolved
 *.plist
 *.xcprivacy
 .DS_Store
+.local-ci/
+.derivedData/
 
 # Documentation artifacts
 docs/

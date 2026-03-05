@@ -8,7 +8,7 @@
 import UIKit
 
 // IME(한글/중국어 조합 입력) 상태 변화를 콜백으로 전달하는 UITextView입니다.
-final class MemoIMETrackingTextView: UITextView {
+class MemoIMETrackingTextView: UITextView {
     var onSetMarkedText: ((NSRange) -> Void)?
     var onUnmarkText: (() -> Void)?
 

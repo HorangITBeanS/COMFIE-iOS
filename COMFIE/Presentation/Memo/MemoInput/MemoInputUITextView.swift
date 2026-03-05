@@ -44,6 +44,7 @@ struct MemoInputUITextView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> UIView {
+
         let container = UIView()
         let textView = createTextView()
         let placeholderLabel = createPlaceholderLabel()
@@ -83,12 +84,29 @@ struct MemoInputUITextView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
+
         context.coordinator.parent = self
         context.coordinator.applyStateToTextView(force: false)
     }
 
     private func createTextView() -> MemoIMETrackingTextView {
+        #if DEBUG
+        // Debug + UITest 실행에서만 테스트 전용 TextView 서브클래스를 사용한다.
+        if let uiTestTextView = createUITestTextViewIfNeeded() {
+            return uiTestTextView
+        }
+        #endif
+
+        return createReleaseTextView()
+    }
+
+    func createReleaseTextView() -> MemoIMETrackingTextView {
         let textView = MemoIMETrackingTextView()
+        configureBaseTextView(textView)
+        return textView
+    }
+
+    func configureBaseTextView(_ textView: MemoIMETrackingTextView) {
         textView.font = comfieUIBodyFont
         textView.isScrollEnabled = false
         textView.backgroundColor = UIColor.keyBackground
@@ -96,8 +114,6 @@ struct MemoInputUITextView: UIViewRepresentable {
         textView.layer.cornerRadius = 12
         textView.clipsToBounds = true
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.accessibilityIdentifier = "memo.inputTextView"
-        return textView
     }
 
     private func createPlaceholderLabel() -> UILabel {

@@ -17,6 +17,7 @@ struct MemoView: View {
     }
 
     private var isEditingMemo: Bool {
+
         intent.state.editingMemo != nil
     }
 
@@ -26,6 +27,7 @@ struct MemoView: View {
 
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
+
                     MemoListView(intent: $intent, isUserInComfieZone: isUserInComfieZone)
                         .onTapGesture {
                             intent(.backgroundTapped)
@@ -33,6 +35,7 @@ struct MemoView: View {
                         .padding(.top, 56)
 
                     if isEditingMemo {
+
                         VStack {
                             Spacer()
                             editingCancelButton
@@ -45,7 +48,6 @@ struct MemoView: View {
                             intent(.backgroundTapped)
                         }
                 }
-
                 memoInputView
                     .ignoresSafeArea(.keyboard, edges: .bottom)
             }
@@ -60,6 +62,7 @@ struct MemoView: View {
             }
 
             if intent.state.deletingMemo != nil {
+
                 CFPopupView(type: .deleteMemo) {
                     intent(.deletePopup(.confirmDeleteButtonTapped))
                 } rightButtonAction: {
@@ -90,8 +93,7 @@ struct MemoView: View {
                         .frame(width: 24, height: 24)
                 }
             }
-            .accessibilityIdentifier("memo.comfieZoneSettingButton")
-
+            .uiTestAccessibilityIdentifier(AccessibilityID.Memo.comfieZoneSettingButton)
             Spacer()
 
             Button {
@@ -103,7 +105,8 @@ struct MemoView: View {
                     .symbolRenderingMode(.monochrome)
                     .tint(.cfBlack)
             }
-            .accessibilityIdentifier("memo.moreButton")
+            // 릴리즈에서는 no-op이고, Debug UITest 세션에서만 식별자를 부여한다.
+            .uiTestAccessibilityIdentifier(AccessibilityID.Memo.moreButton)
         }
         .padding(.horizontal, 19)
         .padding(.vertical, 16)
@@ -142,7 +145,7 @@ struct MemoView: View {
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .accessibilityIdentifier("memo.sendButton")
+            .uiTestAccessibilityIdentifier(AccessibilityID.Memo.sendButton)
             .disabled(intent.state.isInputEmpty)
         }
         .padding(16)
@@ -171,7 +174,7 @@ struct MemoView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 212))
                 .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 0)
         }
-        .accessibilityIdentifier("memo.editingCancelButton")
+        .uiTestAccessibilityIdentifier(AccessibilityID.Memo.editingCancelButton)
     }
 
     private func mapMemoInputUICommand(_ sideEffect: MemoStore.SideEffect.MemoInput) -> MemoInputUICommand {

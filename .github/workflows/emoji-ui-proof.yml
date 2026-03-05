@@ -1,0 +1,918 @@
+name: Emoji UI Proof
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+    paths:
+      - "COMFIE/Presentation/**"
+      - "COMFIE/App/**"
+      - "COMFIE/Domain/TextToEmoji/**"
+      - "COMFIEUITests/**"
+      - "COMFIETests/**"
+      - "COMFIE.xcodeproj/**"
+      - ".github/workflows/emoji-ui-proof.yml"
+  workflow_dispatch:
+    inputs:
+      test_scope:
+        description: "all: COMFIEUITests 전체, focused: proof test 1개"
+        required: false
+        default: all
+        type: choice
+        options:
+          - all
+          - focused
+
+concurrency:
+  group: emoji-ui-proof-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  emoji-ui-proof:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      # 프로젝트/테스트 기본 설정
+      PROJECT_PATH: COMFIE.xcodeproj
+      SCHEME: COMFIE
+      TEST_IDENTIFIER: COMFIEUITests/COMFIEUITests/testHangulJamoTypingShowsStepByStepProgress
+      FULL_UI_TEST_TARGET: COMFIEUITests
+      PUBLISH_BRANCH: ui-proof-media
+      PUBLISH_PREFIX: emoji-ui-proof
+      # 러너 산출물 경로 (repo 내 임시 디렉터리, .gitignore로 제외)
+      RESULT_BUNDLE_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.xcresult
+      ATTACHMENTS_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof-attachments
+      VIDEO_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.mov
+      GIF_PATH: ${{ github.workspace }}/.local-ci/emoji-ui-proof.gif
+      GIF_DIR: ${{ github.workspace }}/.local-ci/emoji-ui-proof-gifs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure Info.plist exists in CI workspace
+        run: |
+          set -euo pipefail
+          if [ -f "COMFIE/Info.plist" ]; then
+            exit 0
+          fi
+
+          cat > "COMFIE/Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>UIAppFonts</key>
+            <array>
+              <string>Pretendard-Bold.otf</string>
+              <string>Pretendard-Medium.otf</string>
+              <string>Pretendard-Regular.otf</string>
+            </array>
+            <key>UIBackgroundModes</key>
+            <array>
+              <string>remote-notification</string>
+            </array>
+          </dict>
+          </plist>
+          PLIST
+
+      - name: Resolve simulator destination
+        id: destination
+        run: |
+          set -euo pipefail
+
+          python3 <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+
+          raw = subprocess.check_output(
+              ["xcrun", "simctl", "list", "devices", "available", "-j"],
+              text=True,
+          )
+          payload = json.loads(raw)
+
+          candidates = []
+          for runtime, devices in payload.get("devices", {}).items():
+              if "iOS" not in runtime:
+                  continue
+              for device in devices:
+                  if not device.get("isAvailable"):
+                      continue
+                  name = device.get("name", "")
+                  if not name.startswith("iPhone"):
+                      continue
+                  candidates.append((name, device.get("udid", ""), runtime))
+
+          if not candidates:
+              print("No available iOS iPhone simulator was found.", file=sys.stderr)
+              sys.exit(1)
+
+          preferred_order = [
+              "iPhone 16 Pro",
+              "iPhone 16",
+              "iPhone 15 Pro",
+              "iPhone 15",
+              "iPhone 14 Pro",
+              "iPhone 14",
+          ]
+
+          selected = None
+          for preferred in preferred_order:
+              for candidate in candidates:
+                  if candidate[0] == preferred:
+                      selected = candidate
+                      break
+              if selected is not None:
+                  break
+
+          if selected is None:
+              selected = candidates[0]
+
+          sim_name, sim_udid, runtime = selected
+          print(f"Selected simulator: {sim_name} ({runtime}) [{sim_udid}]")
+
+          output_path = os.environ["GITHUB_OUTPUT"]
+          with open(output_path, "a", encoding="utf-8") as handle:
+              handle.write(f"sim_name={sim_name}\n")
+              handle.write(f"sim_udid={sim_udid}\n")
+          PY
+
+      - name: Boot simulator
+        run: |
+          set -euo pipefail
+          xcrun simctl boot "${{ steps.destination.outputs.sim_udid }}" || true
+          xcrun simctl bootstatus "${{ steps.destination.outputs.sim_udid }}" -b
+
+      - name: Resolve test scope
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_SCOPE: ${{ github.event.inputs.test_scope || '' }}
+          PR_LABELS_JSON: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -euo pipefail
+
+          scope="all"
+
+          if [ "${EVENT_NAME}" = "pull_request" ]; then
+            if echo "${PR_LABELS_JSON}" | grep -q '"ui-proof:focused"'; then
+              scope="focused"
+            fi
+          fi
+
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ] && [ -n "${DISPATCH_SCOPE}" ]; then
+            scope="${DISPATCH_SCOPE}"
+          fi
+
+          case "${scope}" in
+            focused)
+              echo "selector=-only-testing:${TEST_IDENTIFIER}" >> "$GITHUB_OUTPUT"
+              echo "scope_label=focused" >> "$GITHUB_OUTPUT"
+              ;;
+            all)
+              echo "selector=-only-testing:${FULL_UI_TEST_TARGET}" >> "$GITHUB_OUTPUT"
+              echo "scope_label=all" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unsupported scope: ${scope}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "resolved_scope=${scope}" >> "$GITHUB_OUTPUT"
+
+      - name: Run UI tests with recording
+        id: run_ui_test
+        run: |
+          set +e
+          set -o pipefail
+
+          xcrun simctl io "${{ steps.destination.outputs.sim_udid }}" recordVideo --codec=h264 --force "${VIDEO_PATH}" \
+            > "${RUNNER_TEMP}/emoji-ui-proof-record.log" 2>&1 &
+          video_pid=$!
+
+          xcodebuild test \
+            -project "${PROJECT_PATH}" \
+            -scheme "${SCHEME}" \
+            -destination "id=${{ steps.destination.outputs.sim_udid }}" \
+            -parallel-testing-enabled NO \
+            "${{ steps.scope.outputs.selector }}" \
+            -resultBundlePath "${RESULT_BUNDLE_PATH}" \
+            | tee "${RUNNER_TEMP}/emoji-ui-proof.log"
+          test_exit=${PIPESTATUS[0]}
+
+          kill -INT "${video_pid}" > /dev/null 2>&1 || true
+          wait "${video_pid}" > /dev/null 2>&1 || true
+
+          if [ ! -s "${VIDEO_PATH}" ]; then
+            echo "Video file missing or empty. Continuing with screenshot attachments." \
+              | tee -a "${RUNNER_TEMP}/emoji-ui-proof.log"
+          fi
+
+          echo "exit_code=${test_exit}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Export xcresult attachments
+        id: export_attachments
+        if: always()
+        run: |
+          set -euo pipefail
+
+          mkdir -p "${ATTACHMENTS_PATH}"
+          if [ -d "${RESULT_BUNDLE_PATH}" ]; then
+            xcrun xcresulttool export attachments \
+              --path "${RESULT_BUNDLE_PATH}" \
+              --output-path "${ATTACHMENTS_PATH}" || true
+          fi
+
+          attachment_count="$(find "${ATTACHMENTS_PATH}" -type f | wc -l | tr -d ' ')"
+          echo "attachment_count=${attachment_count}" >> "$GITHUB_OUTPUT"
+
+      - name: Build animated GIF from proof screenshots
+        id: build_gif
+        if: always()
+        run: |
+          set -euo pipefail
+
+          swift - <<'SWIFT'
+          import Foundation
+          import CoreGraphics
+          import ImageIO
+          import UniformTypeIdentifiers
+
+          let environment = ProcessInfo.processInfo.environment
+          guard let attachmentsPath = environment["ATTACHMENTS_PATH"],
+                let gifDirPath = environment["GIF_DIR"] else {
+              fputs("Required environment variables are missing.\n", stderr)
+              exit(1)
+          }
+
+          let attachmentsURL = URL(fileURLWithPath: attachmentsPath)
+          let gifDirURL = URL(fileURLWithPath: gifDirPath)
+          let fileManager = FileManager.default
+
+          struct ExportManifestEntry: Decodable {
+              let exportedFileName: String
+              let suggestedHumanReadableName: String?
+              let timestamp: Double?
+          }
+
+          struct ExportManifestGroup: Decodable {
+              let attachments: [ExportManifestEntry]
+          }
+
+          struct FrameInfo {
+              let fileURL: URL
+              let displayName: String
+              let timestamp: Double
+          }
+
+          func collectPNGFiles(root: URL) -> [FrameInfo] {
+              guard let enumerator = fileManager.enumerator(
+                  at: root,
+                  includingPropertiesForKeys: [.isRegularFileKey],
+                  options: [.skipsHiddenFiles]
+              ) else {
+                  return []
+              }
+
+              var files: [FrameInfo] = []
+              for case let fileURL as URL in enumerator {
+                  guard fileURL.pathExtension.lowercased() == "png" else { continue }
+                  let modified = (try? fileURL.resourceValues(forKeys: [.contentModificationDateKey]))
+                      .flatMap(\.contentModificationDate)?.timeIntervalSince1970 ?? 0
+                  files.append(
+                      FrameInfo(
+                          fileURL: fileURL,
+                          displayName: fileURL.deletingPathExtension().lastPathComponent,
+                          timestamp: modified
+                      )
+                  )
+              }
+              return files
+          }
+
+          func inferGroupKey(from rawName: String) -> String {
+              func canonicalScenarioKey(_ key: String) -> String {
+                  func matchesScenarioKey(_ base: String, in value: String) -> Bool {
+                      value == base || value.hasPrefix(base + "-")
+                  }
+
+                  if matchesScenarioKey("emoji-proof", in: key) { return "emoji-proof" }
+                  if matchesScenarioKey("hangul-emoji", in: key) { return "hangul-emoji" }
+                  if matchesScenarioKey("memo-cancel-flow", in: key) { return "memo-cancel-flow" }
+                  if matchesScenarioKey("memo-compose", in: key) { return "memo-compose" }
+                  if matchesScenarioKey("memo-edit-delete", in: key) { return "memo-edit-delete" }
+                  if matchesScenarioKey("memo-send-typing", in: key) { return "memo-send-typing" }
+                  if matchesScenarioKey("memo-send", in: key) { return "memo-send" }
+                  return key
+              }
+
+              let normalized = rawName
+                  .lowercased()
+                  .replacingOccurrences(of: ".png", with: "")
+                  .replacingOccurrences(of: " ", with: "-")
+              let markers = [
+                  "-step-",
+                  "-after-",
+                  "-before-",
+                  "-key-",
+                  "-syllable-",
+                  "-debugsummary-",
+                  "-missing-"
+              ]
+              for marker in markers {
+                  if let range = normalized.range(of: marker) {
+                      let key = String(normalized[..<range.lowerBound])
+                      return canonicalScenarioKey(key)
+                  }
+              }
+
+              let parts = normalized.split(separator: "-").filter { !$0.isEmpty }
+              if parts.count >= 2 {
+                  let key = "\(parts[0])-\(parts[1])"
+                  return canonicalScenarioKey(key)
+              }
+              let fallback = normalized.isEmpty ? "proof" : normalized
+              return canonicalScenarioKey(fallback)
+          }
+
+          func sanitizeFileName(_ value: String) -> String {
+              let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
+              let scalarView = value.unicodeScalars.map { scalar -> Character in
+                  allowed.contains(scalar) ? Character(scalar) : "-"
+              }
+              var normalized = String(scalarView)
+              while normalized.contains("--") {
+                  normalized = normalized.replacingOccurrences(of: "--", with: "-")
+              }
+              normalized = normalized.trimmingCharacters(in: CharacterSet(charactersIn: "-_"))
+              return normalized.isEmpty ? "proof" : normalized
+          }
+
+          func evenlySample<T>(_ values: [T], maxCount: Int) -> [T] {
+              guard values.count > maxCount, maxCount > 1 else { return values }
+              let lastIndex = values.count - 1
+              let step = Double(lastIndex) / Double(maxCount - 1)
+              var sampled: [T] = []
+              sampled.reserveCapacity(maxCount)
+              for index in 0..<maxCount {
+                  let raw = Int(round(Double(index) * step))
+                  sampled.append(values[min(raw, lastIndex)])
+              }
+              return sampled
+          }
+
+          func resizedIfNeeded(_ image: CGImage, maxWidth: Int) -> CGImage {
+              guard image.width > maxWidth else { return image }
+              let ratio = Double(maxWidth) / Double(image.width)
+              let targetHeight = max(1, Int((Double(image.height) * ratio).rounded()))
+              guard let colorSpace = image.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB) else {
+                  return image
+              }
+              guard let context = CGContext(
+                  data: nil,
+                  width: maxWidth,
+                  height: targetHeight,
+                  bitsPerComponent: 8,
+                  bytesPerRow: 0,
+                  space: colorSpace,
+                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+              ) else {
+                  return image
+              }
+              context.interpolationQuality = .medium
+              context.draw(image, in: CGRect(x: 0, y: 0, width: maxWidth, height: targetHeight))
+              return context.makeImage() ?? image
+          }
+
+          func orderedFramesFromManifest(root: URL) -> [FrameInfo] {
+              let manifestURL = root.appendingPathComponent("manifest.json")
+              guard fileManager.fileExists(atPath: manifestURL.path),
+                    let data = try? Data(contentsOf: manifestURL),
+                    let groups = try? JSONDecoder().decode([ExportManifestGroup].self, from: data) else {
+                  return []
+              }
+
+              return groups.flatMap(\.attachments)
+                  .filter { $0.exportedFileName.lowercased().hasSuffix(".png") }
+                  .compactMap { attachment in
+                      let fileURL = root.appendingPathComponent(attachment.exportedFileName)
+                      guard fileManager.fileExists(atPath: fileURL.path) else { return nil }
+                      return FrameInfo(
+                          fileURL: fileURL,
+                          displayName: attachment.suggestedHumanReadableName ?? attachment.exportedFileName,
+                          timestamp: attachment.timestamp ?? 0
+                      )
+                  }
+                  .sorted { lhs, rhs in
+                      if lhs.timestamp == rhs.timestamp {
+                          return lhs.displayName < rhs.displayName
+                      }
+                      return lhs.timestamp < rhs.timestamp
+                  }
+          }
+
+          func buildGIF(
+              frames: [FrameInfo],
+              to outputURL: URL,
+              frameDelay: Double,
+              lastFrameDelay: Double
+          ) -> Int {
+              guard !frames.isEmpty else { return 0 }
+              try? fileManager.removeItem(at: outputURL)
+
+              guard let destination = CGImageDestinationCreateWithURL(
+                  outputURL as CFURL,
+                  UTType.gif.identifier as CFString,
+                  frames.count,
+                  nil
+              ) else {
+                  return 0
+              }
+
+              let gifProperties = [
+                  kCGImagePropertyGIFDictionary as String: [
+                      kCGImagePropertyGIFLoopCount as String: 0
+                  ]
+              ] as CFDictionary
+              CGImageDestinationSetProperties(destination, gifProperties)
+
+              var addedFrameCount = 0
+              for (index, frame) in frames.enumerated() {
+                  guard let source = CGImageSourceCreateWithURL(frame.fileURL as CFURL, nil),
+                        let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
+                      continue
+                  }
+                  let resized = resizedIfNeeded(image, maxWidth: 420)
+                  let delay = index == frames.count - 1 ? lastFrameDelay : frameDelay
+                  let frameProperties = [
+                      kCGImagePropertyGIFDictionary as String: [
+                          kCGImagePropertyGIFDelayTime as String: delay
+                      ]
+                  ] as CFDictionary
+                  CGImageDestinationAddImage(destination, resized, frameProperties)
+                  addedFrameCount += 1
+              }
+
+              guard addedFrameCount > 0 else { return 0 }
+              guard CGImageDestinationFinalize(destination) else { return 0 }
+              return addedFrameCount
+          }
+
+          var orderedFrames = orderedFramesFromManifest(root: attachmentsURL)
+          if orderedFrames.isEmpty {
+              orderedFrames = collectPNGFiles(root: attachmentsURL).sorted { lhs, rhs in
+                  if lhs.timestamp == rhs.timestamp {
+                      return lhs.displayName < rhs.displayName
+                  }
+                  return lhs.timestamp < rhs.timestamp
+              }
+          }
+
+          if orderedFrames.isEmpty {
+              fputs("No PNG frames were found. GIF generation skipped.\n", stderr)
+              exit(0)
+          }
+
+          try? fileManager.removeItem(at: gifDirURL)
+          try? fileManager.createDirectory(at: gifDirURL, withIntermediateDirectories: true)
+
+          var grouped: [String: [FrameInfo]] = [:]
+          for frame in orderedFrames {
+              let key = inferGroupKey(from: frame.displayName)
+              grouped[key, default: []].append(frame)
+          }
+
+          let groupOrder = grouped.keys.sorted { lhs, rhs in
+              let leftTimestamp = grouped[lhs]?.map(\.timestamp).min() ?? 0
+              let rightTimestamp = grouped[rhs]?.map(\.timestamp).min() ?? 0
+              if leftTimestamp == rightTimestamp { return lhs < rhs }
+              return leftTimestamp < rightTimestamp
+          }
+          let allowedGroupKeys: Set<String> = [
+              "emoji-proof",
+              "hangul-emoji",
+              "memo-cancel-flow",
+              "memo-compose",
+              "memo-edit-delete",
+              "memo-send-typing",
+              "memo-send"
+          ]
+
+          let maxFramesPerGIF = 108
+          var generatedCount = 0
+          for key in groupOrder {
+              guard allowedGroupKeys.contains(key) else { continue }
+              guard var frames = grouped[key], !frames.isEmpty else { continue }
+              frames.sort { lhs, rhs in
+                  if lhs.timestamp == rhs.timestamp {
+                      return lhs.displayName < rhs.displayName
+                  }
+                  return lhs.timestamp < rhs.timestamp
+              }
+              let sampled = evenlySample(frames, maxCount: maxFramesPerGIF)
+              let fileName = "\(sanitizeFileName(key)).gif"
+              let outputURL = gifDirURL.appendingPathComponent(fileName)
+              var frameDelay = 0.18
+              var lastFrameDelay = 0.8
+              if ["memo-compose", "memo-edit-delete"].contains(key) {
+                  frameDelay = 0.5
+                  lastFrameDelay = 1.4
+              }
+              let added = buildGIF(
+                  frames: sampled,
+                  to: outputURL,
+                  frameDelay: frameDelay,
+                  lastFrameDelay: lastFrameDelay
+              )
+              if added > 0 {
+                  generatedCount += 1
+                  print("Generated \(fileName) with \(added) frames.")
+              }
+          }
+
+          if generatedCount == 0 {
+              fputs("No valid GIF files were generated.\n", stderr)
+              exit(0)
+          }
+          SWIFT
+
+          generated_gifs=()
+          while IFS= read -r gif_file; do
+            generated_gifs+=("${gif_file}")
+          done < <(find "${GIF_DIR}" -maxdepth 1 -type f -name '*.gif' -print | sort)
+          if [ "${#generated_gifs[@]}" -gt 0 ]; then
+            primary_gif="${generated_gifs[0]}"
+            for preferred in "hangul-emoji" "emoji-proof" "memo-send" "memo-compose" "memo-edit-delete"; do
+              for candidate in "${generated_gifs[@]}"; do
+                if [[ "$(basename "${candidate}")" == *"${preferred}"* ]]; then
+                  primary_gif="${candidate}"
+                  break 2
+                fi
+              done
+            done
+
+            cp "${primary_gif}" "${GIF_PATH}"
+            gif_names_csv="$(printf '%s\n' "${generated_gifs[@]}" | xargs -n1 basename | paste -sd, -)"
+            echo "gif_created=true" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_count=${#generated_gifs[@]}" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_names=${gif_names_csv}" >> "$GITHUB_OUTPUT"
+            echo "primary_gif_name=$(basename "${primary_gif}")" >> "$GITHUB_OUTPUT"
+          else
+            echo "gif_created=false" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_count=0" >> "$GITHUB_OUTPUT"
+            echo "generated_gif_names=" >> "$GITHUB_OUTPUT"
+            echo "primary_gif_name=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate required GIF keys for all scope
+        if: always() && steps.scope.outputs.scope_label == 'all'
+        run: |
+          set -euo pipefail
+
+          IFS=',' read -r -a gif_names <<< "${{ steps.build_gif.outputs.generated_gif_names }}"
+          missing=()
+
+          if ! printf '%s\n' "${gif_names[@]}" | grep -qx "memo-send-typing.gif"; then
+            missing+=("memo-send-typing.gif")
+          fi
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Missing required GIF keys for all scope: ${missing[*]}" >&2
+            exit 1
+          fi
+
+      - name: Publish GIF for inline PR preview
+        id: publish_inline
+        if: always() && steps.build_gif.outputs.gif_created == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
+        continue-on-error: true
+        env:
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number || 'manual' }}
+          SCOPE_LABEL: ${{ steps.scope.outputs.scope_label }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GENERATED_GIF_NAMES: ${{ steps.build_gif.outputs.generated_gif_names }}
+          PRIMARY_GIF_NAME: ${{ steps.build_gif.outputs.primary_gif_name }}
+        run: |
+          set -euo pipefail
+
+          publish_root="${RUNNER_TEMP}/emoji-ui-proof-media"
+          rm -rf "${publish_root}"
+          mkdir -p "${publish_root}"
+          cd "${publish_root}"
+
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin "${PUBLISH_BRANCH}" > /dev/null 2>&1; then
+            git fetch --depth=1 origin "${PUBLISH_BRANCH}"
+            git checkout -B "${PUBLISH_BRANCH}" "origin/${PUBLISH_BRANCH}"
+          else
+            git checkout --orphan "${PUBLISH_BRANCH}"
+            find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          fi
+
+          relative_root="${PUBLISH_PREFIX}/pr-${PR_NUMBER}/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/${SCOPE_LABEL}"
+          IFS=',' read -r -a gif_names <<< "${GENERATED_GIF_NAMES:-}"
+
+          if [ "${#gif_names[@]}" -eq 0 ] || [ -z "${gif_names[0]:-}" ]; then
+            gif_names=("$(basename "${GIF_PATH}")")
+          fi
+
+          urls=()
+          primary_url=""
+          for gif_name in "${gif_names[@]}"; do
+            [ -n "${gif_name}" ] || continue
+            source_path="${GIF_DIR}/${gif_name}"
+            if [ ! -f "${source_path}" ] && [ "${gif_name}" = "$(basename "${GIF_PATH}")" ] && [ -f "${GIF_PATH}" ]; then
+              source_path="${GIF_PATH}"
+            fi
+            if [ ! -f "${source_path}" ]; then
+              continue
+            fi
+
+            target_path="${relative_root}/${gif_name}"
+            mkdir -p "$(dirname "${target_path}")"
+            cp "${source_path}" "${target_path}"
+            git add "${target_path}"
+
+            url="https://raw.githubusercontent.com/${REPOSITORY}/${PUBLISH_BRANCH}/${target_path}"
+            urls+=("${url}")
+            if [ -n "${PRIMARY_GIF_NAME}" ] && [ "${gif_name}" = "${PRIMARY_GIF_NAME}" ]; then
+              primary_url="${url}"
+            fi
+          done
+
+          if [ "${#urls[@]}" -eq 0 ]; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "published_gif_count=0" >> "$GITHUB_OUTPUT"
+            echo "all_urls=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ -z "${primary_url}" ]; then
+            primary_url="${urls[0]}"
+          fi
+          urls_csv="$(printf '%s\n' "${urls[@]}" | paste -sd, -)"
+
+          if git diff --cached --quiet; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "published_gif_count=${#urls[@]}" >> "$GITHUB_OUTPUT"
+            echo "all_urls=${urls_csv}" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "chore: add emoji ui proof gif for run ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+            if git push origin "${PUBLISH_BRANCH}"; then
+              echo "published=true" >> "$GITHUB_OUTPUT"
+              echo "inline_url=${primary_url}" >> "$GITHUB_OUTPUT"
+              echo "published_gif_count=${#urls[@]}" >> "$GITHUB_OUTPUT"
+              echo "all_urls=${urls_csv}" >> "$GITHUB_OUTPUT"
+            else
+              echo "Publish skipped: unable to push ${PUBLISH_BRANCH} (branch protection or token permission)." >&2
+              echo "published=false" >> "$GITHUB_OUTPUT"
+              echo "published_gif_count=0" >> "$GITHUB_OUTPUT"
+              echo "all_urls=" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Upload visual proof artifacts
+        id: upload_artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emoji-ui-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/emoji-ui-proof.log
+            ${{ runner.temp }}/emoji-ui-proof-record.log
+            ${{ env.VIDEO_PATH }}
+            ${{ env.GIF_PATH }}
+            ${{ env.GIF_DIR }}
+            ${{ env.RESULT_BUNDLE_PATH }}
+            ${{ env.ATTACHMENTS_PATH }}
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Create or update PR comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = "<!-- emoji-ui-proof-comment -->";
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const testPassed = "${{ steps.run_ui_test.outputs.exit_code }}" === "0";
+            const statusText = testPassed ? "✅ PASSED" : "❌ FAILED";
+            const artifactUrl = "${{ steps.upload_artifact.outputs.artifact-url }}";
+            const attachmentCount = "${{ steps.export_attachments.outputs.attachment_count }}";
+            const simulatorName = "${{ steps.destination.outputs.sim_name }}";
+            const gifCreated = "${{ steps.build_gif.outputs.gif_created }}" === "true";
+            const generatedGifCount = Number("${{ steps.build_gif.outputs.generated_gif_count || '0' }}");
+            const inlineGifUrl = "${{ steps.publish_inline.outputs.inline_url }}";
+            const allGifUrlsRaw = "${{ steps.publish_inline.outputs.all_urls }}";
+            const publishedGifCount = Number("${{ steps.publish_inline.outputs.published_gif_count || '0' }}");
+            const scopeLabel = "${{ steps.scope.outputs.scope_label }}";
+            const selectedTest = scopeLabel === "all"
+              ? "${{ env.FULL_UI_TEST_TARGET }}"
+              : "${{ env.TEST_IDENTIFIER }}";
+            const allGifUrls = allGifUrlsRaw
+              ? allGifUrlsRaw.split(",").map((url) => url.trim()).filter(Boolean)
+              : [];
+            const gifMetaByKey = {
+              "hangul-emoji": {
+                title: "한글 자모 단계 입력 검증",
+                description: "받침/공백 포함 문장의 단계별 입력과 변환 진행을 검증합니다.",
+                testName: "testHangulJamoTypingShowsStepByStepProgress",
+              },
+              "emoji-proof": {
+                title: "영문 실시간 변환 검증",
+                description: "문자 단위로 원문/이모지 변환이 실시간 반영되는지 검증합니다.",
+                testName: "testEmojiInputConvertsPerCharacterRealtimeAndAttachesVisualProof",
+              },
+              "memo-compose": {
+                title: "메모 작성 패턴 플로우",
+                description: "단일라인/멀티라인/커서 이동+추가입력을 키보드 단계 입력 증적으로 검증합니다.",
+                testName: "testMemoComposeFlowCoversMultipleWritingPatterns",
+              },
+              "memo-edit-delete": {
+                title: "메모 수정/삭제 플로우",
+                description: "수정 문구 단계 입력 후 저장/삭제 동작이 정상 동작하는지 검증합니다.",
+                testName: "testMemoEditUpdateAndDeleteLifecycle",
+              },
+              "memo-send": {
+                title: "메모 전송 플로우",
+                description: "6번 타이핑 증적 이후 전송 완료 결과를 검증합니다.",
+                testName: "testMemoInputSendCreatesNewMemoCell",
+              },
+              "memo-send-typing": {
+                title: "메모 타이핑 증적",
+                description: "전송 전 키보드 타이핑 단계의 시각 증적을 검증합니다.",
+                testName: "testMemoInputSendCreatesNewMemoCell",
+              },
+              "memo-cancel-flow": {
+                title: "삭제 팝업 취소 플로우",
+                description: "삭제 확인 팝업에서 취소를 눌렀을 때 메모와 입력 UI가 유지되는지 검증합니다.",
+                testName: "testMemoEditingCancelInteractionFlow",
+              },
+            };
+
+            const parseGifFileName = (url) => {
+              try {
+                const pathname = new URL(url).pathname;
+                return pathname.split("/").pop() ?? "";
+              } catch {
+                return url.split("/").pop() ?? "";
+              }
+            };
+
+            const toGifKey = (fileName) => fileName.replace(/\.gif$/i, "").toLowerCase();
+
+            const humanizeGifKey = (key) => {
+              if (!key) return "GIF";
+              return key
+                .split("-")
+                .filter(Boolean)
+                .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
+                .join(" ");
+            };
+
+            const resolveGifMeta = (url, index) => {
+              const fileName = parseGifFileName(url);
+              const key = toGifKey(fileName);
+              const mapped = gifMetaByKey[key];
+              if (mapped) {
+                return {
+                  key,
+                  title: mapped.title,
+                  description: mapped.description,
+                  testName: mapped.testName,
+                };
+              }
+              return {
+                key: key || `gif-${index + 1}`,
+                title: humanizeGifKey(key),
+                description: "해당 시나리오의 시각 검증 결과",
+                testName: "N/A",
+              };
+            };
+
+            const previewOrderingNotice = "_번호는 테스트 실행 순서가 아니라, 게시된 GIF 미리보기 정렬 순서입니다._";
+            const previewNumberMappingText = [
+              "- 1. `emoji-proof` → `testEmojiInputConvertsPerCharacterRealtimeAndAttachesVisualProof`",
+              "- 2. `hangul-emoji` → `testHangulJamoTypingShowsStepByStepProgress`",
+              "- 3. `memo-cancel-flow` (삭제 확인 팝업에서 취소) → `testMemoEditingCancelInteractionFlow`",
+              "- 4. `memo-compose` (단일/멀티라인/커서 이동 작성 패턴) → `testMemoComposeFlowCoversMultipleWritingPatterns`",
+              "- 5. `memo-edit-delete` (수정 문구 단계 입력 + 저장/삭제) → `testMemoEditUpdateAndDeleteLifecycle`",
+              "- 6. `memo-send-typing` → `testMemoInputSendCreatesNewMemoCell`",
+              "- 7. `memo-send` (6번 타이핑 이후 전송 완료) → `testMemoInputSendCreatesNewMemoCell`",
+            ].join("\n");
+
+            const inlinePreviewText = allGifUrls.length > 0
+              ? allGifUrls
+                .map((url, index) => {
+                    const meta = resolveGifMeta(url, index);
+                    return `#### ${index + 1}. ${meta.title}\n- XCTest: \`${meta.testName}\`\n- ${meta.description}\n![${meta.key}](${url})`;
+                  })
+                  .join("\n\n")
+              : gifCreated
+                ? "_Inline GIF unavailable (media branch publish blocked by branch protection or token permission). Check artifact link._"
+                : "_Inline GIF unavailable (fork PR or GIF generation skipped)._";
+
+            const galleryText = allGifUrls.length > 0
+              ? allGifUrls
+                  .map((url, index) => {
+                    const meta = resolveGifMeta(url, index);
+                    return `- [${index + 1}. ${meta.title}](${url})`;
+                  })
+                  .join("\n")
+              : "_Published GIF URLs unavailable._";
+
+            const body = `${marker}
+            ## Emoji UI Visual Proof
+            - Status: ${statusText}
+            - Simulator: \`${simulatorName}\`
+            - Test scope: \`${scopeLabel}\`
+            - Selected test target: \`${selectedTest}\`
+            - Default scope: \`all\`
+            - Focused trigger: add PR label \`ui-proof:focused\` or run \`workflow_dispatch(test_scope=focused)\`
+            - Screenshot attachments exported: **${attachmentCount}**
+            - Generated GIF files: **${generatedGifCount}**
+            - Published GIF files: **${publishedGifCount}**
+            - Animated GIF artifact: ${gifCreated ? "Included (`emoji-ui-proof.gif` + grouped GIFs)" : "Not generated"}
+            - Inline GIF URL: ${inlineGifUrl || "Unavailable"}
+            - Workflow run: ${runUrl}
+            - Artifacts: ${artifactUrl || "Unavailable"}
+
+            ### Preview Number Mapping (All)
+            ${previewNumberMappingText}
+
+            ### Inline GIF Previews (All)
+            ${previewOrderingNotice}
+
+            ${inlinePreviewText}
+
+            ### GIF Gallery
+            ${galleryText}`;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) => {
+              return comment.user?.type === "Bot" && comment.body?.includes(marker);
+            });
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+              });
+            }
+
+      - name: Cleanup generated proof files on runner
+        if: always()
+        run: |
+          set +e
+          # Artifact 업로드는 이미 끝난 상태라 러너 임시 파일은 모두 지워도 된다.
+          rm -rf \
+            "${ATTACHMENTS_PATH}" \
+            "${RESULT_BUNDLE_PATH}" \
+            "${VIDEO_PATH}" \
+            "${GIF_PATH}" \
+            "${GIF_DIR}" \
+            "${RUNNER_TEMP}/emoji-ui-proof.log" \
+            "${RUNNER_TEMP}/emoji-ui-proof-record.log"
+
+      - name: Fail if UI tests failed
+        if: steps.run_ui_test.outputs.exit_code != '0'
+        run: |
+          echo "Emoji UI proof tests failed."
+          exit 1

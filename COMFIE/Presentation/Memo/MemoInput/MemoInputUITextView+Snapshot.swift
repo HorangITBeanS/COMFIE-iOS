@@ -34,6 +34,8 @@ extension MemoInputUITextView.Coordinator {
             emojiTextCandidate: emojiTextCandidate
         )
         publishDraftAvailability()
+        // +Snapshot+UITest 확장에서 실제 동작하며, 그 외 빌드에서는 no-op이다.
+        publishDebugSnapshotIfNeeded(textView)
     }
 
     // textView가 없는 생명주기 경계에서도 seed 기반 draft를 복구해 savePhase 고착을 막습니다.
@@ -93,6 +95,8 @@ extension MemoInputUITextView.Coordinator {
         updateTextViewHeight(textView)
         lastTextLength = textView.textStorage.length
         lastSelectionRange = textView.selectedRange
+        // +Snapshot+UITest 확장에서 실제 동작하며, 그 외 빌드에서는 no-op이다.
+        publishDebugSnapshotIfNeeded(textView)
     }
 
     func attributedText(originalText: String, emojiText: String, font: UIFont) -> NSAttributedString {
