@@ -9,7 +9,6 @@ import UIKit
 
 extension MemoInputUITextView.Coordinator {
     // MARK: - IME Handling
-    // IME 변환 흐름 지도(요약):
 
     // marked 구간이 생겼을 때 조합 시작점 이전 글자만 안전하게 토큰화합니다.
     func handleMarkedRange(in textView: UITextView, marked: NSRange) {
@@ -63,6 +62,7 @@ extension MemoInputUITextView.Coordinator {
         lastTextLength = storage.length
     }
 
+    // 조합이 끝난 실제 입력 범위를 찾아 attachment 토큰 변환을 적용합니다.
     func handleNonMarkedChange(in textView: UITextView, change: PendingChange) {
         guard change.replacementUTF16Length > 0 else { return }
 
@@ -142,6 +142,7 @@ extension MemoInputUITextView.Coordinator {
 
     // MARK: - Mode Conversion
 
+    // 일반 텍스트 모드를 이모지 표시 모드로 일괄 변환합니다.
     func convertAllPlainToEmoji(in textView: UITextView) {
         let storage = textView.textStorage
         guard storage.length > 0 else { return }
@@ -173,6 +174,7 @@ extension MemoInputUITextView.Coordinator {
         lastTextLength = storage.length
     }
 
+    // attachment 토큰을 원문 문자열로 되돌려 일반 텍스트 모드를 복원합니다.
     func convertAllToPlain(in textView: UITextView) {
         let currentSnapshot = snapshot(from: textView.textStorage)
         let oldSelection = textView.selectedRange

@@ -31,7 +31,6 @@ extension MemoInputUITextView {
 
         var isMutating = false
         private(set) var pendingChange: PendingChange?
-        // 조합이 끝난 뒤(handleUnmark) 안전하게 처리하려고 사용합니다.
         private(set) var deferredChange: PendingChange?
         var lastSelectionRange = NSRange(location: 0, length: 0)
         var lastTextChangeTime: TimeInterval = 0
@@ -104,6 +103,7 @@ extension MemoInputUITextView {
         }
 #endif
 
+        // seed/모드/명령 이벤트를 합쳐 현재 UITextView 상태를 일관되게 재적용합니다.
         func applyStateToTextView(force: Bool) {
             handleUICommandIfNeeded()
             guard let textView else { return }
@@ -133,7 +133,7 @@ extension MemoInputUITextView {
                 updateTextViewHeight(textView)
                 return
             }
-            // IME 조합 중에는 강제 모드 렌더링으로 조합을 깨지 않도록 대기합니다.
+            // 조합 중에는 모드 강제 렌더를 미뤄 IME 입력이 깨지지 않게 보호합니다.
             guard textView.markedTextRange == nil else { return }
 
             clearPendingAndDeferredChanges()
@@ -176,7 +176,6 @@ extension MemoInputUITextView {
             }
 
             if isEmojiMode {
-                // true면 한글 IME 조합 중이라는 뜻입니다.
                 let isComposing = (textView.markedTextRange != nil)
                 if isComposing {
                     deferPendingChangeIfNeeded()
@@ -227,7 +226,7 @@ extension MemoInputUITextView {
 
             guard isEmojiMode else { return }
             guard !isMutating else { return }
-            // IME 조합 중 선택 변화는 무시합니다.
+            // 조합 중 커서 이동 이벤트는 flush 기준이 아니므로 건너뜁니다.
             guard textView.markedTextRange == nil else { return }
             guard !NSEqualRanges(lastSelectionRange, textView.selectedRange) else { return }
 
@@ -239,7 +238,7 @@ extension MemoInputUITextView {
     }
 }
 
-    // MARK: - UI Command
+// MARK: - UI Command
 extension MemoInputUITextView.Coordinator {
     private func handleUICommandIfNeeded() {
         guard let commandEvent = parent.uiCommandEvent else { return }
@@ -248,6 +247,7 @@ extension MemoInputUITextView.Coordinator {
         handleUICommand(commandEvent.command)
     }
 
+    // Store에서 내려온 입력 명령을 한 번만 실행하고 sync 정책을 함께 조정합니다.
     private func handleUICommand(_ command: MemoInputUICommand) {
         switch command {
         case .resignWithSync:

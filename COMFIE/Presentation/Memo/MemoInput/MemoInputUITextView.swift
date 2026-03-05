@@ -51,14 +51,11 @@ struct MemoInputUITextView: UIViewRepresentable {
         let heightConstraint = createMaxHeightConstraint(for: textView)
 
         textView.delegate = context.coordinator
-        // 아래 두 콜백은 "일반 delegate만으로는 잡기 어려운 IME 조합 경계"를 잡기 위한 연결입니다.
-        // setMarkedText/unmarkText 타이밍을 직접 잡아야 조합 중 글자와 확정 글자를 안전하게 구분할 수 있습니다.
-        // IME marked text가 생길 때 코디네이터가 즉시 토큰화를 조정할 수 있게 연결합니다.
+        // delegate만으로 놓치기 쉬운 IME 조합 시작/종료 경계를 직접 받아 Coordinator에 전달합니다.
         textView.onSetMarkedText = { [weak textView, weak coordinator = context.coordinator] markedRange in
             guard let textView else { return }
             coordinator?.handleMarkedRange(in: textView, marked: markedRange)
         }
-        // IME 조합이 끝나는 순간에도 코디네이터가 후처리하도록 연결합니다.
         textView.onUnmarkText = { [weak textView, weak coordinator = context.coordinator] in
             guard let textView else { return }
             coordinator?.handleUnmark(in: textView)
