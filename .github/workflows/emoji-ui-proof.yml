@@ -434,7 +434,7 @@ jobs:
                       continue
                   }
                   let resized = resizedIfNeeded(image, maxWidth: 420)
-                  let delay = index == frames.count - 1 ? 1.2 : 0.35
+                  let delay = index == frames.count - 1 ? 0.8 : 0.18
                   let frameProperties = [
                       kCGImagePropertyGIFDictionary as String: [
                           kCGImagePropertyGIFDelayTime as String: delay
@@ -480,7 +480,7 @@ jobs:
               return leftTimestamp < rightTimestamp
           }
 
-          let maxFramesPerGIF = 36
+          let maxFramesPerGIF = 108
           var generatedCount = 0
           for key in groupOrder {
               guard var frames = grouped[key], !frames.isEmpty else { continue }
@@ -677,30 +677,37 @@ jobs:
               "hangul-emoji": {
                 title: "한글 자모 단계 입력 검증",
                 description: "받침/공백 포함 문장의 단계별 입력과 변환 진행을 검증합니다.",
+                testName: "testHangulJamoTypingShowsStepByStepProgress",
               },
               "emoji-proof": {
                 title: "영문 실시간 변환 검증",
                 description: "문자 단위로 원문/이모지 변환이 실시간 반영되는지 검증합니다.",
+                testName: "testEmojiInputConvertsPerCharacterRealtimeAndAttachesVisualProof",
               },
               "memo-compose": {
                 title: "메모 작성 플로우",
                 description: "멀티라인/커서 이동 포함 작성 시나리오를 검증합니다.",
+                testName: "testMemoComposeFlowCoversMultipleWritingPatterns",
               },
               "memo-edit-delete": {
                 title: "메모 수정/삭제 플로우",
                 description: "수정 저장과 삭제 동작이 정상 동작하는지 검증합니다.",
+                testName: "testMemoEditUpdateAndDeleteLifecycle",
               },
               "memo-send": {
                 title: "메모 전송 플로우",
                 description: "입력 후 전송으로 신규 메모가 생성되는지 검증합니다.",
+                testName: "testMemoInputSendCreatesNewMemoCell",
               },
               "memo-send-typing": {
                 title: "메모 타이핑 증적",
                 description: "전송 전 타이핑 단계의 시각 증적을 검증합니다.",
+                testName: "testMemoInputSendCreatesNewMemoCell",
               },
               "memo-cancel-flow": {
                 title: "메모 취소 플로우",
                 description: "작성 중 취소 시 입력 상태/UI 전환을 검증합니다.",
+                testName: "testMemoEditingCancelInteractionFlow",
               },
             };
 
@@ -729,20 +736,37 @@ jobs:
               const key = toGifKey(fileName);
               const mapped = gifMetaByKey[key];
               if (mapped) {
-                return { key, title: mapped.title, description: mapped.description };
+                return {
+                  key,
+                  title: mapped.title,
+                  description: mapped.description,
+                  testName: mapped.testName,
+                };
               }
               return {
                 key: key || `gif-${index + 1}`,
                 title: humanizeGifKey(key),
                 description: "해당 시나리오의 시각 검증 결과",
+                testName: "N/A",
               };
             };
+
+            const previewOrderingNotice = "_번호는 테스트 실행 순서가 아니라, 게시된 GIF 미리보기 정렬 순서입니다._";
+            const previewNumberMappingText = [
+              "- 1. `emoji-proof` → `testEmojiInputConvertsPerCharacterRealtimeAndAttachesVisualProof`",
+              "- 2. `hangul-emoji` → `testHangulJamoTypingShowsStepByStepProgress`",
+              "- 3. `memo-cancel-flow` → `testMemoEditingCancelInteractionFlow`",
+              "- 4. `memo-compose` → `testMemoComposeFlowCoversMultipleWritingPatterns`",
+              "- 5. `memo-edit-delete` → `testMemoEditUpdateAndDeleteLifecycle`",
+              "- 6. `memo-send-typing` → `testMemoInputSendCreatesNewMemoCell`",
+              "- 7. `memo-send` → `testMemoInputSendCreatesNewMemoCell`",
+            ].join("\n");
 
             const inlinePreviewText = allGifUrls.length > 0
               ? allGifUrls
                 .map((url, index) => {
                     const meta = resolveGifMeta(url, index);
-                    return `#### ${index + 1}. ${meta.title}\n- ${meta.description}\n![${meta.key}](${url})`;
+                    return `#### ${index + 1}. ${meta.title}\n- XCTest: \`${meta.testName}\`\n- ${meta.description}\n![${meta.key}](${url})`;
                   })
                   .join("\n\n")
               : gifCreated
@@ -774,7 +798,12 @@ jobs:
             - Workflow run: ${runUrl}
             - Artifacts: ${artifactUrl || "Unavailable"}
 
+            ### Preview Number Mapping (All)
+            ${previewNumberMappingText}
+
             ### Inline GIF Previews (All)
+            ${previewOrderingNotice}
+
             ${inlinePreviewText}
 
             ### GIF Gallery
