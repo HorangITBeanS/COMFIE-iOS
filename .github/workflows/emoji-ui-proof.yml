@@ -500,7 +500,7 @@ jobs:
               let outputURL = gifDirURL.appendingPathComponent(fileName)
               var frameDelay = 0.18
               var lastFrameDelay = 0.8
-              if key == "memo-compose" {
+              if ["memo-compose", "memo-edit-delete"].contains(key) {
                   frameDelay = 0.5
                   lastFrameDelay = 1.4
               }
